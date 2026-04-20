@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/widgets/app_scaffold.dart';
+import '../../../../l10n/app_localizations.dart';
 import '../../../../models/order_model.dart';
 import '../../../orders/domain/order_providers.dart';
 
@@ -9,11 +10,12 @@ class KitchenOrdersPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context)!;
     // StreamProvider'dan ma'lumotlarni watch qilamiz
     final ordersAsync = ref.watch(ordersStreamProvider);
 
     return AppScaffold(
-      title: 'Kitchen Screen',
+      title: l10n.kitchenScreen,
       child: ordersAsync.when(
         data: (orders) {
           final pending = orders.where((e) => e.status == 'pending').toList();
@@ -24,33 +26,33 @@ class KitchenOrdersPage extends ConsumerWidget {
             padding: const EdgeInsets.all(16),
             children: [
               _KitchenSection(
-                title: 'New Orders',
+                title: l10n.newOrders,
                 orders: pending,
                 nextStatus: 'cooking',
                 color: Colors.red,
-                buttonText: 'Start Cooking',
+                buttonText: l10n.startCooking,
               ),
               const SizedBox(height: 24),
               _KitchenSection(
-                title: 'Cooking',
+                title: l10n.cooking,
                 orders: cooking,
                 nextStatus: 'ready',
                 color: Colors.orange,
-                buttonText: 'Mark as Ready',
+                buttonText: l10n.markAsReady,
               ),
               const SizedBox(height: 24),
               _KitchenSection(
-                title: 'Ready',
+                title: l10n.ready,
                 orders: ready,
                 nextStatus: 'served',
                 color: Colors.green,
-                buttonText: 'Mark as Served',
+                buttonText: l10n.markAsServed,
               ),
             ],
           );
         },
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (err, stack) => Center(child: Text('Error: $err')),
+        error: (err, stack) => Center(child: Text(l10n.errorMessage(err.toString()))),
       ),
     );
   }
@@ -73,6 +75,7 @@ class _KitchenSection extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context)!;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -94,8 +97,8 @@ class _KitchenSection extends ConsumerWidget {
         ),
         const SizedBox(height: 12),
         if (orders.isEmpty)
-          const Text('No orders in this stage.',
-              style: TextStyle(color: Colors.grey, fontSize: 14)),
+          Text(l10n.noOrdersInStage,
+              style: const TextStyle(color: Colors.grey, fontSize: 14)),
         ...orders.map((order) => Card(
               margin: const EdgeInsets.only(bottom: 12),
               elevation: 2,
@@ -111,7 +114,7 @@ class _KitchenSection extends ConsumerWidget {
                 title: Text(
                     'Order #${order.orderNumber.substring(order.orderNumber.length - 4)}'),
                 subtitle: Text(
-                    '${order.items.length} items • ${order.total.toStringAsFixed(0)} so\'m'),
+                    '${order.items.length} ${l10n.items} • ${order.total.toStringAsFixed(0)} ${l10n.currency}'),
                 children: [
                   Padding(
                     padding: const EdgeInsets.all(16.0),

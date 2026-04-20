@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import '../../../../l10n/app_localizations.dart';
 
 class RoleSelectPage extends StatelessWidget {
   const RoleSelectPage({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       backgroundColor: Colors.grey[50],
       appBar: AppBar(
@@ -25,32 +27,32 @@ class RoleSelectPage extends StatelessWidget {
             children: [
               const Spacer(),
               Text(
-                'Welcome to Restaurant App',
+                l10n.welcomeToApp,
                 style: Theme.of(context).textTheme.headlineMedium?.copyWith(
                       fontWeight: FontWeight.bold,
                       color: Colors.black,
                     ),
               ),
               const SizedBox(height: 12),
-              const Text('Please select your role to continue'),
+              Text(l10n.selectRoleToContinue),
               const SizedBox(height: 32),
               _RoleButton(
-                title: 'Customer Mode',
-                subtitle: 'Order delicious food from your table',
+                title: l10n.customerMode,
+                subtitle: l10n.customerSubtitle,
                 icon: Icons.restaurant,
                 onTap: () => context.go('/customer'),
               ),
               const SizedBox(height: 16),
               _RoleButton(
-                title: 'Admin Panel',
-                subtitle: 'Manage categories, menu, and orders',
+                title: l10n.adminPanel,
+                subtitle: l10n.adminSubtitle,
                 icon: Icons.admin_panel_settings,
                 onTap: () => context.push('/login/admin'),
               ),
               const SizedBox(height: 16),
               _RoleButton(
-                title: 'Kitchen Display',
-                subtitle: 'Track and prepare incoming orders',
+                title: l10n.kitchenDisplay,
+                subtitle: l10n.kitchenSubtitle,
                 icon: Icons.kitchen,
                 onTap: () => context.push('/login/kitchen'),
               ),

@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../core/widgets/app_scaffold.dart';
+import '../../../../l10n/app_localizations.dart';
 import '../../domain/table_provider.dart';
 import '../../domain/table_status_provider.dart';
 
@@ -11,15 +12,14 @@ class CustomerHomePage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    const restaurantName = "Universal Restaurant";
-    const restaurantDesc = "Delicious food, best service";
+    final l10n = AppLocalizations.of(context)!;
 
     final currentTableId = ref.watch(tableIdProvider);
     final tableNumber = int.tryParse(currentTableId ?? '0') ?? 0;
     final tableStatus = ref.watch(tableStatusProvider)(tableNumber);
 
     return AppScaffold(
-      title: restaurantName,
+      title: l10n.restaurantName,
       actions: [
         IconButton(
           onPressed: () => context.go('/customer/cart'),
@@ -45,9 +45,9 @@ class CustomerHomePage extends ConsumerWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text(
-                        'Stol raqami',
-                        style: TextStyle(fontSize: 12, color: Colors.grey),
+                      Text(
+                        l10n.tableNumber,
+                        style: const TextStyle(fontSize: 12, color: Colors.grey),
                       ),
                       Text(
                         currentTableId ?? '-',
@@ -57,15 +57,15 @@ class CustomerHomePage extends ConsumerWidget {
                         ),
                       ),
                       if (tableStatus)
-                        const Padding(
-                          padding: EdgeInsets.only(top: 4),
+                        Padding(
+                          padding: const EdgeInsets.only(top: 4),
                           child: Row(
                             children: [
-                              Icon(Icons.info, size: 12, color: Colors.orange),
-                              SizedBox(width: 4),
+                              const Icon(Icons.info, size: 12, color: Colors.orange),
+                              const SizedBox(width: 4),
                               Text(
-                                'Bu stol band',
-                                style: TextStyle(
+                                l10n.tableOccupied,
+                                style: const TextStyle(
                                   fontSize: 11,
                                   color: Colors.orange,
                                   fontWeight: FontWeight.w500,
@@ -83,7 +83,7 @@ class CustomerHomePage extends ConsumerWidget {
                     context.go('/role-select');
                   },
                   icon: const Icon(Icons.refresh, size: 18),
-                  label: const Text('Reset'),
+                  label: Text(l10n.reset),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.red[100],
                     foregroundColor: Colors.red,
@@ -112,17 +112,17 @@ class CustomerHomePage extends ConsumerWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text(
-                  restaurantName,
-                  style: TextStyle(
+                Text(
+                  l10n.restaurantName,
+                  style: const TextStyle(
                       color: Colors.white,
                       fontSize: 24,
                       fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 8),
-                const Text(
-                  restaurantDesc,
-                  style: TextStyle(color: Colors.white70, fontSize: 16),
+                Text(
+                  l10n.restaurantDesc,
+                  style: const TextStyle(color: Colors.white70, fontSize: 16),
                 ),
                 const SizedBox(height: 24),
                 ElevatedButton(
@@ -133,7 +133,7 @@ class CustomerHomePage extends ConsumerWidget {
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12)),
                   ),
-                  child: const Text('Menyuni ochish'),
+                  child: Text(l10n.openMenu),
                 ),
               ],
             ),
@@ -142,19 +142,19 @@ class CustomerHomePage extends ConsumerWidget {
           Row(
             children: [
               _HomeActionCard(
-                title: 'Mening buyurtmalar',
+                title: l10n.myOrders,
                 icon: Icons.receipt_long,
                 color: Colors.orange,
                 onTap: () => context.go('/customer/tracking'),
               ),
               const SizedBox(width: 16),
               _HomeActionCard(
-                title: 'Xodim chaqirish',
+                title: l10n.callStaff,
                 icon: Icons.notifications_active,
                 color: Colors.red,
                 onTap: () {
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Xodim chaqirildi!')),
+                    SnackBar(content: Text(l10n.staffCalled)),
                   );
                 },
               ),

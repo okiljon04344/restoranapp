@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../core/widgets/app_scaffold.dart';
+import '../../../../l10n/app_localizations.dart';
 import '../../../../models/menu_item_model.dart';
 import '../../../orders/domain/order_providers.dart';
 
@@ -20,12 +21,13 @@ class _MenuPageState extends ConsumerState<MenuPage> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final categoriesAsync = ref.watch(categoriesProvider);
     final itemsAsync = ref.watch(menuItemsProvider);
     final cartItems = ref.watch(cartProvider);
 
     return AppScaffold(
-      title: 'Menu',
+      title: l10n.menu,
       actions: [
         Stack(
           alignment: Alignment.center,
@@ -60,7 +62,7 @@ class _MenuPageState extends ConsumerState<MenuPage> {
               controller: _searchController,
               onChanged: (val) => setState(() => searchQuery = val),
               decoration: InputDecoration(
-                hintText: 'Search for food...',
+                hintText: l10n.searchFood,
                 prefixIcon: const Icon(Icons.search),
                 suffixIcon: searchQuery.isNotEmpty 
                   ? IconButton(icon: const Icon(Icons.clear), onPressed: () {
@@ -84,7 +86,7 @@ class _MenuPageState extends ConsumerState<MenuPage> {
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 children: [
                   ChoiceChip(
-                    label: const Text('All'),
+                    label: Text(l10n.all),
                     selected: selectedCategoryId == 'all',
                     onSelected: (_) => setState(() => selectedCategoryId = 'all'),
                   ),
@@ -116,7 +118,7 @@ class _MenuPageState extends ConsumerState<MenuPage> {
                 }).toList();
 
                 if (filtered.isEmpty) {
-                  return const Center(child: Text('No items found.'));
+                  return Center(child: Text(l10n.noItemsFound));
                 }
 
                 return ListView.builder(
@@ -128,10 +130,11 @@ class _MenuPageState extends ConsumerState<MenuPage> {
                       tag: 'menu_item_${item.id}',
                       child: _EnhancedMenuCard(
                         item: item,
+                        currency: l10n.currency,
                         onAdd: () {
                           ref.read(cartProvider.notifier).addItem(item);
                           ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: Text('${item.name} added!'), duration: const Duration(seconds: 1)),
+                            SnackBar(content: Text(l10n.itemAdded(item.name)), duration: const Duration(seconds: 1)),
                           );
                         },
                       ),
@@ -140,7 +143,7 @@ class _MenuPageState extends ConsumerState<MenuPage> {
                 );
               },
               loading: () => const Center(child: CircularProgressIndicator()),
-              error: (e, _) => Center(child: Text('Error: $e')),
+              error: (e, _) => Center(child: Text(l10n.errorMessage(e.toString()))),
             ),
           ),
         ],
@@ -151,9 +154,10 @@ class _MenuPageState extends ConsumerState<MenuPage> {
 
 class _EnhancedMenuCard extends StatelessWidget {
   final MenuItemModel item;
+  final String currency;
   final VoidCallback onAdd;
 
-  const _EnhancedMenuCard({required this.item, required this.onAdd});
+  const _EnhancedMenuCard({required this.item, required this.currency, required this.onAdd});
 
   @override
   Widget build(BuildContext context) {
@@ -182,7 +186,7 @@ class _EnhancedMenuCard extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text('${item.price.toStringAsFixed(0)} so\'m', style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.blue, fontSize: 16)),
+                      Text('${item.price.toStringAsFixed(0)} $currency', style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.blue, fontSize: 16)),
                       IconButton.filled(onPressed: onAdd, icon: const Icon(Icons.add)),
                     ],
                   ),

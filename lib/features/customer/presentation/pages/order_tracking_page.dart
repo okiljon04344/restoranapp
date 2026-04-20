@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import '../../../../l10n/app_localizations.dart';
 import '../../domain/table_provider.dart';
 import '../../../orders/domain/order_providers.dart';
 
@@ -9,6 +10,7 @@ class OrderTrackingPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context)!;
     final tableId = ref.watch(tableIdProvider);
     final orders = ref.watch(ordersProvider);
 
@@ -18,14 +20,14 @@ class OrderTrackingPage extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Table $tableId - Orders'),
+        title: Text(l10n.tableOrders(tableId ?? '-')),
         leading: IconButton(
           icon: const Icon(Icons.close),
           onPressed: () => context.go('/customer'),
         ),
       ),
       body: tableOrders.isEmpty
-          ? const Center(child: Text('No active orders for this table.'))
+          ? Center(child: Text(l10n.noActiveOrders))
           : ListView.builder(
               padding: const EdgeInsets.all(16),
               itemCount: tableOrders.length,
@@ -68,8 +70,8 @@ class OrderTrackingPage extends ConsumerWidget {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            const Text('Subtotal',
-                                style: TextStyle(fontWeight: FontWeight.bold)),
+                            Text(l10n.subtotal,
+                                style: const TextStyle(fontWeight: FontWeight.bold)),
                             Text(
                               '${order.total.toStringAsFixed(0)}',
                               style: const TextStyle(
@@ -90,12 +92,12 @@ class OrderTrackingPage extends ConsumerWidget {
                 child: FilledButton.icon(
                   onPressed: () {
                     ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                          content: Text('Waitress notified for the bill.')),
+                      SnackBar(
+                          content: Text(l10n.waitressNotified)),
                     );
                   },
                   icon: const Icon(Icons.receipt_long),
-                  label: const Text('Request Bill'),
+                  label: Text(l10n.requestBill),
                   style: FilledButton.styleFrom(
                     backgroundColor: Colors.orange[800],
                     minimumSize: const Size(double.infinity, 56),
@@ -114,21 +116,22 @@ class _StatusBadge extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     Color color;
     String text;
 
     switch (status) {
       case 'pending':
         color = Colors.orange;
-        text = 'Preparing';
+        text = l10n.preparing;
         break;
       case 'ready':
         color = Colors.green;
-        text = 'Ready';
+        text = l10n.ready;
         break;
       case 'delivered':
         color = Colors.blue;
-        text = 'Delivered';
+        text = l10n.delivered;
         break;
       default:
         color = Colors.grey;

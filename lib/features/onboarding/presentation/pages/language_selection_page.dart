@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter/foundation.dart';
 import '../../../../app/locale_provider_hive.dart';
+import '../../../../l10n/app_localizations.dart';
 
 class LanguageSelectionPage extends ConsumerStatefulWidget {
   const LanguageSelectionPage({super.key});
@@ -40,23 +41,8 @@ class _LanguageSelectionPageState extends ConsumerState<LanguageSelectionPage>
         return;
       }
 
-      // Try to auto-detect device language on first launch
-      if (!hasSelected) {
-        final isSupported = isDeviceLocaleSupported();
-        debugPrint('Device locale supported: $isSupported');
-
-        if (isSupported) {
-          // Auto-set device language
-          final autoSet = await autoSetDeviceLanguage();
-          if (autoSet && mounted) {
-            debugPrint('Device language auto-selected, navigating next...');
-            await _navigateNext();
-            return;
-          }
-        }
-      }
-
-      // Show language selection screen
+      // Always show language selection screen on first launch
+      // so the user can choose from 3 languages
       if (mounted) {
         setState(() {
           _hasCheckedSelection = true;
@@ -168,7 +154,7 @@ class _LanguageSelectionPageState extends ConsumerState<LanguageSelectionPage>
                 const SizedBox(height: 32),
                 // Title
                 Text(
-                  'Select Your Language',
+                  AppLocalizations.of(context)?.selectLanguage ?? 'Select Your Language',
                   textAlign: TextAlign.center,
                   style: Theme.of(context).textTheme.headlineMedium?.copyWith(
                         fontWeight: FontWeight.bold,
@@ -201,7 +187,7 @@ class _LanguageSelectionPageState extends ConsumerState<LanguageSelectionPage>
                           borderRadius: BorderRadius.circular(8),
                         ),
                         child: Text(
-                          '📱 Device language: ${_getDeviceLanguageName(getDeviceLocale().languageCode)}',
+                          '📱 ${AppLocalizations.of(context)?.deviceLanguage(_getDeviceLanguageName(getDeviceLocale().languageCode)) ?? 'Device language: ${_getDeviceLanguageName(getDeviceLocale().languageCode)}'}',
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             fontSize: 12,
@@ -278,7 +264,7 @@ class _LanguageSelectionPageState extends ConsumerState<LanguageSelectionPage>
           await ref.read(localeNotifierProvider.notifier).setLocale(locale);
 
       if (!saved) {
-        _showErrorSnackBar('Failed to save language preference');
+        _showErrorSnackBar(AppLocalizations.of(context)?.failedToSaveLanguage ?? 'Failed to save language preference');
         if (mounted) {
           setState(() {
             _isLoading = false;
@@ -296,7 +282,7 @@ class _LanguageSelectionPageState extends ConsumerState<LanguageSelectionPage>
       // Navigate to next screen
       await _navigateNext();
     } catch (e) {
-      _showErrorSnackBar('Error selecting language: ${e.toString()}');
+      _showErrorSnackBar('${AppLocalizations.of(context)?.errorSelectingLanguage ?? 'Error selecting language'}: ${e.toString()}');
       if (mounted) {
         setState(() {
           _isLoading = false;
