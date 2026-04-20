@@ -1,0 +1,20 @@
+{
+  "@@locale": "en",
+  "menu": "Menu",
+  "cart": "Cart",
+  "orders": "Orders",
+  "chooseLanguage": "Choose your language",
+  "tableEntry": "Table Entry",
+  "scanQr": "Scan QR Code",
+  "enterTableManually": "Enter table manually",
+  "searchFood": "Search for food...",
+  "addToCart": "Add to Cart",
+  "orderNow": "Order Now",
+  "total": "Total",
+  "statusPending": "Pending",
+  "statusCooking": "Cooking",
+  "statusReady": "Ready",
+  "statusServed": "Served",
+  "adminDashboard": "Admin Dashboard",
+  "kitchenOrders": "Kitchen Orders"
+}

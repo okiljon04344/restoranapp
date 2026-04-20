@@ -1,0 +1,20 @@
+{
+  "@@locale": "uz",
+  "menu": "Menyu",
+  "cart": "Savatcha",
+  "orders": "Buyurtmalar",
+  "chooseLanguage": "Tilni tanlang",
+  "tableEntry": "Stol tanlang",
+  "scanQr": "QR-kodni skanerlang",
+  "enterTableManually": "Stol raqamini kiriting",
+  "searchFood": "Taomlarni qidirish...",
+  "addToCart": "Savatchaga qo'shish",
+  "orderNow": "Buyurtma berish",
+  "total": "Jami",
+  "statusPending": "Kutilmoqda",
+  "statusCooking": "Tayyorlanmoqda",
+  "statusReady": "Tayyor",
+  "statusServed": "Yetkazildi",
+  "adminDashboard": "Admin paneli",
+  "kitchenOrders": "Oshxona buyurtmalari"
+}

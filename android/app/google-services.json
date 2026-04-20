@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "880009780004",
+    "project_id": "cafeoder",
+    "storage_bucket": "cafeoder.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:880009780004:android:4da3eea4f017c0dd6131b1",
+        "android_client_info": {
+          "package_name": "com.example.cafe_order_mvp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAAKaUgQrRORIzQTDwL1vwSQVFIQRzF46Q"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:880009780004:android:a80348687f5872a16131b1",
+        "android_client_info": {
+          "package_name": "com.example.restaurant_universal_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAAKaUgQrRORIzQTDwL1vwSQVFIQRzF46Q"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

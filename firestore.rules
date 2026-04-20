@@ -1,0 +1,55 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    // ✅ faqat aniq email'lar admin
+    function isAdmin() {
+      return isSignedIn() && (
+        request.auth.token.email == "admin@gmail.com" ||
+        request.auth.token.email == "oqiljonnabiyev0434@gmail.com" ||
+        request.auth.token.email == "123@gmail.com"
+      );
+    }
+
+    match /cafes/{cafeId} {
+
+      // menyu, stol, orderlarni hamma o'qiy oladi
+      allow read: if true;
+
+      match /categories/{doc} {
+        allow read: if true;
+        allow write: if isAdmin();
+      }
+
+      match /menuItems/{doc} {
+        allow read: if true;
+        allow write: if isAdmin();
+      }
+
+      match /tables/{doc} {
+        allow read: if true;
+        allow write: if isAdmin();
+      }
+
+      match /orders/{doc} {
+        // mijoz buyurtma yuborishi va o'qishi mumkin
+        allow create, read: if true;
+        // faqat admin statusni o'zgartiradi yoki o'chiradi
+        allow update, delete: if isAdmin();
+      }
+
+      match /calls/{doc} {
+        // mijoz "call staff" bosganda create qiladi
+        allow create, read: if true;
+        // faqat admin handled qilib o'zgartirishi / o'chirishi mumkin
+        allow update, delete: if isAdmin();
+      }
+
+    }
+  }
+}
