@@ -100,107 +100,133 @@ abstract class AppLocalizations {
     Locale('uz')
   ];
 
-  /// No description provided for @menu.
-  ///
-  /// In en, this message translates to:
-  /// **'Menu'**
   String get menu;
-
-  /// No description provided for @cart.
-  ///
-  /// In en, this message translates to:
-  /// **'Cart'**
   String get cart;
-
-  /// No description provided for @orders.
-  ///
-  /// In en, this message translates to:
-  /// **'Orders'**
   String get orders;
-
-  /// No description provided for @chooseLanguage.
-  ///
-  /// In en, this message translates to:
-  /// **'Choose your language'**
   String get chooseLanguage;
-
-  /// No description provided for @tableEntry.
-  ///
-  /// In en, this message translates to:
-  /// **'Table Entry'**
   String get tableEntry;
-
-  /// No description provided for @scanQr.
-  ///
-  /// In en, this message translates to:
-  /// **'Scan QR Code'**
   String get scanQr;
-
-  /// No description provided for @enterTableManually.
-  ///
-  /// In en, this message translates to:
-  /// **'Enter table manually'**
   String get enterTableManually;
-
-  /// No description provided for @searchFood.
-  ///
-  /// In en, this message translates to:
-  /// **'Search for food...'**
   String get searchFood;
-
-  /// No description provided for @addToCart.
-  ///
-  /// In en, this message translates to:
-  /// **'Add to Cart'**
   String get addToCart;
-
-  /// No description provided for @orderNow.
-  ///
-  /// In en, this message translates to:
-  /// **'Order Now'**
   String get orderNow;
-
-  /// No description provided for @total.
-  ///
-  /// In en, this message translates to:
-  /// **'Total'**
   String get total;
-
-  /// No description provided for @statusPending.
-  ///
-  /// In en, this message translates to:
-  /// **'Pending'**
   String get statusPending;
-
-  /// No description provided for @statusCooking.
-  ///
-  /// In en, this message translates to:
-  /// **'Cooking'**
   String get statusCooking;
-
-  /// No description provided for @statusReady.
-  ///
-  /// In en, this message translates to:
-  /// **'Ready'**
   String get statusReady;
-
-  /// No description provided for @statusServed.
-  ///
-  /// In en, this message translates to:
-  /// **'Served'**
   String get statusServed;
-
-  /// No description provided for @adminDashboard.
-  ///
-  /// In en, this message translates to:
-  /// **'Admin Dashboard'**
   String get adminDashboard;
-
-  /// No description provided for @kitchenOrders.
-  ///
-  /// In en, this message translates to:
-  /// **'Kitchen Orders'**
   String get kitchenOrders;
+
+  String get restaurantName;
+  String get restaurantDesc;
+  String get tableNumber;
+  String get tableOccupied;
+  String get reset;
+  String get openMenu;
+  String get myOrders;
+  String get callStaff;
+  String get staffCalled;
+
+  String get welcome;
+  String get enterTableOrScan;
+  String get tableNumberLabel;
+  String get tableNumberHint;
+  String get goToMenu;
+  String get checking;
+  String get scanQrTitle;
+  String get scanQrDescription;
+  String get cancel;
+  String get openCamera;
+  String get enterTableNumber;
+  String get tableNumberMustBeNumber;
+  String get tableOccupiedTitle;
+  String get tableOccupiedMessage;
+  String get continueText;
+  String get invalidQrCode;
+  String qrScannedTable(String tableNum);
+  String errorMessage(String message);
+
+  String get all;
+  String get noItemsFound;
+  String itemAdded(String item);
+  String get currency;
+
+  String get yourCart;
+  String get cartEmpty;
+  String get totalAmount;
+  String get confirmOrder;
+
+  String tableOrders(String tableId);
+  String get noActiveOrders;
+  String get subtotal;
+  String get waitressNotified;
+  String get requestBill;
+  String get preparing;
+  String get ready;
+  String get delivered;
+
+  String get kitchenScreen;
+  String get newOrders;
+  String get cooking;
+  String get startCooking;
+  String get markAsReady;
+  String get markAsServed;
+  String get noOrdersInStage;
+  String get items;
+
+  String get menuManagement;
+  String get cancelOrderByTable;
+  String get staffCalls;
+  String get activeOrders;
+  String get noOrdersYet;
+  String get enterTableNumberColon;
+  String get cancelOrderBtn;
+  String tableOrderCancelled(String tableNum);
+  String get noActiveOrderForTable;
+  String get staffCallResolved;
+  String get orderCancelled;
+  String get confirmTitle;
+  String cancelOrderForTable(String tableNumber);
+  String get no;
+  String get yesCancel;
+  String get categories;
+  String get menuItems;
+  String get system;
+  String get live;
+  String get resolve;
+  String calledAt(String time);
+  String get tableLabel;
+
+  String get adminLogin;
+  String get emailAndPasswordRequired;
+  String get email;
+  String get emailHint;
+  String get password;
+  String get login;
+  String get createNewAdmin;
+  String get debugFirebase;
+  String get noAdminRights;
+  String get userNotFound;
+  String get wrongPassword;
+  String get invalidCredential;
+  String get networkError;
+  String get tooManyRequests;
+
+  String get welcomeToApp;
+  String get selectRoleToContinue;
+  String get customerMode;
+  String get customerSubtitle;
+  String get adminPanel;
+  String get adminSubtitle;
+  String get kitchenDisplay;
+  String get kitchenSubtitle;
+
+  String get selectLanguage;
+  String get selectLanguageSubtitle;
+  String deviceLanguage(String language);
+  String get failedToSaveLanguage;
+  String get errorSelectingLanguage;
 }
 
 class _AppLocalizationsDelegate

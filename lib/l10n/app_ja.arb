@@ -1,32 +1,170 @@
 {
-  "appTitle": "レストラン・ユニバーサル・アプリ",
-  "roleSelectionSubtitle": "一つのプロジェクトに顧客、管理者、厨房の機能が備わっています。",
-  "customerMode": "顧客モード",
-  "customerSubtitle": "メニュー、カート、注文",
-  "adminPanel": "管理者パネル",
-  "adminSubtitle": "カテゴリー、テーブル、注文",
-  "kitchenScreen": "厨房画面",
-  "kitchenSubtitle": "新規および調理中の注文",
+  "@@locale": "ja",
   "menu": "メニュー",
-  "all": "すべて",
-  "add": "追加",
-  "addedToCart": "{item} をカートに追加しました",
-  "@addedToCart": {
+  "cart": "カート",
+  "orders": "注文",
+  "chooseLanguage": "言語を選択してください",
+  "tableEntry": "テーブル選択",
+  "scanQr": "QRコードをスキャン",
+  "enterTableManually": "テーブル番号を入力",
+  "searchFood": "料理を検索...",
+  "addToCart": "カートに追加",
+  "orderNow": "注文する",
+  "total": "合計",
+  "statusPending": "待機中",
+  "statusCooking": "調理中",
+  "statusReady": "準備完了",
+  "statusServed": "提供済み",
+  "adminDashboard": "管理者ダッシュボード",
+  "kitchenOrders": "キッチン注文",
+
+  "restaurantName": "ユニバーサルレストラン",
+  "restaurantDesc": "美味しい料理、最高のサービス",
+  "tableNumber": "テーブル番号",
+  "tableOccupied": "このテーブルは使用中です",
+  "reset": "リセット",
+  "openMenu": "メニューを開く",
+  "myOrders": "私の注文",
+  "callStaff": "スタッフを呼ぶ",
+  "staffCalled": "スタッフを呼びました！",
+
+  "welcome": "ようこそ！",
+  "enterTableOrScan": "テーブル番号を入力するか、テーブルのQRコードをスキャンしてください。",
+  "tableNumberLabel": "テーブル番号",
+  "tableNumberHint": "1, 2, 3...",
+  "goToMenu": "メニューへ",
+  "checking": "確認中...",
+  "scanQrTitle": "QRコードをスキャン",
+  "scanQrDescription": "カメラを使用してテーブルのQRコードをスキャンします",
+  "cancel": "キャンセル",
+  "openCamera": "カメラを開く",
+  "enterTableNumber": "テーブル番号を入力",
+  "tableNumberMustBeNumber": "テーブル番号は数字でなければなりません",
+  "tableOccupiedTitle": "テーブル使用中",
+  "tableOccupiedMessage": "このテーブルは現在使用中です。続行しますか？",
+  "continueText": "続行",
+  "invalidQrCode": "無効なQRコード。もう一度お試しください。",
+  "qrScannedTable": "QRスキャン完了: テーブル {tableNum}",
+  "@qrScannedTable": {
     "placeholders": {
-      "item": {
-        "type": "String"
-      }
+      "tableNum": {"type": "String"}
     }
   },
-  "cart": "カート",
-  "total": "合計",
-  "checkout": "お会計へ",
-  "emptyCart": "カートは空です",
-  "placeOrder": "注文する",
-  "orderType": "注文タイプ",
-  "dineIn": "店内",
-  "takeaway": "テイクアウト",
-  "table": "テーブル",
-  "confirmOrder": "注文を確定する",
-  "orderPlaced": "注文が確定しました！"
+  "errorMessage": "エラー: {message}",
+  "@errorMessage": {
+    "placeholders": {
+      "message": {"type": "String"}
+    }
+  },
+
+  "all": "すべて",
+  "noItemsFound": "商品が見つかりません。",
+  "itemAdded": "{item} を追加しました！",
+  "@itemAdded": {
+    "placeholders": {
+      "item": {"type": "String"}
+    }
+  },
+  "currency": "ソム",
+
+  "yourCart": "カート",
+  "cartEmpty": "カートは空です",
+  "totalAmount": "合計金額",
+  "confirmOrder": "注文を確定",
+
+  "tableOrders": "テーブル {tableId} - 注文",
+  "@tableOrders": {
+    "placeholders": {
+      "tableId": {"type": "String"}
+    }
+  },
+  "noActiveOrders": "このテーブルにはアクティブな注文がありません。",
+  "subtotal": "小計",
+  "waitressNotified": "お会計をお知らせしました。",
+  "requestBill": "お会計",
+  "preparing": "準備中",
+  "ready": "準備完了",
+  "delivered": "提供済み",
+
+  "kitchenScreen": "キッチン画面",
+  "newOrders": "新規注文",
+  "cooking": "調理中",
+  "startCooking": "調理開始",
+  "markAsReady": "準備完了にする",
+  "markAsServed": "提供済みにする",
+  "noOrdersInStage": "この段階の注文はありません。",
+  "items": "品",
+
+  "menuManagement": "メニュー管理",
+  "cancelOrderByTable": "テーブルの注文をキャンセル",
+  "staffCalls": "スタッフ呼び出し",
+  "activeOrders": "アクティブな注文",
+  "noOrdersYet": "まだ注文がありません",
+  "enterTableNumberColon": "テーブル番号を入力:",
+  "cancelOrderBtn": "注文をキャンセル",
+  "tableOrderCancelled": "テーブル #{tableNum} の注文がキャンセルされました",
+  "@tableOrderCancelled": {
+    "placeholders": {
+      "tableNum": {"type": "String"}
+    }
+  },
+  "noActiveOrderForTable": "このテーブルにはアクティブな注文がありません",
+  "staffCallResolved": "スタッフ呼び出し対応済み",
+  "orderCancelled": "注文がキャンセルされました",
+  "confirmTitle": "確認",
+  "cancelOrderForTable": "テーブル #{tableNumber} の注文をキャンセルしますか？",
+  "@cancelOrderForTable": {
+    "placeholders": {
+      "tableNumber": {"type": "String"}
+    }
+  },
+  "no": "いいえ",
+  "yesCancel": "はい、キャンセル",
+  "categories": "カテゴリー",
+  "menuItems": "メニュー商品",
+  "system": "システム",
+  "live": "稼働中",
+  "resolve": "対応済み",
+  "calledAt": "呼び出し: {time}",
+  "@calledAt": {
+    "placeholders": {
+      "time": {"type": "String"}
+    }
+  },
+  "tableLabel": "テーブル",
+
+  "adminLogin": "管理者ログイン",
+  "emailAndPasswordRequired": "メールアドレスとパスワードを入力してください",
+  "email": "メール",
+  "emailHint": "admin@gmail.com",
+  "password": "パスワード",
+  "login": "ログイン",
+  "createNewAdmin": "新しい管理者アカウントを作成",
+  "debugFirebase": "デバッグ - Firebase状態",
+  "noAdminRights": "管理者権限がありません。",
+  "userNotFound": "このメールアドレスのユーザーが見つかりません",
+  "wrongPassword": "パスワードが間違っています",
+  "invalidCredential": "メールアドレスまたはパスワードが間違っています",
+  "networkError": "ネットワーク接続エラー",
+  "tooManyRequests": "試行回数が多すぎます。後でもう一度お試しください",
+
+  "welcomeToApp": "レストランアプリへようこそ",
+  "selectRoleToContinue": "続行するには役割を選択してください",
+  "customerMode": "お客様モード",
+  "customerSubtitle": "テーブルから美味しい料理を注文",
+  "adminPanel": "管理者パネル",
+  "adminSubtitle": "カテゴリー、メニュー、注文を管理",
+  "kitchenDisplay": "キッチンディスプレイ",
+  "kitchenSubtitle": "新規注文と調理中の注文を追跡",
+
+  "selectLanguage": "言語を選択",
+  "selectLanguageSubtitle": "ご希望の言語を選択してください",
+  "deviceLanguage": "デバイスの言語: {language}",
+  "@deviceLanguage": {
+    "placeholders": {
+      "language": {"type": "String"}
+    }
+  },
+  "failedToSaveLanguage": "言語設定の保存に失敗しました",
+  "errorSelectingLanguage": "言語の選択でエラーが発生しました"
 }
