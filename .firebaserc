@@ -1,0 +1,15 @@
+{
+  "projects": {
+    "production": "cafeoder"
+  },
+  "targets": {
+    "cafeoder": {
+      "hosting": {
+        "admin": [
+          "build/web"
+        ]
+      }
+    }
+  },
+  "etags": {}
+}

@@ -1,0 +1,32 @@
+{
+  "appTitle": "レストラン・ユニバーサル・アプリ",
+  "roleSelectionSubtitle": "一つのプロジェクトに顧客、管理者、厨房の機能が備わっています。",
+  "customerMode": "顧客モード",
+  "customerSubtitle": "メニュー、カート、注文",
+  "adminPanel": "管理者パネル",
+  "adminSubtitle": "カテゴリー、テーブル、注文",
+  "kitchenScreen": "厨房画面",
+  "kitchenSubtitle": "新規および調理中の注文",
+  "menu": "メニュー",
+  "all": "すべて",
+  "add": "追加",
+  "addedToCart": "{item} をカートに追加しました",
+  "@addedToCart": {
+    "placeholders": {
+      "item": {
+        "type": "String"
+      }
+    }
+  },
+  "cart": "カート",
+  "total": "合計",
+  "checkout": "お会計へ",
+  "emptyCart": "カートは空です",
+  "placeOrder": "注文する",
+  "orderType": "注文タイプ",
+  "dineIn": "店内",
+  "takeaway": "テイクアウト",
+  "table": "テーブル",
+  "confirmOrder": "注文を確定する",
+  "orderPlaced": "注文が確定しました！"
+}
