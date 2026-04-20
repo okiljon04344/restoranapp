@@ -16,5 +16,155 @@
   "statusReady": "Ready",
   "statusServed": "Served",
   "adminDashboard": "Admin Dashboard",
-  "kitchenOrders": "Kitchen Orders"
+  "kitchenOrders": "Kitchen Orders",
+
+  "restaurantName": "Universal Restaurant",
+  "restaurantDesc": "Delicious food, best service",
+  "tableNumber": "Table number",
+  "tableOccupied": "This table is occupied",
+  "reset": "Reset",
+  "openMenu": "Open Menu",
+  "myOrders": "My Orders",
+  "callStaff": "Call Staff",
+  "staffCalled": "Staff has been called!",
+
+  "welcome": "Welcome!",
+  "enterTableOrScan": "Enter the table number or scan the QR code at the table.",
+  "tableNumberLabel": "Table number",
+  "tableNumberHint": "1, 2, 3...",
+  "goToMenu": "Go to Menu",
+  "checking": "Checking...",
+  "scanQrTitle": "Scan QR Code",
+  "scanQrDescription": "We will use the camera to scan the table QR code",
+  "cancel": "Cancel",
+  "openCamera": "Open Camera",
+  "enterTableNumber": "Enter table number",
+  "tableNumberMustBeNumber": "Table number must be a number",
+  "tableOccupiedTitle": "Table Occupied",
+  "tableOccupiedMessage": "This table is currently in use. Do you want to continue?",
+  "continueText": "Continue",
+  "invalidQrCode": "Invalid QR code. Please try again.",
+  "qrScannedTable": "QR Scanned: Table {tableNum}",
+  "@qrScannedTable": {
+    "placeholders": {
+      "tableNum": {"type": "String"}
+    }
+  },
+  "errorMessage": "Error: {message}",
+  "@errorMessage": {
+    "placeholders": {
+      "message": {"type": "String"}
+    }
+  },
+
+  "all": "All",
+  "noItemsFound": "No items found.",
+  "itemAdded": "{item} added!",
+  "@itemAdded": {
+    "placeholders": {
+      "item": {"type": "String"}
+    }
+  },
+  "currency": "so'm",
+
+  "yourCart": "Your Cart",
+  "cartEmpty": "Your cart is empty",
+  "totalAmount": "Total Amount",
+  "confirmOrder": "Confirm Order",
+
+  "tableOrders": "Table {tableId} - Orders",
+  "@tableOrders": {
+    "placeholders": {
+      "tableId": {"type": "String"}
+    }
+  },
+  "noActiveOrders": "No active orders for this table.",
+  "subtotal": "Subtotal",
+  "waitressNotified": "Waitress notified for the bill.",
+  "requestBill": "Request Bill",
+  "preparing": "Preparing",
+  "ready": "Ready",
+  "delivered": "Delivered",
+
+  "kitchenScreen": "Kitchen Screen",
+  "newOrders": "New Orders",
+  "cooking": "Cooking",
+  "startCooking": "Start Cooking",
+  "markAsReady": "Mark as Ready",
+  "markAsServed": "Mark as Served",
+  "noOrdersInStage": "No orders in this stage.",
+  "items": "items",
+
+  "menuManagement": "Menu Management",
+  "cancelOrderByTable": "Cancel Order by Table",
+  "staffCalls": "Staff Calls",
+  "activeOrders": "Active Orders",
+  "noOrdersYet": "No orders yet",
+  "enterTableNumberColon": "Enter table number:",
+  "cancelOrderBtn": "Cancel Order",
+  "tableOrderCancelled": "Table #{tableNum} order cancelled",
+  "@tableOrderCancelled": {
+    "placeholders": {
+      "tableNum": {"type": "String"}
+    }
+  },
+  "noActiveOrderForTable": "No active order found for this table",
+  "staffCallResolved": "Staff call resolved",
+  "orderCancelled": "Order cancelled",
+  "confirmTitle": "Confirm",
+  "cancelOrderForTable": "Cancel order for table #{tableNumber}?",
+  "@cancelOrderForTable": {
+    "placeholders": {
+      "tableNumber": {"type": "String"}
+    }
+  },
+  "no": "No",
+  "yesCancel": "Yes, Cancel",
+  "categories": "Categories",
+  "menuItems": "Menu Items",
+  "system": "System",
+  "live": "Live",
+  "resolve": "Resolve",
+  "calledAt": "Called at {time}",
+  "@calledAt": {
+    "placeholders": {
+      "time": {"type": "String"}
+    }
+  },
+  "tableLabel": "Table",
+
+  "adminLogin": "Admin Login",
+  "emailAndPasswordRequired": "Please enter email and password",
+  "email": "Email",
+  "emailHint": "admin@gmail.com",
+  "password": "Password",
+  "login": "Login",
+  "createNewAdmin": "Create new admin account",
+  "debugFirebase": "Debug - Firebase Status",
+  "noAdminRights": "You do not have admin rights.",
+  "userNotFound": "No user found with this email",
+  "wrongPassword": "Wrong password",
+  "invalidCredential": "Email or password is incorrect",
+  "networkError": "Network connection error",
+  "tooManyRequests": "Too many attempts. Please try again later",
+
+  "welcomeToApp": "Welcome to Restaurant App",
+  "selectRoleToContinue": "Please select your role to continue",
+  "customerMode": "Customer Mode",
+  "customerSubtitle": "Order delicious food from your table",
+  "adminPanel": "Admin Panel",
+  "adminSubtitle": "Manage categories, menu, and orders",
+  "kitchenDisplay": "Kitchen Display",
+  "kitchenSubtitle": "Track and prepare incoming orders",
+
+  "selectLanguage": "Select Your Language",
+  "selectLanguageSubtitle": "Choose your preferred language",
+  "deviceLanguage": "Device language: {language}",
+  "@deviceLanguage": {
+    "placeholders": {
+      "language": {"type": "String"}
+    }
+  },
+  "failedToSaveLanguage": "Failed to save language preference",
+  "errorSelectingLanguage": "Error selecting language"
 }

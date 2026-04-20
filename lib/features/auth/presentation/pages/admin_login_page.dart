@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import '../../../../l10n/app_localizations.dart';
 import '../../domain/auth_provider.dart';
 import 'admin_signup_page.dart';
 import 'admin_debug_page.dart';
@@ -20,10 +21,11 @@ class _AdminLoginPageState extends ConsumerState<AdminLoginPage> {
   bool _isLoading = false;
 
   Future<void> _onLogin() async {
+    final l10n = AppLocalizations.of(context)!;
     if (_emailController.text.isEmpty || _passwordController.text.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Email va parol-ni kiritib chiqing'),
+        SnackBar(
+          content: Text(l10n.emailAndPasswordRequired),
           backgroundColor: Colors.red,
         ),
       );
@@ -44,25 +46,26 @@ class _AdminLoginPageState extends ConsumerState<AdminLoginPage> {
           }
         } else {
           await repo.signOut();
-          throw 'Sizning admin huquqlaringiz yo\'q.';
+          throw l10n.noAdminRights;
         }
       } else if (mounted) {
         context.go('/kitchen');
       }
     } on FirebaseAuthException catch (e) {
-      String errorMessage = 'Xato: ${e.message}';
+      if (!mounted) return;
+      final l10n = AppLocalizations.of(context)!;
+      String errorMessage = l10n.errorMessage(e.message ?? '');
 
       if (e.code == 'user-not-found') {
-        errorMessage = 'Bu email-da foydalanuvchi topilmadi';
+        errorMessage = l10n.userNotFound;
       } else if (e.code == 'wrong-password') {
-        errorMessage = 'Parol noto\'g\'ri';
+        errorMessage = l10n.wrongPassword;
       } else if (e.code == 'invalid-credential') {
-        errorMessage = 'Email yoki parol noto\'g\'ri';
+        errorMessage = l10n.invalidCredential;
       } else if (e.code == 'network-request-failed') {
-        errorMessage = 'Internetga ulanishda xato';
+        errorMessage = l10n.networkError;
       } else if (e.code == 'too-many-requests') {
-        errorMessage =
-            'Juda ko\'p urinish. Birozdan so\'ng qayta urinib ko\'ring';
+        errorMessage = l10n.tooManyRequests;
       }
 
       if (mounted) {
@@ -74,7 +77,7 @@ class _AdminLoginPageState extends ConsumerState<AdminLoginPage> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Xato: ${e.toString()}'),
+            content: Text(AppLocalizations.of(context)!.errorMessage(e.toString())),
             backgroundColor: Colors.red,
           ),
         );
@@ -86,8 +89,9 @@ class _AdminLoginPageState extends ConsumerState<AdminLoginPage> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
-      appBar: AppBar(title: const Text('Admin Kirish')),
+      appBar: AppBar(title: Text(l10n.adminLogin)),
       body: Padding(
         padding: const EdgeInsets.all(24.0),
         child: Column(
@@ -97,19 +101,19 @@ class _AdminLoginPageState extends ConsumerState<AdminLoginPage> {
             const SizedBox(height: 32),
             TextField(
               controller: _emailController,
-              decoration: const InputDecoration(
-                  labelText: 'Email',
-                  hintText: 'admin@gmail.com',
-                  border: OutlineInputBorder(),
-                  prefixIcon: Icon(Icons.email)),
+              decoration: InputDecoration(
+                  labelText: l10n.email,
+                  hintText: l10n.emailHint,
+                  border: const OutlineInputBorder(),
+                  prefixIcon: const Icon(Icons.email)),
             ),
             const SizedBox(height: 16),
             TextField(
               controller: _passwordController,
-              decoration: const InputDecoration(
-                  labelText: 'Parol',
-                  border: OutlineInputBorder(),
-                  prefixIcon: Icon(Icons.lock)),
+              decoration: InputDecoration(
+                  labelText: l10n.password,
+                  border: const OutlineInputBorder(),
+                  prefixIcon: const Icon(Icons.lock)),
               obscureText: true,
             ),
             const SizedBox(height: 32),
@@ -120,7 +124,7 @@ class _AdminLoginPageState extends ConsumerState<AdminLoginPage> {
                 onPressed: _isLoading ? null : _onLogin,
                 child: _isLoading
                     ? const CircularProgressIndicator(color: Colors.white)
-                    : const Text('Kirish'),
+                    : Text(l10n.login),
               ),
             ),
             const SizedBox(height: 16),
@@ -132,7 +136,7 @@ class _AdminLoginPageState extends ConsumerState<AdminLoginPage> {
                           builder: (context) => const AdminSignupPage(),
                         ),
                       ),
-              child: const Text('Yangi admin akkaunt yaratish'),
+              child: Text(l10n.createNewAdmin),
             ),
             const SizedBox(height: 12),
             TextButton(
@@ -143,7 +147,7 @@ class _AdminLoginPageState extends ConsumerState<AdminLoginPage> {
                           builder: (context) => const AdminDebugPage(),
                         ),
                       ),
-              child: const Text('🔧 Debug - Firebase Status'),
+              child: Text('🔧 ${l10n.debugFirebase}'),
             ),
           ],
         ),

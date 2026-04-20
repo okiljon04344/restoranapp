@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../../../../core/widgets/app_scaffold.dart';
+import '../../../../l10n/app_localizations.dart';
 import '../../../orders/domain/order_providers.dart';
 import '../../domain/staff_calls_provider.dart';
 
@@ -11,22 +12,23 @@ class AdminDashboardPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context)!;
     final categoriesAsync = ref.watch(categoriesProvider);
     final itemsAsync = ref.watch(menuItemsProvider);
     final orders = ref.watch(ordersProvider);
     final staffCallsAsync = ref.watch(staffCallsProvider);
 
     return AppScaffold(
-      title: 'Admin Dashboard',
+      title: l10n.adminDashboard,
       actions: [
         IconButton(
           icon: const Icon(Icons.restaurant_menu),
-          tooltip: 'Menu Management',
+          tooltip: l10n.menuManagement,
           onPressed: () => context.go('/admin/menu'),
         ),
         IconButton(
           icon: const Icon(Icons.cancel),
-          tooltip: 'Cancel Order by Table',
+          tooltip: l10n.cancelOrderByTable,
           onPressed: () => _showCancelOrderDialog(context, ref),
         ),
       ],
@@ -49,9 +51,9 @@ class AdminDashboardPage extends ConsumerWidget {
                           const Icon(Icons.phone_in_talk,
                               color: Colors.red, size: 24),
                           const SizedBox(width: 8),
-                          const Text(
-                            'Staff Calls',
-                            style: TextStyle(
+                          Text(
+                            l10n.staffCalls,
+                            style: const TextStyle(
                                 fontSize: 20, fontWeight: FontWeight.bold),
                           ),
                           const Spacer(),
@@ -85,15 +87,15 @@ class AdminDashboardPage extends ConsumerWidget {
             error: (err, stack) => const SizedBox.shrink(),
           ),
           // ORDERS SECTION
-          const Text(
-            'Active Orders',
-            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+          Text(
+            l10n.activeOrders,
+            style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 12),
           if (orders.isEmpty)
-            const Card(
+            Card(
                 child: Padding(
-                    padding: EdgeInsets.all(16), child: Text('No orders yet'))),
+                    padding: const EdgeInsets.all(16), child: Text(l10n.noOrdersYet))),
           ...orders.take(10).map((order) => _OrderCard(
                 order: order,
                 onCancel: () => _confirmCancelOrder(context, ref, order),
@@ -104,24 +106,26 @@ class AdminDashboardPage extends ConsumerWidget {
   }
 
   void _showCancelOrderDialog(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context)!;
     final tableController = TextEditingController();
 
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('📊 Cancel Order by Table'),
+        title: Text(l10n.cancelOrderByTable),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Text('Enter table number:'),
+            Text(l10n.enterTableNumberColon),
             const SizedBox(height: 12),
             TextField(
               controller: tableController,
               keyboardType: TextInputType.number,
-              decoration: const InputDecoration(
+              decoration: InputDecoration(
                 hintText: '1, 2, 3...',
-                border: OutlineInputBorder(),
-                prefixIcon: Icon(Icons.table_restaurant),
+                border: const OutlineInputBorder(),
+                prefixIcon: const Icon(Icons.table_restaurant),
+                labelText: l10n.tableNumberLabel,
               ),
             ),
           ],
@@ -129,7 +133,7 @@ class AdminDashboardPage extends ConsumerWidget {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel'),
+            child: Text(l10n.cancel),
           ),
           FilledButton(
             onPressed: () async {
@@ -140,12 +144,12 @@ class AdminDashboardPage extends ConsumerWidget {
                 Navigator.pop(context);
               } else {
                 ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                      content: Text('Table number must be a number')),
+                  SnackBar(
+                      content: Text(l10n.tableNumberMustBeNumber)),
                 );
               }
             },
-            child: const Text('Cancel Order'),
+            child: Text(l10n.cancelOrderBtn),
           ),
         ],
       ),
@@ -154,6 +158,7 @@ class AdminDashboardPage extends ConsumerWidget {
 
   Future<void> _cancelOrderByTable(
       WidgetRef ref, int tableNum, BuildContext context) async {
+    final l10n = AppLocalizations.of(context)!;
     final firestoreService = ref.read(firestoreServiceProvider);
     final orders = ref.read(ordersProvider);
 
@@ -167,18 +172,19 @@ class AdminDashboardPage extends ConsumerWidget {
       await firestoreService.cancelOrder(order.id);
 
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Table #$tableNum order cancelled')),
+        SnackBar(content: Text(l10n.tableOrderCancelled(tableNum.toString()))),
       );
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-            content: Text('Error: No active order found for this table')),
+        SnackBar(
+            content: Text(l10n.noActiveOrderForTable)),
       );
     }
   }
 
   Future<void> _resolveStaffCall(
       WidgetRef ref, String callId, BuildContext context) async {
+    final l10n = AppLocalizations.of(context)!;
     final db = FirebaseFirestore.instance;
     try {
       await db
@@ -189,25 +195,26 @@ class AdminDashboardPage extends ConsumerWidget {
           .update({'status': 'resolved'});
 
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Staff call resolved')),
+        SnackBar(content: Text(l10n.staffCallResolved)),
       );
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error: $e')),
+        SnackBar(content: Text(l10n.errorMessage(e.toString()))),
       );
     }
   }
 
   void _confirmCancelOrder(BuildContext context, WidgetRef ref, dynamic order) {
+    final l10n = AppLocalizations.of(context)!;
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('⚠️ Confirm'),
-        content: Text('Cancel order for table #${order.tableNumber}?'),
+        title: Text('⚠️ ${l10n.confirmTitle}'),
+        content: Text(l10n.cancelOrderForTable(order.tableNumber.toString())),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('No'),
+            child: Text(l10n.no),
           ),
           FilledButton(
             onPressed: () async {
@@ -216,7 +223,7 @@ class AdminDashboardPage extends ConsumerWidget {
               Navigator.pop(context);
             },
             style: FilledButton.styleFrom(backgroundColor: Colors.red),
-            child: const Text('Yes, Cancel'),
+            child: Text(l10n.yesCancel),
           ),
         ],
       ),
@@ -225,15 +232,16 @@ class AdminDashboardPage extends ConsumerWidget {
 
   Future<void> _cancelOrderDirectly(
       WidgetRef ref, String orderId, BuildContext context) async {
+    final l10n = AppLocalizations.of(context)!;
     final firestoreService = ref.read(firestoreServiceProvider);
     try {
       await firestoreService.cancelOrder(orderId);
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Order cancelled')),
+        SnackBar(content: Text(l10n.orderCancelled)),
       );
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error: $e')),
+        SnackBar(content: Text(l10n.errorMessage(e.toString()))),
       );
     }
   }
@@ -247,12 +255,13 @@ class _OrderCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final statusColor = _getStatusColor(order.status);
 
     return Card(
       child: ListTile(
         title: Text('Order #${order.orderNumber}'),
-        subtitle: Text('Table #${order.tableNumber} • ${order.status}'),
+        subtitle: Text('${l10n.tableLabel} #${order.tableNumber} • ${order.status}'),
         trailing: SizedBox(
           width: 120,
           child: Row(
@@ -284,7 +293,7 @@ class _OrderCard extends StatelessWidget {
                 itemBuilder: (context) => [
                   PopupMenuItem(
                     onTap: onCancel,
-                    child: const Text('Cancel'),
+                    child: Text(l10n.cancel),
                   ),
                 ],
               ),
@@ -321,6 +330,7 @@ class _StaffCallCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Card(
       color: Colors.red.shade50,
       child: ListTile(
@@ -333,11 +343,11 @@ class _StaffCallCard extends StatelessWidget {
           child: const Icon(Icons.phone_callback, color: Colors.white),
         ),
         title: Text(
-          'Table #${call.tableNumber}',
+          '${l10n.tableLabel} #${call.tableNumber}',
           style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
         ),
         subtitle: Text(
-          'Called at ${call.createdAt.hour}:${call.createdAt.minute.toString().padLeft(2, '0')}',
+          l10n.calledAt('${call.createdAt.hour}:${call.createdAt.minute.toString().padLeft(2, '0')}'),
           style: TextStyle(color: Colors.grey.shade700),
         ),
         trailing: FilledButton.tonal(
@@ -345,9 +355,9 @@ class _StaffCallCard extends StatelessWidget {
           style: FilledButton.styleFrom(
             backgroundColor: Colors.green.shade100,
           ),
-          child: const Text(
-            'Resolve',
-            style: TextStyle(color: Colors.green),
+          child: Text(
+            l10n.resolve,
+            style: const TextStyle(color: Colors.green),
           ),
         ),
       ),
@@ -367,6 +377,7 @@ class _StatGrid extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return GridView.count(
       crossAxisCount: 2,
       shrinkWrap: true,
@@ -376,23 +387,23 @@ class _StatGrid extends StatelessWidget {
       childAspectRatio: 1.5,
       children: [
         _StatCard(
-            title: 'Categories',
+            title: l10n.categories,
             value: '$categoryCount',
             icon: Icons.category,
             color: Colors.blue),
         _StatCard(
-            title: 'Menu Items',
+            title: l10n.menuItems,
             value: '$itemCount',
             icon: Icons.fastfood,
             color: Colors.orange),
         _StatCard(
-            title: 'Active Orders',
+            title: l10n.activeOrders,
             value: '$orderCount',
             icon: Icons.receipt,
             color: Colors.green),
         _StatCard(
-            title: 'System',
-            value: 'Live',
+            title: l10n.system,
+            value: l10n.live,
             icon: Icons.settings,
             color: Colors.grey),
       ],

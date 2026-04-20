@@ -16,5 +16,155 @@
   "statusReady": "Tayyor",
   "statusServed": "Yetkazildi",
   "adminDashboard": "Admin paneli",
-  "kitchenOrders": "Oshxona buyurtmalari"
+  "kitchenOrders": "Oshxona buyurtmalari",
+
+  "restaurantName": "Universal Restoran",
+  "restaurantDesc": "Mazali taomlar, eng yaxshi xizmat",
+  "tableNumber": "Stol raqami",
+  "tableOccupied": "Bu stol band",
+  "reset": "Qayta",
+  "openMenu": "Menyuni ochish",
+  "myOrders": "Mening buyurtmalarim",
+  "callStaff": "Xodim chaqirish",
+  "staffCalled": "Xodim chaqirildi!",
+
+  "welcome": "Xush kelibsiz!",
+  "enterTableOrScan": "Stol raqamini kiriting yoki stolda QR codeni skanerlang.",
+  "tableNumberLabel": "Stol raqami",
+  "tableNumberHint": "1, 2, 3...",
+  "goToMenu": "Menyuga o'tish",
+  "checking": "Tekshirilmoqda...",
+  "scanQrTitle": "QR Codeni Skanerlang",
+  "scanQrDescription": "Stol QR-ini skanerlash uchun kamerani ishlatamiz",
+  "cancel": "Bekor",
+  "openCamera": "Kamera oching",
+  "enterTableNumber": "Stol raqamini kiriting",
+  "tableNumberMustBeNumber": "Stol raqami sonda bo'lishi kerak",
+  "tableOccupiedTitle": "Stol band",
+  "tableOccupiedMessage": "Bu stol hozir ishlatilyapti. Davom ettirishni xohlaysizmi?",
+  "continueText": "Davom etish",
+  "invalidQrCode": "QR kod noto'g'ri. Qayta urinib ko'ring.",
+  "qrScannedTable": "QR skanerlandi: Stol {tableNum}",
+  "@qrScannedTable": {
+    "placeholders": {
+      "tableNum": {"type": "String"}
+    }
+  },
+  "errorMessage": "Xato: {message}",
+  "@errorMessage": {
+    "placeholders": {
+      "message": {"type": "String"}
+    }
+  },
+
+  "all": "Hammasi",
+  "noItemsFound": "Hech narsa topilmadi.",
+  "itemAdded": "{item} qo'shildi!",
+  "@itemAdded": {
+    "placeholders": {
+      "item": {"type": "String"}
+    }
+  },
+  "currency": "so'm",
+
+  "yourCart": "Sizning savatchangiz",
+  "cartEmpty": "Savatcha bo'sh",
+  "totalAmount": "Jami summa",
+  "confirmOrder": "Buyurtmani tasdiqlash",
+
+  "tableOrders": "Stol {tableId} - Buyurtmalar",
+  "@tableOrders": {
+    "placeholders": {
+      "tableId": {"type": "String"}
+    }
+  },
+  "noActiveOrders": "Bu stol uchun faol buyurtmalar yo'q.",
+  "subtotal": "Jami",
+  "waitressNotified": "Ofitsiant chaqirildi.",
+  "requestBill": "Hisob so'rash",
+  "preparing": "Tayyorlanmoqda",
+  "ready": "Tayyor",
+  "delivered": "Yetkazildi",
+
+  "kitchenScreen": "Oshxona ekrani",
+  "newOrders": "Yangi buyurtmalar",
+  "cooking": "Tayyorlanmoqda",
+  "startCooking": "Tayyorlashni boshlash",
+  "markAsReady": "Tayyor deb belgilash",
+  "markAsServed": "Yetkazildi deb belgilash",
+  "noOrdersInStage": "Bu bosqichda buyurtmalar yo'q.",
+  "items": "ta",
+
+  "menuManagement": "Menyu boshqaruvi",
+  "cancelOrderByTable": "Stol bo'yicha buyurtmani bekor qilish",
+  "staffCalls": "Xodim chaqiruvlari",
+  "activeOrders": "Faol buyurtmalar",
+  "noOrdersYet": "Hali buyurtmalar yo'q",
+  "enterTableNumberColon": "Stol raqamini kiriting:",
+  "cancelOrderBtn": "Buyurtmani bekor qilish",
+  "tableOrderCancelled": "Stol #{tableNum} buyurtmasi bekor qilindi",
+  "@tableOrderCancelled": {
+    "placeholders": {
+      "tableNum": {"type": "String"}
+    }
+  },
+  "noActiveOrderForTable": "Bu stol uchun faol buyurtma topilmadi",
+  "staffCallResolved": "Xodim chaqiruvi bajarildi",
+  "orderCancelled": "Buyurtma bekor qilindi",
+  "confirmTitle": "Tasdiqlash",
+  "cancelOrderForTable": "Stol #{tableNumber} buyurtmasini bekor qilasizmi?",
+  "@cancelOrderForTable": {
+    "placeholders": {
+      "tableNumber": {"type": "String"}
+    }
+  },
+  "no": "Yo'q",
+  "yesCancel": "Ha, bekor qilish",
+  "categories": "Kategoriyalar",
+  "menuItems": "Menyu mahsulotlari",
+  "system": "Tizim",
+  "live": "Jonli",
+  "resolve": "Bajarish",
+  "calledAt": "Chaqirilgan: {time}",
+  "@calledAt": {
+    "placeholders": {
+      "time": {"type": "String"}
+    }
+  },
+  "tableLabel": "Stol",
+
+  "adminLogin": "Admin kirish",
+  "emailAndPasswordRequired": "Email va parolni kiriting",
+  "email": "Email",
+  "emailHint": "admin@gmail.com",
+  "password": "Parol",
+  "login": "Kirish",
+  "createNewAdmin": "Yangi admin akkaunt yaratish",
+  "debugFirebase": "Debug - Firebase holati",
+  "noAdminRights": "Sizning admin huquqlaringiz yo'q.",
+  "userNotFound": "Bu emailda foydalanuvchi topilmadi",
+  "wrongPassword": "Parol noto'g'ri",
+  "invalidCredential": "Email yoki parol noto'g'ri",
+  "networkError": "Internetga ulanishda xato",
+  "tooManyRequests": "Juda ko'p urinish. Birozdan so'ng qayta urinib ko'ring",
+
+  "welcomeToApp": "Restoran ilovasiga xush kelibsiz",
+  "selectRoleToContinue": "Davom etish uchun rolingizni tanlang",
+  "customerMode": "Mijoz rejimi",
+  "customerSubtitle": "Stolingizdan mazali taomlar buyurtma qiling",
+  "adminPanel": "Admin paneli",
+  "adminSubtitle": "Kategoriyalar, menyu va buyurtmalarni boshqaring",
+  "kitchenDisplay": "Oshxona ekrani",
+  "kitchenSubtitle": "Yangi va tayyorlanayotgan buyurtmalar",
+
+  "selectLanguage": "Tilni tanlang",
+  "selectLanguageSubtitle": "O'zingizga qulay tilni tanlang",
+  "deviceLanguage": "Qurilma tili: {language}",
+  "@deviceLanguage": {
+    "placeholders": {
+      "language": {"type": "String"}
+    }
+  },
+  "failedToSaveLanguage": "Til sozlamasini saqlashda xato",
+  "errorSelectingLanguage": "Tilni tanlashda xato"
 }
