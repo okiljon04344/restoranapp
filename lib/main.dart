@@ -14,5 +14,7 @@ Future<void> main() async {
     );
   } catch (_) {}
 
+  // Har doim tilni tanlash sahifasidan boshlanadi (restoran uchun to'g'ri)
+  // Hive localeInitializerProvider ichida ishga tushiriladi
   runApp(const ProviderScope(child: RestaurantUniversalApp()));
 }

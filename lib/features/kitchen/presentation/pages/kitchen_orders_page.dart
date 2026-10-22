@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/widgets/app_scaffold.dart';
+import '../../../../l10n/app_localizations.dart';
 import '../../../../models/order_model.dart';
 import '../../../orders/domain/order_providers.dart';
 
@@ -12,8 +13,10 @@ class KitchenOrdersPage extends ConsumerWidget {
     // StreamProvider'dan ma'lumotlarni watch qilamiz
     final ordersAsync = ref.watch(ordersStreamProvider);
 
+    final l = AppLocalizations.of(context)!;
+
     return AppScaffold(
-      title: 'Kitchen Screen',
+      title: l.kitchenScreen,
       child: ordersAsync.when(
         data: (orders) {
           final pending = orders.where((e) => e.status == 'pending').toList();
@@ -24,27 +27,27 @@ class KitchenOrdersPage extends ConsumerWidget {
             padding: const EdgeInsets.all(16),
             children: [
               _KitchenSection(
-                title: 'New Orders',
+                title: l.newOrders,
                 orders: pending,
                 nextStatus: 'cooking',
                 color: Colors.red,
-                buttonText: 'Start Cooking',
+                buttonText: l.startCooking,
               ),
               const SizedBox(height: 24),
               _KitchenSection(
-                title: 'Cooking',
+                title: l.cooking,
                 orders: cooking,
                 nextStatus: 'ready',
                 color: Colors.orange,
-                buttonText: 'Mark as Ready',
+                buttonText: l.markReady,
               ),
               const SizedBox(height: 24),
               _KitchenSection(
-                title: 'Ready',
+                title: l.ready,
                 orders: ready,
                 nextStatus: 'served',
                 color: Colors.green,
-                buttonText: 'Mark as Served',
+                buttonText: l.markServed,
               ),
             ],
           );
@@ -94,8 +97,10 @@ class _KitchenSection extends ConsumerWidget {
         ),
         const SizedBox(height: 12),
         if (orders.isEmpty)
-          const Text('No orders in this stage.',
-              style: TextStyle(color: Colors.grey, fontSize: 14)),
+          Text(
+              AppLocalizations.of(context)?.noOrdersInStage ??
+                  'No orders in this stage.',
+              style: const TextStyle(color: Colors.grey, fontSize: 14)),
         ...orders.map((order) => Card(
               margin: const EdgeInsets.only(bottom: 12),
               elevation: 2,

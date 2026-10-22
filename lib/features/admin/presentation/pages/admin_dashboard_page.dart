@@ -1,23 +1,47 @@
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../../../../core/widgets/app_scaffold.dart';
+import '../../../../l10n/app_localizations.dart';
 import '../../../orders/domain/order_providers.dart';
 import '../../domain/staff_calls_provider.dart';
 
-class AdminDashboardPage extends ConsumerWidget {
+class AdminDashboardPage extends ConsumerStatefulWidget {
   const AdminDashboardPage({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<AdminDashboardPage> createState() => _AdminDashboardPageState();
+}
+
+class _AdminDashboardPageState extends ConsumerState<AdminDashboardPage> {
+  final _audioPlayer = AudioPlayer();
+
+  @override
+  void dispose() {
+    _audioPlayer.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context)!;
     final categoriesAsync = ref.watch(categoriesProvider);
     final itemsAsync = ref.watch(menuItemsProvider);
     final orders = ref.watch(ordersProvider);
     final staffCallsAsync = ref.watch(staffCallsProvider);
 
+    ref.listen<AsyncValue<List<StaffCall>>>(staffCallsProvider, (prev, next) {
+      final prevLen = prev?.value?.length ?? 0;
+      final nextLen = next.value?.length ?? 0;
+      if (nextLen > prevLen) {
+        _audioPlayer.play(AssetSource('sounds/notification.wav'));
+      }
+    });
+
     return AppScaffold(
-      title: 'Admin Dashboard',
+      title: l.adminPanel,
       actions: [
         IconButton(
           icon: const Icon(Icons.restaurant_menu),
@@ -84,10 +108,9 @@ class AdminDashboardPage extends ConsumerWidget {
             loading: () => const SizedBox.shrink(),
             error: (err, stack) => const SizedBox.shrink(),
           ),
-          // ORDERS SECTION
-          const Text(
-            'Active Orders',
-            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+          Text(
+            l.orders,
+            style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 12),
           if (orders.isEmpty)
@@ -129,7 +152,7 @@ class AdminDashboardPage extends ConsumerWidget {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel'),
+            child: Text(AppLocalizations.of(context)?.cancel ?? 'Cancel'),
           ),
           FilledButton(
             onPressed: () async {
@@ -140,12 +163,15 @@ class AdminDashboardPage extends ConsumerWidget {
                 Navigator.pop(context);
               } else {
                 ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                      content: Text('Table number must be a number')),
+                  SnackBar(
+                      content: Text(
+                          AppLocalizations.of(context)?.tableInvalid ??
+                              'Table number must be a number')),
                 );
               }
             },
-            child: const Text('Cancel Order'),
+            child: Text(
+                AppLocalizations.of(context)?.cancelOrder ?? 'Cancel Order'),
           ),
         ],
       ),
@@ -166,10 +192,12 @@ class AdminDashboardPage extends ConsumerWidget {
 
       await firestoreService.cancelOrder(order.id);
 
+      if (!context.mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Table #$tableNum order cancelled')),
       );
     } catch (e) {
+      if (!context.mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
             content: Text('Error: No active order found for this table')),
@@ -180,6 +208,7 @@ class AdminDashboardPage extends ConsumerWidget {
   Future<void> _resolveStaffCall(
       WidgetRef ref, String callId, BuildContext context) async {
     final db = FirebaseFirestore.instance;
+    final messenger = ScaffoldMessenger.of(context);
     try {
       await db
           .collection('cafes')
@@ -188,11 +217,11 @@ class AdminDashboardPage extends ConsumerWidget {
           .doc(callId)
           .update({'status': 'resolved'});
 
-      ScaffoldMessenger.of(context).showSnackBar(
+      messenger.showSnackBar(
         const SnackBar(content: Text('Staff call resolved')),
       );
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
+      messenger.showSnackBar(
         SnackBar(content: Text('Error: $e')),
       );
     }
@@ -207,7 +236,7 @@ class AdminDashboardPage extends ConsumerWidget {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('No'),
+            child: Text(AppLocalizations.of(context)?.no ?? 'No'),
           ),
           FilledButton(
             onPressed: () async {
@@ -216,7 +245,7 @@ class AdminDashboardPage extends ConsumerWidget {
               Navigator.pop(context);
             },
             style: FilledButton.styleFrom(backgroundColor: Colors.red),
-            child: const Text('Yes, Cancel'),
+            child: Text(AppLocalizations.of(context)?.yes ?? 'Yes, Cancel'),
           ),
         ],
       ),
@@ -226,13 +255,14 @@ class AdminDashboardPage extends ConsumerWidget {
   Future<void> _cancelOrderDirectly(
       WidgetRef ref, String orderId, BuildContext context) async {
     final firestoreService = ref.read(firestoreServiceProvider);
+    final messenger = ScaffoldMessenger.of(context);
     try {
       await firestoreService.cancelOrder(orderId);
-      ScaffoldMessenger.of(context).showSnackBar(
+      messenger.showSnackBar(
         const SnackBar(content: Text('Order cancelled')),
       );
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
+      messenger.showSnackBar(
         SnackBar(content: Text('Error: $e')),
       );
     }
@@ -390,7 +420,7 @@ class _StatGrid extends StatelessWidget {
             value: '$orderCount',
             icon: Icons.receipt,
             color: Colors.green),
-        _StatCard(
+        const _StatCard(
             title: 'System',
             value: 'Live',
             icon: Icons.settings,

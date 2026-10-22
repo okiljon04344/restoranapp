@@ -9,7 +9,9 @@ import 'package:hive_flutter/hive_flutter.dart';
 /// Hive box uchun key
 const String _localeBoxName = 'app_settings';
 const String _languageCodeKey = 'language_code';
-const String _languageSelectedKey = 'language_selected';
+// 'user_confirmed_language' - foydalanuvchi o'zi tanlagan holda saqlanadi
+// Eski 'language_selected' (auto-set) dan farq qiladi — migration uchun
+const String _languageSelectedKey = 'user_confirmed_language';
 
 /// Default locale (fallback language)
 const Locale _defaultLocale = Locale('uz');
@@ -222,85 +224,13 @@ Locale getDeviceLocale() {
   }
 }
 
-/// Check if device locale is supported
-bool isDeviceLocaleSupported() {
-  try {
-    final deviceLocale = getDeviceLocale();
-    final isSupported = isLanguageSupported(deviceLocale.languageCode);
-    debugPrint(
-        '📱 Device locale supported: $isSupported (${deviceLocale.languageCode})');
-    return isSupported;
-  } catch (e) {
-    debugPrint('✗ Error checking device locale support: $e');
-    return false;
-  }
-}
-
-/// Get device locale if supported, otherwise default
-Locale getDeviceLocaleIfSupported() {
-  try {
-    final deviceLocale = getDeviceLocale();
-    if (isLanguageSupported(deviceLocale.languageCode)) {
-      debugPrint('✓ Using device locale: ${deviceLocale.languageCode}');
-      return deviceLocale;
-    }
-    debugPrint(
-        'Device locale not supported, using default: ${_defaultLocale.languageCode}');
-    return _defaultLocale;
-  } catch (e) {
-    debugPrint('✗ Error getting device locale: $e');
-    return _defaultLocale;
-  }
-}
-
-/// Auto-detect and set device language on first launch
-Future<bool> autoSetDeviceLanguage() async {
-  try {
-    final hasSelected = await hasSelectedLanguage();
-    if (hasSelected) {
-      debugPrint('⏭ User already selected language, skipping auto-detection');
-      return false;
-    }
-
-    final deviceLocale = getDeviceLocaleIfSupported();
-    final saved = await saveLocale(deviceLocale);
-
-    if (saved) {
-      debugPrint(
-          '✓ Auto-set language to device locale: ${deviceLocale.languageCode}');
-    }
-
-    return saved;
-  } catch (e) {
-    debugPrint('✗ Error in auto-set device language: $e');
-    return false;
-  }
-}
-
 // ============================================================================
 // STATE NOTIFIER - Riverpod Integration
 // ============================================================================
 
 class LocaleNotifier extends StateNotifier<Locale> {
-  LocaleNotifier() : super(_defaultLocale) {
-    _initialize();
-  }
-
-  bool _isInitialized = false;
-
-  Future<void> _initialize() async {
-    if (_isInitialized) return;
-
-    try {
-      final savedLocale = await getSavedLocale();
-      state = savedLocale;
-      _isInitialized = true;
-    } catch (e) {
-      debugPrint('✗ Error initializing locale: $e');
-      state = _defaultLocale;
-      _isInitialized = true;
-    }
-  }
+  // localeInitializerProvider startup da applyLocale() orqali to'g'ri qiymat beradi
+  LocaleNotifier() : super(_defaultLocale);
 
   /// Set locale and save to Hive immediately
   Future<bool> setLocale(Locale locale) async {
@@ -335,6 +265,19 @@ class LocaleNotifier extends StateNotifier<Locale> {
     }
   }
 
+  /// Preview locale (updates UI only, does NOT save to Hive)
+  void previewLocale(Locale locale) {
+    if (isLanguageSupported(locale.languageCode)) {
+      state = locale;
+    }
+  }
+
+  /// Apply locale directly (called by initializer, does NOT re-save to Hive)
+  void applyLocale(Locale locale) {
+    state = locale;
+    debugPrint('✓ Applied locale from storage: ${locale.languageCode}');
+  }
+
   /// Reset to default locale
   Future<bool> resetToDefault() async {
     return setLocale(_defaultLocale);
@@ -353,12 +296,13 @@ class LocaleNotifier extends StateNotifier<Locale> {
 // RIVERPOD PROVIDERS
 // ============================================================================
 
-/// Provider that initializes locale from Hive on startup
+/// Provider that initializes locale from Hive on startup (runs ONCE)
 final localeInitializerProvider = FutureProvider<void>((ref) async {
   try {
     await initializeLocaleStorage();
-    // Initialize the notifier
-    ref.watch(localeNotifierProvider);
+    // Load saved locale into the notifier (reads Hive once at startup)
+    final savedLocale = await getSavedLocale();
+    ref.read(localeNotifierProvider.notifier).applyLocale(savedLocale);
   } catch (e) {
     debugPrint('✗ Error in locale initializer: $e');
   }

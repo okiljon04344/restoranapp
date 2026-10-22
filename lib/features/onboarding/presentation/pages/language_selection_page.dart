@@ -1,8 +1,9 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:flutter/foundation.dart';
 import '../../../../app/locale_provider_hive.dart';
+import '../../../../l10n/app_localizations.dart';
 
 class LanguageSelectionPage extends ConsumerStatefulWidget {
   const LanguageSelectionPage({super.key});
@@ -12,69 +13,31 @@ class LanguageSelectionPage extends ConsumerStatefulWidget {
       _LanguageSelectionPageState();
 }
 
-class _LanguageSelectionPageState extends ConsumerState<LanguageSelectionPage>
-    with WidgetsBindingObserver {
-  bool _hasCheckedSelection = false;
+class _LanguageSelectionPageState extends ConsumerState<LanguageSelectionPage> {
+  String? _selectedCode;
   bool _isLoading = false;
-  String? _selectedLanguageCode;
 
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addObserver(this);
-    _checkIfLanguageSelected();
-  }
-
-  @override
-  void dispose() {
-    WidgetsBinding.instance.removeObserver(this);
-    super.dispose();
-  }
-
-  Future<void> _checkIfLanguageSelected() async {
-    try {
-      final hasSelected = await hasSelectedLanguage();
-      if (hasSelected && mounted) {
-        // User has already selected a language, navigate away
-        await _navigateNext();
-        return;
-      }
-
-      // Try to auto-detect device language on first launch
-      if (!hasSelected) {
-        final isSupported = isDeviceLocaleSupported();
-        debugPrint('Device locale supported: $isSupported');
-
-        if (isSupported) {
-          // Auto-set device language
-          final autoSet = await autoSetDeviceLanguage();
-          if (autoSet && mounted) {
-            debugPrint('Device language auto-selected, navigating next...');
-            await _navigateNext();
-            return;
-          }
-        }
-      }
-
-      // Show language selection screen
-      if (mounted) {
-        setState(() {
-          _hasCheckedSelection = true;
-        });
-      }
-    } catch (e) {
-      debugPrint('Error checking language selection: $e');
-      // If there's an error, show the language selection
-      if (mounted) {
-        setState(() {
-          _hasCheckedSelection = true;
-        });
-      }
+    // Pre-select device language if supported
+    final deviceLocale = getDeviceLocale();
+    if (isLanguageSupported(deviceLocale.languageCode)) {
+      _selectedCode = deviceLocale.languageCode;
+    } else {
+      _selectedCode = 'uz';
     }
   }
 
-  Future<void> _navigateNext() async {
+  Future<void> _confirm() async {
+    if (_selectedCode == null || _isLoading) return;
+
+    setState(() => _isLoading = true);
+
     try {
+      final locale = Locale(_selectedCode!);
+      await ref.read(localeNotifierProvider.notifier).setLocale(locale);
+
       if (!mounted) return;
 
       final isDesktop = kIsWeb ||
@@ -82,52 +45,17 @@ class _LanguageSelectionPageState extends ConsumerState<LanguageSelectionPage>
           defaultTargetPlatform == TargetPlatform.windows ||
           defaultTargetPlatform == TargetPlatform.linux;
 
-      if (mounted) {
-        context.go(isDesktop ? '/role-select' : '/table-entry');
-      }
+      context.go(isDesktop ? '/role-select' : '/table-entry');
     } catch (e) {
-      _showErrorSnackBar('Navigation error: $e');
+      debugPrint('Language confirm error: $e');
+      if (mounted) setState(() => _isLoading = false);
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    // Don't show anything until we've checked if language was selected
-    if (!_hasCheckedSelection) {
-      return Scaffold(
-        body: Container(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [
-                Colors.green.shade50,
-                Colors.blue.shade50,
-              ],
-            ),
-          ),
-          child: const Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                CircularProgressIndicator(
-                  strokeWidth: 3,
-                ),
-                SizedBox(height: 24),
-                Text(
-                  'Detecting device language...',
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: Colors.grey,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-      );
-    }
+    final languages = getSupportedLanguages();
+    final scheme = Theme.of(context).colorScheme;
 
     return Scaffold(
       body: Container(
@@ -136,330 +64,227 @@ class _LanguageSelectionPageState extends ConsumerState<LanguageSelectionPage>
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
             colors: [
-              Colors.green.shade50,
-              Colors.blue.shade50,
+              scheme.primary.withValues(alpha: 0.08),
+              scheme.secondary.withValues(alpha: 0.05),
             ],
           ),
         ),
         child: SafeArea(
-          child: Padding(
-            padding:
-                const EdgeInsets.symmetric(horizontal: 24.0, vertical: 32.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                const Spacer(flex: 2),
-                // Header Icon
-                Container(
-                  alignment: Alignment.center,
-                  child: Container(
-                    padding: const EdgeInsets.all(20),
-                    decoration: BoxDecoration(
-                      color: Colors.green.shade100,
-                      shape: BoxShape.circle,
-                    ),
-                    child: Icon(
-                      Icons.language,
-                      size: 64,
-                      color: Colors.green.shade700,
+          child: LayoutBuilder(
+            builder: (context, constraints) {
+              return SingleChildScrollView(
+                padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 32),
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(minHeight: constraints.maxHeight - 64),
+                  child: IntrinsicHeight(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        const Spacer(),
+
+                        // ── Logo/Icon ──────────────────────────────────────
+                        Center(
+                          child: Container(
+                            width: 100,
+                            height: 100,
+                            decoration: BoxDecoration(
+                              color: scheme.primary,
+                              shape: BoxShape.circle,
+                              boxShadow: [
+                                BoxShadow(
+                                  color: scheme.primary.withValues(alpha: 0.35),
+                                  blurRadius: 24,
+                                  offset: const Offset(0, 8),
+                                ),
+                              ],
+                            ),
+                            child: const Icon(
+                              Icons.restaurant_menu,
+                              size: 52,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 28),
+
+                        // ── Title ─────────────────────────────────────────
+                        Text(
+                          AppLocalizations.of(context)?.welcomeTitle ??
+                              'Xush kelibsiz!',
+                          textAlign: TextAlign.center,
+                          style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                                fontWeight: FontWeight.w800,
+                                color: scheme.onSurface,
+                                letterSpacing: -0.5,
+                              ),
+                        ),
+                        const SizedBox(height: 6),
+                        Text(
+                          AppLocalizations.of(context)?.chooseLanguage ??
+                              'Davom etish uchun tilni tanlang',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: 15,
+                            color: scheme.onSurface.withValues(alpha: 0.55),
+                            height: 1.4,
+                          ),
+                        ),
+
+                        const SizedBox(height: 40),
+
+                        // ── Language Buttons ───────────────────────────────
+                        ...languages.map(
+                          (lang) => Padding(
+                            padding: const EdgeInsets.only(bottom: 14),
+                            child: _LangTile(
+                              language: lang,
+                              isSelected: _selectedCode == lang.code,
+                              onTap: _isLoading
+                                  ? null
+                                  : () {
+                                      setState(() => _selectedCode = lang.code);
+                                      ref
+                                          .read(localeNotifierProvider.notifier)
+                                          .previewLocale(Locale(lang.code));
+                                    },
+                            ),
+                          ),
+                        ),
+
+                        const Spacer(),
+
+                        // ── Confirm Button ─────────────────────────────────
+                        FilledButton(
+                          onPressed: _isLoading ? null : _confirm,
+                          style: FilledButton.styleFrom(
+                            minimumSize: const Size.fromHeight(56),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(16),
+                            ),
+                            textStyle: const TextStyle(
+                              fontSize: 17,
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                          child: _isLoading
+                              ? const SizedBox(
+                                  width: 24,
+                                  height: 24,
+                                  child: CircularProgressIndicator(
+                                    strokeWidth: 2.5,
+                                    color: Colors.white,
+                                  ),
+                                )
+                              : Text(AppLocalizations.of(context)?.continueBtn ??
+                                  'Davom etish →'),
+                        ),
+
+                        const SizedBox(height: 12),
+                      ],
                     ),
                   ),
                 ),
-                const SizedBox(height: 32),
-                // Title
-                Text(
-                  'Select Your Language',
-                  textAlign: TextAlign.center,
-                  style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                        fontWeight: FontWeight.bold,
-                        color: Colors.grey.shade900,
-                      ),
-                ),
-                const SizedBox(height: 12),
-                // Subtitle with device language info
-                Column(
-                  children: [
-                    Text(
-                      'Tilni tanlang / 言語を選択してください',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: Colors.grey.shade600,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                    if (isDeviceLocaleSupported()) ...[
-                      const SizedBox(height: 8),
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 12,
-                          vertical: 6,
-                        ),
-                        decoration: BoxDecoration(
-                          color: Colors.green.shade50,
-                          border: Border.all(color: Colors.green.shade200),
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        child: Text(
-                          '📱 Device language: ${_getDeviceLanguageName(getDeviceLocale().languageCode)}',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            fontSize: 12,
-                            color: Colors.green.shade700,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ],
-                ),
-                const SizedBox(height: 48),
-                // Language Buttons
-                Expanded(
-                  child: _buildLanguageButtonsList(),
-                ),
-                const Spacer(flex: 1),
-              ],
-            ),
+              );
+            },
           ),
         ),
       ),
     );
   }
-
-  Widget _buildLanguageButtonsList() {
-    final supportedLanguages = getSupportedLanguages();
-
-    return ListView.separated(
-      physics: const NeverScrollableScrollPhysics(),
-      itemCount: supportedLanguages.length,
-      separatorBuilder: (context, index) => const SizedBox(height: 16),
-      itemBuilder: (context, index) {
-        final language = supportedLanguages[index];
-        final isSelected = _selectedLanguageCode == language.code;
-
-        return _LanguageButton(
-          title: language.name,
-          subtitle: language.nativeName,
-          flag: language.flag,
-          isSelected: isSelected,
-          isLoading: _isLoading && isSelected,
-          onTap: _isLoading ? null : () => _selectLanguage(language.code),
-        );
-      },
-    );
-  }
-
-  void _showErrorSnackBar(String message) {
-    if (!mounted) return;
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message),
-        backgroundColor: Colors.red.shade600,
-        behavior: SnackBarBehavior.floating,
-        margin: const EdgeInsets.all(16),
-      ),
-    );
-  }
-
-  Future<void> _selectLanguage(String languageCode) async {
-    if (_isLoading) return;
-
-    setState(() {
-      _isLoading = true;
-      _selectedLanguageCode = languageCode;
-    });
-
-    try {
-      final locale = Locale(languageCode);
-
-      // Save locale and wait for confirmation
-      final saved =
-          await ref.read(localeNotifierProvider.notifier).setLocale(locale);
-
-      if (!saved) {
-        _showErrorSnackBar('Failed to save language preference');
-        if (mounted) {
-          setState(() {
-            _isLoading = false;
-            _selectedLanguageCode = null;
-          });
-        }
-        return;
-      }
-
-      // Add a small delay to ensure the UI updates
-      await Future.delayed(const Duration(milliseconds: 300));
-
-      if (!mounted) return;
-
-      // Navigate to next screen
-      await _navigateNext();
-    } catch (e) {
-      _showErrorSnackBar('Error selecting language: ${e.toString()}');
-      if (mounted) {
-        setState(() {
-          _isLoading = false;
-          _selectedLanguageCode = null;
-        });
-      }
-    }
-  }
-
-  String _getDeviceLanguageName(String code) {
-    final metadata = getLanguageMetadata(code);
-    return metadata?.name ?? code.toUpperCase();
-  }
 }
 
-class _LanguageButton extends StatefulWidget {
-  final String title;
-  final String subtitle;
-  final String flag;
+// ── Til tugmasi ────────────────────────────────────────────────────────────
+class _LangTile extends StatelessWidget {
+  final LanguageMetadata language;
   final bool isSelected;
-  final bool isLoading;
   final VoidCallback? onTap;
 
-  const _LanguageButton({
-    required this.title,
-    required this.subtitle,
-    required this.flag,
-    this.isSelected = false,
-    this.isLoading = false,
+  const _LangTile({
+    required this.language,
+    required this.isSelected,
     required this.onTap,
   });
 
   @override
-  State<_LanguageButton> createState() => _LanguageButtonState();
-}
-
-class _LanguageButtonState extends State<_LanguageButton>
-    with SingleTickerProviderStateMixin {
-  late AnimationController _animationController;
-  late Animation<double> _scaleAnimation;
-
-  @override
-  void initState() {
-    super.initState();
-    _animationController = AnimationController(
-      duration: const Duration(milliseconds: 200),
-      vsync: this,
-    );
-
-    _scaleAnimation = Tween<double>(begin: 1.0, end: 0.98).animate(
-      CurvedAnimation(parent: _animationController, curve: Curves.easeInOut),
-    );
-  }
-
-  @override
-  void dispose() {
-    _animationController.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTapDown:
-          widget.onTap != null ? (_) => _animationController.forward() : null,
-      onTapUp:
-          widget.onTap != null ? (_) => _animationController.reverse() : null,
-      onTapCancel:
-          widget.onTap != null ? () => _animationController.reverse() : null,
-      onTap: widget.onTap,
-      child: AnimatedBuilder(
-        animation: _animationController,
-        builder: (context, child) {
-          return Transform.scale(
-            scale: _scaleAnimation.value,
-            child: child,
-          );
-        },
-        child: Card(
-          elevation: widget.isSelected ? 8 : 2,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16),
-            side: BorderSide(
-              color: widget.isSelected
-                  ? Colors.green.shade600
-                  : Colors.transparent,
-              width: widget.isSelected ? 2 : 0,
-            ),
-          ),
-          child: Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(16),
-              gradient: widget.isSelected
-                  ? LinearGradient(
-                      colors: [
-                        Colors.green.shade50,
-                        Colors.blue.shade50,
-                      ],
-                    )
-                  : null,
-              color: widget.isSelected ? null : Colors.white,
-            ),
-            child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
-              child: Row(
-                children: [
-                  // Flag
-                  Text(
-                    widget.flag,
-                    style: const TextStyle(fontSize: 40),
-                  ),
-                  const SizedBox(width: 20),
-                  // Title and Subtitle
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          widget.title,
-                          style: const TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        const SizedBox(height: 4),
-                        Text(
-                          widget.subtitle,
-                          style: TextStyle(
-                            fontSize: 13,
-                            color: Colors.grey.shade600,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  // Loading or Check Icon
-                  if (widget.isLoading)
-                    SizedBox(
-                      width: 24,
-                      height: 24,
-                      child: CircularProgressIndicator(
-                        strokeWidth: 2.5,
-                        valueColor: AlwaysStoppedAnimation<Color>(
-                          Colors.green.shade600,
-                        ),
+    final scheme = Theme.of(context).colorScheme;
+
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 200),
+      decoration: BoxDecoration(
+        color: isSelected ? scheme.primary : Colors.white,
+        borderRadius: BorderRadius.circular(18),
+        border: Border.all(
+          color: isSelected ? scheme.primary : scheme.outlineVariant,
+          width: isSelected ? 2 : 1.5,
+        ),
+        boxShadow: isSelected
+            ? [
+                BoxShadow(
+                  color: scheme.primary.withValues(alpha: 0.22),
+                  blurRadius: 16,
+                  offset: const Offset(0, 6),
+                ),
+              ]
+            : [
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: 0.04),
+                  blurRadius: 8,
+                  offset: const Offset(0, 2),
+                ),
+              ],
+      ),
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(18),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 18),
+          child: Row(
+            children: [
+              Text(language.flag, style: const TextStyle(fontSize: 36)),
+              const SizedBox(width: 18),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      language.nativeName,
+                      style: TextStyle(
+                        fontSize: 17,
+                        fontWeight: FontWeight.w700,
+                        color: isSelected ? Colors.white : scheme.onSurface,
                       ),
-                    )
-                  else if (widget.isSelected)
-                    Icon(
-                      Icons.check_circle,
-                      color: Colors.green.shade600,
-                      size: 28,
-                    )
-                  else
-                    Icon(
-                      Icons.arrow_forward_ios,
-                      size: 16,
-                      color: Colors.grey.shade400,
                     ),
-                ],
+                    const SizedBox(height: 2),
+                    Text(
+                      language.name,
+                      style: TextStyle(
+                        fontSize: 13,
+                        color: isSelected
+                            ? Colors.white.withValues(alpha: 0.75)
+                            : scheme.onSurface.withValues(alpha: 0.5),
+                      ),
+                    ),
+                  ],
+                ),
               ),
-            ),
+              AnimatedSwitcher(
+                duration: const Duration(milliseconds: 200),
+                child: isSelected
+                    ? const Icon(
+                        Icons.check_circle_rounded,
+                        key: ValueKey(true),
+                        color: Colors.white,
+                        size: 26,
+                      )
+                    : Icon(
+                        Icons.circle_outlined,
+                        key: const ValueKey(false),
+                        color: scheme.outlineVariant,
+                        size: 26,
+                      ),
+              ),
+            ],
           ),
         ),
       ),

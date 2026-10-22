@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import '../../../../l10n/app_localizations.dart';
 
 class RoleSelectPage extends StatelessWidget {
   const RoleSelectPage({super.key});
@@ -24,36 +25,45 @@ class RoleSelectPage extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const Spacer(),
-              Text(
-                'Welcome to Restaurant App',
-                style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black,
+              Builder(builder: (context) {
+                final l = AppLocalizations.of(context)!;
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      l.welcomeRestaurant,
+                      style:
+                          Theme.of(context).textTheme.headlineMedium?.copyWith(
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black,
+                              ),
                     ),
-              ),
-              const SizedBox(height: 12),
-              const Text('Please select your role to continue'),
-              const SizedBox(height: 32),
-              _RoleButton(
-                title: 'Customer Mode',
-                subtitle: 'Order delicious food from your table',
-                icon: Icons.restaurant,
-                onTap: () => context.go('/customer'),
-              ),
-              const SizedBox(height: 16),
-              _RoleButton(
-                title: 'Admin Panel',
-                subtitle: 'Manage categories, menu, and orders',
-                icon: Icons.admin_panel_settings,
-                onTap: () => context.push('/login/admin'),
-              ),
-              const SizedBox(height: 16),
-              _RoleButton(
-                title: 'Kitchen Display',
-                subtitle: 'Track and prepare incoming orders',
-                icon: Icons.kitchen,
-                onTap: () => context.push('/login/kitchen'),
-              ),
+                    const SizedBox(height: 12),
+                    Text(l.selectRole),
+                    const SizedBox(height: 32),
+                    _RoleButton(
+                      title: l.customerMode,
+                      subtitle: l.customerSubtitle,
+                      icon: Icons.restaurant,
+                      onTap: () => context.go('/customer'),
+                    ),
+                    const SizedBox(height: 16),
+                    _RoleButton(
+                      title: l.adminPanel,
+                      subtitle: l.adminSubtitle,
+                      icon: Icons.admin_panel_settings,
+                      onTap: () => context.push('/login/admin'),
+                    ),
+                    const SizedBox(height: 16),
+                    _RoleButton(
+                      title: l.kitchenDisplay,
+                      subtitle: l.kitchenSubtitle,
+                      icon: Icons.kitchen,
+                      onTap: () => context.push('/login/kitchen'),
+                    ),
+                  ],
+                );
+              }),
               const Spacer(),
             ],
           ),

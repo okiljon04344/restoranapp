@@ -15,7 +15,7 @@ import '../features/customer/presentation/pages/table_entry_page.dart';
 
 final appRouterProvider = Provider<GoRouter>((ref) {
   return GoRouter(
-    initialLocation: '/', // DOIM BIRINCHI SHU SAHIFA
+    initialLocation: '/',
     routes: [
       GoRoute(
         path: '/',

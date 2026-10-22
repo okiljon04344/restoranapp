@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../../l10n/app_localizations.dart';
 
 class QRScannerPage extends StatefulWidget {
   final Function(String) onQRScanned;
@@ -20,9 +21,10 @@ class _QRScannerPageState extends State<QRScannerPage> {
 
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context)!;
     return Scaffold(
       appBar: AppBar(
-        title: const Text('QR Codeni Kiritib Chiqing'),
+        title: Text(l.qrScanManualTitle),
         centerTitle: true,
       ),
       body: Padding(
@@ -32,14 +34,14 @@ class _QRScannerPageState extends State<QRScannerPage> {
           children: [
             const Icon(Icons.qr_code_2, size: 80, color: Colors.blue),
             const SizedBox(height: 32),
-            const Text(
-              'Kamera bu platform-da mavjud emas',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            Text(
+              l.cameraNotAvailable,
+              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 16),
-            const Text(
-              'QR code ma\'lumotini qo\'lda kiritib chiqing:',
-              style: TextStyle(fontSize: 14),
+            Text(
+              l.enterQrManuallyShort,
+              style: const TextStyle(fontSize: 14),
             ),
             const SizedBox(height: 24),
             TextField(
@@ -67,7 +69,7 @@ class _QRScannerPageState extends State<QRScannerPage> {
                     Navigator.pop(context);
                   }
                 },
-                child: const Text('Tasdiqlang'),
+                child: Text(l.confirm),
               ),
             ),
             const SizedBox(height: 12),
@@ -76,7 +78,7 @@ class _QRScannerPageState extends State<QRScannerPage> {
               height: 48,
               child: FilledButton.tonal(
                 onPressed: () => Navigator.pop(context),
-                child: const Text('Bekor'),
+                child: Text(l.cancel),
               ),
             ),
           ],

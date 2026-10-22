@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../../l10n/app_localizations.dart';
 
 class QRScannerPage extends StatefulWidget {
   final Function(String) onQRScanned;
@@ -20,9 +21,10 @@ class _QRScannerPageState extends State<QRScannerPage> {
 
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context)!;
     return Scaffold(
       appBar: AppBar(
-        title: const Text('QR Codeni Skanerlang'),
+        title: Text(l.qrScanTitle),
         centerTitle: true,
       ),
       body: Padding(
@@ -32,14 +34,14 @@ class _QRScannerPageState extends State<QRScannerPage> {
           children: [
             const Icon(Icons.qr_code_2, size: 80, color: Colors.blue),
             const SizedBox(height: 32),
-            const Text(
-              'Veb-da kamera mavjud emas',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            Text(
+              l.webNoCameraTitle,
+              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 16),
-            const Text(
-              'Qr code-ni qo\'lda kiritib chiqing:',
-              style: TextStyle(fontSize: 14),
+            Text(
+              l.enterQrManually,
+              style: const TextStyle(fontSize: 14),
             ),
             const SizedBox(height: 24),
             TextField(
@@ -67,7 +69,7 @@ class _QRScannerPageState extends State<QRScannerPage> {
                     Navigator.pop(context);
                   }
                 },
-                child: const Text('Tasdiqlang'),
+                child: Text(l.confirm),
               ),
             ),
           ],

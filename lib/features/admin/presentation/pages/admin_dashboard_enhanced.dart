@@ -371,10 +371,12 @@ class AdminDashboardPageEnhanced extends ConsumerWidget {
           .doc(callId)
           .update({'status': 'resolved'});
 
+      if (!context.mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Staff call resolved')),
       );
     } catch (e) {
+      if (!context.mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Error: $e')),
       );
@@ -411,10 +413,12 @@ class AdminDashboardPageEnhanced extends ConsumerWidget {
     final firestoreService = ref.read(firestoreServiceProvider);
     try {
       await firestoreService.cancelOrder(orderId);
+      if (!context.mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Order cancelled')),
       );
     } catch (e) {
+      if (!context.mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Error: $e')),
       );
@@ -501,7 +505,7 @@ class _RevenueCard extends StatelessWidget {
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  '${revenue.toStringAsFixed(0)}',
+                  revenue.toStringAsFixed(0),
                   style: const TextStyle(
                     color: Colors.white,
                     fontSize: 28,

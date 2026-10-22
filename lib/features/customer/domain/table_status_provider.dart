@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../orders/domain/order_providers.dart';
 
@@ -39,6 +40,6 @@ Future<void> cancelOrderByTable(int tableNumber, WidgetRef ref) async {
     final order = orders.firstWhere((o) => o.tableNumber == tableNumber);
     await firestoreService.cancelOrder(order.id);
   } catch (e) {
-    print('Error cancelling order: $e');
+    debugPrint('Error cancelling order: $e');
   }
 }

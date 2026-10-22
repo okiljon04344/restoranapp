@@ -3,6 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../core/widgets/app_scaffold.dart';
+import '../../../../l10n/app_localizations.dart';
+import '../../../admin/domain/staff_call_action_provider.dart';
 import '../../domain/table_provider.dart';
 import '../../domain/table_status_provider.dart';
 
@@ -11,15 +13,14 @@ class CustomerHomePage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    const restaurantName = "Universal Restaurant";
-    const restaurantDesc = "Delicious food, best service";
+    final l = AppLocalizations.of(context)!;
 
     final currentTableId = ref.watch(tableIdProvider);
     final tableNumber = int.tryParse(currentTableId ?? '0') ?? 0;
     final tableStatus = ref.watch(tableStatusProvider)(tableNumber);
 
     return AppScaffold(
-      title: restaurantName,
+      title: l.appTitle,
       actions: [
         IconButton(
           onPressed: () => context.go('/customer/cart'),
@@ -29,7 +30,6 @@ class CustomerHomePage extends ConsumerWidget {
       child: ListView(
         padding: const EdgeInsets.all(16),
         children: [
-          // Table Info Card
           Container(
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
@@ -45,9 +45,10 @@ class CustomerHomePage extends ConsumerWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text(
-                        'Stol raqami',
-                        style: TextStyle(fontSize: 12, color: Colors.grey),
+                      Text(
+                        l.tableInfo,
+                        style:
+                            const TextStyle(fontSize: 12, color: Colors.grey),
                       ),
                       Text(
                         currentTableId ?? '-',
@@ -57,15 +58,16 @@ class CustomerHomePage extends ConsumerWidget {
                         ),
                       ),
                       if (tableStatus)
-                        const Padding(
-                          padding: EdgeInsets.only(top: 4),
+                        Padding(
+                          padding: const EdgeInsets.only(top: 4),
                           child: Row(
                             children: [
-                              Icon(Icons.info, size: 12, color: Colors.orange),
-                              SizedBox(width: 4),
+                              const Icon(Icons.info,
+                                  size: 12, color: Colors.orange),
+                              const SizedBox(width: 4),
                               Text(
-                                'Bu stol band',
-                                style: TextStyle(
+                                l.tableOccupiedBadge,
+                                style: const TextStyle(
                                   fontSize: 11,
                                   color: Colors.orange,
                                   fontWeight: FontWeight.w500,
@@ -83,7 +85,7 @@ class CustomerHomePage extends ConsumerWidget {
                     context.go('/role-select');
                   },
                   icon: const Icon(Icons.refresh, size: 18),
-                  label: const Text('Reset'),
+                  label: Text(l.reset),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.red[100],
                     foregroundColor: Colors.red,
@@ -112,17 +114,17 @@ class CustomerHomePage extends ConsumerWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text(
-                  restaurantName,
-                  style: TextStyle(
+                Text(
+                  l.appTitle,
+                  style: const TextStyle(
                       color: Colors.white,
                       fontSize: 24,
                       fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 8),
-                const Text(
-                  restaurantDesc,
-                  style: TextStyle(color: Colors.white70, fontSize: 16),
+                Text(
+                  l.restaurantDesc,
+                  style: const TextStyle(color: Colors.white70, fontSize: 16),
                 ),
                 const SizedBox(height: 24),
                 ElevatedButton(
@@ -133,7 +135,7 @@ class CustomerHomePage extends ConsumerWidget {
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12)),
                   ),
-                  child: const Text('Menyuni ochish'),
+                  child: Text(l.openMenu),
                 ),
               ],
             ),
@@ -142,20 +144,46 @@ class CustomerHomePage extends ConsumerWidget {
           Row(
             children: [
               _HomeActionCard(
-                title: 'Mening buyurtmalar',
+                title: l.myOrders,
                 icon: Icons.receipt_long,
                 color: Colors.orange,
                 onTap: () => context.go('/customer/tracking'),
               ),
               const SizedBox(width: 16),
               _HomeActionCard(
-                title: 'Xodim chaqirish',
+                title: l.callStaff,
                 icon: Icons.notifications_active,
                 color: Colors.red,
-                onTap: () {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Xodim chaqirildi!')),
-                  );
+                onTap: () async {
+                  final tableId = ref.read(tableIdProvider);
+                  final tableNumber = int.tryParse(tableId ?? '0') ?? 0;
+                  if (tableNumber == 0) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text(l.tableRequired)),
+                    );
+                    return;
+                  }
+                  try {
+                    await ref
+                        .read(staffCallActionProvider)
+                        .callStaff(tableNumber);
+                    if (context.mounted) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(l.staffCalled),
+                          backgroundColor: Colors.green,
+                          duration: const Duration(seconds: 2),
+                        ),
+                      );
+                    }
+                  } catch (_) {
+                    if (context.mounted) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                            content: Text(l.error('Failed to call staff'))),
+                      );
+                    }
+                  }
                 },
               ),
             ],
@@ -197,7 +225,8 @@ class _HomeActionCard extends StatelessWidget {
               Icon(icon, color: color, size: 32),
               const SizedBox(height: 12),
               Text(title,
-                  style: TextStyle(fontWeight: FontWeight.bold, color: color)),
+                  style: TextStyle(fontWeight: FontWeight.bold, color: color),
+                  textAlign: TextAlign.center),
             ],
           ),
         ),

@@ -60,10 +60,12 @@ class _AdminMenuManagementPageEnhancedState
       _imageUrlController.clear();
       setState(() => _selectedCategoryId = null);
 
+      if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Menu item added successfully')),
       );
     } catch (e) {
+      if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Error: $e')),
       );

@@ -59,7 +59,7 @@ class AdminDashboardPageImproved extends ConsumerWidget {
 
   Widget _buildSidebar(
       BuildContext context, WidgetRef ref, String selectedSection) {
-    final menuItems = [
+    const menuItems = [
       MapEntry('dashboard', (Icons.dashboard, '📊 Dashboard')),
       MapEntry('orders', (Icons.receipt, '📋 Sifarishlar')),
       MapEntry('staff_calls', (Icons.phone_in_talk, '🔔 Staff Calls')),
@@ -70,11 +70,11 @@ class AdminDashboardPageImproved extends ConsumerWidget {
 
     return Column(
       children: [
-        Padding(
-          padding: const EdgeInsets.all(16),
+        const Padding(
+          padding: EdgeInsets.all(16),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-            children: const [
+            children: [
               Text(
                 'Admin Panel',
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
@@ -691,9 +691,9 @@ class AdminDashboardPageImproved extends ConsumerWidget {
                                     ),
                                   ),
                                   const SizedBox(height: 4),
-                                  Text(
+                                  const Text(
                                     'Xodim chaqirilmoqda',
-                                    style: const TextStyle(fontSize: 14),
+                                    style: TextStyle(fontSize: 14),
                                   ),
                                 ],
                               ),
@@ -706,8 +706,7 @@ class AdminDashboardPageImproved extends ConsumerWidget {
                           ],
                         ),
                       ),
-                    ))
-                .toList(),
+                    )),
         ],
       ),
       loading: () => const Center(child: CircularProgressIndicator()),
