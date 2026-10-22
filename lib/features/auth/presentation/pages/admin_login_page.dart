@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import '../../../../l10n/app_localizations.dart';
 import '../../domain/auth_provider.dart';
 import 'admin_signup_page.dart';
 import 'admin_debug_page.dart';
@@ -87,7 +88,9 @@ class _AdminLoginPageState extends ConsumerState<AdminLoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Admin Kirish')),
+      appBar: AppBar(
+          title:
+              Text(AppLocalizations.of(context)?.adminLogin ?? 'Admin Login')),
       body: Padding(
         padding: const EdgeInsets.all(24.0),
         child: Column(
@@ -120,7 +123,7 @@ class _AdminLoginPageState extends ConsumerState<AdminLoginPage> {
                 onPressed: _isLoading ? null : _onLogin,
                 child: _isLoading
                     ? const CircularProgressIndicator(color: Colors.white)
-                    : const Text('Kirish'),
+                    : Text(AppLocalizations.of(context)?.login ?? 'Kirish'),
               ),
             ),
             const SizedBox(height: 16),
@@ -132,7 +135,8 @@ class _AdminLoginPageState extends ConsumerState<AdminLoginPage> {
                           builder: (context) => const AdminSignupPage(),
                         ),
                       ),
-              child: const Text('Yangi admin akkaunt yaratish'),
+              child: Text(AppLocalizations.of(context)?.createAdminAccount ??
+                  'Yangi admin akkaunt yaratish'),
             ),
             const SizedBox(height: 12),
             TextButton(

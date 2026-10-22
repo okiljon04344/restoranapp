@@ -3,12 +3,14 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../domain/table_provider.dart';
 import '../../../orders/domain/order_providers.dart';
+import '../../../../l10n/app_localizations.dart';
 
 class OrderTrackingPage extends ConsumerWidget {
   const OrderTrackingPage({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l = AppLocalizations.of(context)!;
     final tableId = ref.watch(tableIdProvider);
     final orders = ref.watch(ordersProvider);
 
@@ -18,14 +20,14 @@ class OrderTrackingPage extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Table $tableId - Orders'),
+        title: Text('${l.table} $tableId - ${l.orders}'),
         leading: IconButton(
           icon: const Icon(Icons.close),
           onPressed: () => context.go('/customer'),
         ),
       ),
       body: tableOrders.isEmpty
-          ? const Center(child: Text('No active orders for this table.'))
+          ? Center(child: Text(l.noActiveOrders))
           : ListView.builder(
               padding: const EdgeInsets.all(16),
               itemCount: tableOrders.length,
@@ -60,7 +62,7 @@ class OrderTrackingPage extends ConsumerWidget {
                                 children: [
                                   Text('${item.quantity}x ${item.name}'),
                                   Text(
-                                      '${(item.price * item.quantity).toStringAsFixed(0)}'),
+                                      (item.price * item.quantity).toStringAsFixed(0)),
                                 ],
                               ),
                             )),
@@ -68,10 +70,11 @@ class OrderTrackingPage extends ConsumerWidget {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            const Text('Subtotal',
-                                style: TextStyle(fontWeight: FontWeight.bold)),
+                            Text(l.subtotal,
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.bold)),
                             Text(
-                              '${order.total.toStringAsFixed(0)}',
+                              order.total.toStringAsFixed(0),
                               style: const TextStyle(
                                   fontWeight: FontWeight.bold, fontSize: 18),
                             ),
@@ -90,12 +93,11 @@ class OrderTrackingPage extends ConsumerWidget {
                 child: FilledButton.icon(
                   onPressed: () {
                     ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                          content: Text('Waitress notified for the bill.')),
+                      SnackBar(content: Text(l.billRequested)),
                     );
                   },
                   icon: const Icon(Icons.receipt_long),
-                  label: const Text('Request Bill'),
+                  label: Text(l.requestBill),
                   style: FilledButton.styleFrom(
                     backgroundColor: Colors.orange[800],
                     minimumSize: const Size(double.infinity, 56),
@@ -116,19 +118,20 @@ class _StatusBadge extends StatelessWidget {
   Widget build(BuildContext context) {
     Color color;
     String text;
+    final l = AppLocalizations.of(context)!;
 
     switch (status) {
       case 'pending':
         color = Colors.orange;
-        text = 'Preparing';
+        text = l.statusPreparing;
         break;
       case 'ready':
         color = Colors.green;
-        text = 'Ready';
+        text = l.ready;
         break;
       case 'delivered':
         color = Colors.blue;
-        text = 'Delivered';
+        text = l.statusDelivered;
         break;
       default:
         color = Colors.grey;

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
+import '../../../../l10n/app_localizations.dart';
 
 class QRScannerPage extends StatefulWidget {
   final Function(String) onQRScanned;
@@ -53,7 +54,7 @@ class _QRScannerPageState extends State<QRScannerPage>
     try {
       controller.dispose();
     } catch (e) {
-      print('Error disposing scanner: $e');
+      debugPrint('Error disposing scanner: $e');
     }
     super.dispose();
   }
@@ -79,7 +80,7 @@ class _QRScannerPageState extends State<QRScannerPage>
         }
       }
     } catch (e) {
-      print('Error processing barcode: $e');
+      debugPrint('Error processing barcode: $e');
       _isProcessing = false;
     }
   }
@@ -93,7 +94,7 @@ class _QRScannerPageState extends State<QRScannerPage>
         });
       }
     } catch (e) {
-      print('Error toggling torch: $e');
+      debugPrint('Error toggling torch: $e');
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Torch error: $e')),
@@ -104,14 +105,14 @@ class _QRScannerPageState extends State<QRScannerPage>
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () async {
-        _isPageActive = false;
-        return true;
+    return PopScope(
+      onPopInvokedWithResult: (didPop, _) {
+        if (didPop) _isPageActive = false;
       },
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('QR Codeni Skanerlang'),
+          title: Text(AppLocalizations.of(context)?.qrScanTitle ??
+              'QR Codeni Skanerlang'),
           centerTitle: true,
           elevation: 0,
         ),
@@ -132,7 +133,8 @@ class _QRScannerPageState extends State<QRScannerPage>
                       const SizedBox(height: 16),
                       FilledButton(
                         onPressed: () => Navigator.pop(context),
-                        child: const Text('Orqaga qaytish'),
+                        child: Text(
+                            AppLocalizations.of(context)?.goBack ?? 'Go Back'),
                       ),
                     ],
                   ),
@@ -160,17 +162,17 @@ class _QRScannerPageState extends State<QRScannerPage>
                           ),
                           borderRadius: BorderRadius.circular(12),
                         ),
-                        child: Center(
+                        child: const Center(
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              const Icon(
+                              Icon(
                                 Icons.qr_code_2,
                                 size: 80,
                                 color: Colors.white,
                               ),
-                              const SizedBox(height: 16),
-                              const Text(
+                              SizedBox(height: 16),
+                              Text(
                                 'QR codeni to\'g\'ri joyda qo\'ying',
                                 style: TextStyle(
                                   color: Colors.white,

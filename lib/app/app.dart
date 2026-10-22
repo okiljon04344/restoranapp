@@ -12,33 +12,24 @@ class RestaurantUniversalApp extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final localeInitializer = ref.watch(localeInitializerProvider);
+    // localeInitializerProvider Hive dan locale yuklab, applyLocale() qiladi
+    ref.watch(localeInitializerProvider);
     final router = ref.watch(appRouterProvider);
     final locale = ref.watch(localeNotifierProvider);
 
-    return localeInitializer.when(
-      data: (_) {
-        return MaterialApp.router(
-          title: 'Restaurant Universal App',
-          debugShowCheckedModeBanner: false,
-          theme: AppTheme.light,
-          routerConfig: router,
-          locale: locale, // Tanlangan til bu yerda qo'llaniladi
-          localizationsDelegates: const [
-            AppLocalizations.delegate,
-            GlobalMaterialLocalizations.delegate,
-            GlobalWidgetsLocalizations.delegate,
-            GlobalCupertinoLocalizations.delegate,
-          ],
-          supportedLocales: AppLocalizations.supportedLocales,
-        );
-      },
-      loading: () => const MaterialApp(
-        home: Scaffold(body: Center(child: CircularProgressIndicator())),
-      ),
-      error: (err, stack) => MaterialApp(
-        home: Scaffold(body: Center(child: Text('Error: $err'))),
-      ),
+    return MaterialApp.router(
+      title: 'Restaurant Universal App',
+      debugShowCheckedModeBanner: false,
+      theme: AppTheme.light,
+      routerConfig: router,
+      locale: locale,
+      localizationsDelegates: const [
+        AppLocalizations.delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      supportedLocales: AppLocalizations.supportedLocales,
     );
   }
 }

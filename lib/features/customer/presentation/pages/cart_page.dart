@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../core/widgets/app_scaffold.dart';
+import '../../../../l10n/app_localizations.dart';
 import '../../../orders/domain/order_providers.dart';
 import '../../domain/table_provider.dart';
 
@@ -11,14 +12,15 @@ class CartPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l = AppLocalizations.of(context)!;
     final cartItems = ref.watch(cartProvider);
     final tableId = ref.watch(tableIdProvider);
     final total = cartItems.fold<double>(0, (sum, item) => sum + item.total);
 
     return AppScaffold(
-      title: 'Your Cart',
+      title: l.yourCart,
       child: cartItems.isEmpty
-          ? const Center(child: Text('Your cart is empty'))
+          ? Center(child: Text(l.cartEmpty))
           : Column(
               children: [
                 Expanded(
@@ -33,7 +35,7 @@ class CartPage extends ConsumerWidget {
                             style:
                                 const TextStyle(fontWeight: FontWeight.bold)),
                         subtitle:
-                            Text('${item.price.toStringAsFixed(0)} so\'m'),
+                            Text('${item.price.toStringAsFixed(0)} ${l.som}'),
                         trailing: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
@@ -74,10 +76,10 @@ class CartPage extends ConsumerWidget {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          const Text('Total Amount',
-                              style: TextStyle(fontSize: 16)),
+                          Text(l.totalAmount,
+                              style: const TextStyle(fontSize: 16)),
                           Text(
-                            '${total.toStringAsFixed(0)} so\'m',
+                            '${total.toStringAsFixed(0)} ${l.som}',
                             style: const TextStyle(
                                 fontSize: 20,
                                 fontWeight: FontWeight.bold,
@@ -103,7 +105,7 @@ class CartPage extends ConsumerWidget {
                               context.go('/customer/tracking');
                             }
                           },
-                          child: const Text('Confirm Order'),
+                          child: Text(l.placeOrder),
                         ),
                       ),
                     ],

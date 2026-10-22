@@ -4,8 +4,8 @@ import 'package:go_router/go_router.dart';
 import '../../domain/table_provider.dart';
 import '../../domain/table_status_provider.dart';
 import '../../../../services/qr_code_service.dart';
+import '../../../../l10n/app_localizations.dart';
 
-// Conditional imports based on platform
 import 'qr_scanner_page.dart' if (dart.library.html) 'qr_scanner_page_web.dart'
     as qr_scanner;
 
@@ -20,19 +20,25 @@ class _TableEntryPageState extends ConsumerState<TableEntryPage> {
   final _tableIdController = TextEditingController();
   bool _isLoading = false;
 
+  @override
+  void dispose() {
+    _tableIdController.dispose();
+    super.dispose();
+  }
+
   void _handleQRData(String qrData) {
-    // Parse QR data (format: table_1, table_2, etc.)
+    final l = AppLocalizations.of(context)!;
     final qrService = ref.read(qrCodeServiceProvider);
     final tableNum = qrService.parseTableQRData(qrData);
 
     if (tableNum != null) {
       _tableIdController.text = tableNum.toString();
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('QR Scanned: Table $tableNum')),
+        SnackBar(content: Text(l.qrScanned(tableNum.toString()))),
       );
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Invalid QR code. Please try again.')),
+        SnackBar(content: Text(l.invalidQr)),
       );
     }
   }
@@ -40,39 +46,41 @@ class _TableEntryPageState extends ConsumerState<TableEntryPage> {
   void _showScanQRDialog() {
     showDialog(
       context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('QR Codeni Skanerlang'),
-        content:
-            const Text('Stol QR-ini skanerlash uchun kamera-ni ishlatamiz'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Bekor'),
-          ),
-          FilledButton(
-            onPressed: () {
-              Navigator.pop(context);
-              // Open camera scanner
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) => qr_scanner.QRScannerPage(
-                    onQRScanned: _handleQRData,
+      builder: (context) {
+        final dl = AppLocalizations.of(context)!;
+        return AlertDialog(
+          title: Text(dl.scanQrDialog),
+          content: Text(dl.scanQrDialogContent),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: Text(dl.cancel),
+            ),
+            FilledButton(
+              onPressed: () {
+                Navigator.pop(context);
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => qr_scanner.QRScannerPage(
+                      onQRScanned: _handleQRData,
+                    ),
                   ),
-                ),
-              );
-            },
-            child: const Text('Kamera Oching'),
-          ),
-        ],
-      ),
+                );
+              },
+              child: Text(dl.openCamera),
+            ),
+          ],
+        );
+      },
     );
   }
 
   Future<void> _onContinue() async {
+    final l = AppLocalizations.of(context)!;
     final tableId = _tableIdController.text.trim();
     if (tableId.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Stol raqamini kiriting')),
+        SnackBar(content: Text(l.tableRequired)),
       );
       return;
     }
@@ -83,35 +91,35 @@ class _TableEntryPageState extends ConsumerState<TableEntryPage> {
       final tableNumber = int.tryParse(tableId);
       if (tableNumber == null) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Stol raqami sonda bo\'lishi kerak')),
+          SnackBar(content: Text(l.tableInvalid)),
         );
         setState(() => _isLoading = false);
         return;
       }
 
-      // Check if table has active orders
       final isTableOccupied = ref.read(tableStatusProvider)(tableNumber);
 
       if (isTableOccupied) {
-        // Show dialog that table is occupied
         if (!mounted) return;
         final action = await showDialog<String>(
           context: context,
-          builder: (context) => AlertDialog(
-            title: const Text('⚠️ Stol Band'),
-            content: const Text(
-                'Bu stol hozir ishlatilyapti. Davom ettirishni xohlaysizmi?'),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.pop(context, 'cancel'),
-                child: const Text('Bekor'),
-              ),
-              FilledButton(
-                onPressed: () => Navigator.pop(context, 'continue'),
-                child: const Text('Davom etish'),
-              ),
-            ],
-          ),
+          builder: (context) {
+            final dl = AppLocalizations.of(context)!;
+            return AlertDialog(
+              title: Text(dl.tableOccupied),
+              content: Text(dl.tableOccupiedMsg),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.pop(context, 'cancel'),
+                  child: Text(dl.cancel),
+                ),
+                FilledButton(
+                  onPressed: () => Navigator.pop(context, 'continue'),
+                  child: Text(dl.continueAnyway),
+                ),
+              ],
+            );
+          },
         );
 
         if (action != 'continue') {
@@ -120,26 +128,27 @@ class _TableEntryPageState extends ConsumerState<TableEntryPage> {
         }
       }
 
-      // Set table ID and navigate
       ref.read(tableIdProvider.notifier).state = tableId;
       if (!mounted) return;
       context.go('/customer');
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Xato: $e')),
-      );
-    } finally {
       if (mounted) {
-        setState(() => _isLoading = false);
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Error: $e')),
+        );
       }
+    } finally {
+      if (mounted) setState(() => _isLoading = false);
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context)!;
+
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Stol tanlang'),
+        title: Text(l.tableEntry),
         leading: IconButton(
           icon: const Icon(Icons.language),
           onPressed: () => context.go('/'),
@@ -153,25 +162,25 @@ class _TableEntryPageState extends ConsumerState<TableEntryPage> {
           children: [
             const Icon(Icons.qr_code_scanner, size: 80, color: Colors.blue),
             const SizedBox(height: 32),
-            const Text(
-              'Xush kelibsiz!',
+            Text(
+              l.welcomeTitle,
               textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+              style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 8),
-            const Text(
-              'Stol raqamini kiriting yoki stolda QR codeni skanerlang.',
+            Text(
+              l.enterTableManually,
               textAlign: TextAlign.center,
-              style: TextStyle(color: Colors.grey, fontSize: 14),
+              style: const TextStyle(color: Colors.grey, fontSize: 14),
             ),
             const SizedBox(height: 32),
             TextField(
               controller: _tableIdController,
-              decoration: const InputDecoration(
-                labelText: 'Stol raqami',
-                hintText: '1, 2, 3...',
-                border: OutlineInputBorder(),
-                prefixIcon: Icon(Icons.table_restaurant),
+              decoration: InputDecoration(
+                labelText: l.tableNumber,
+                hintText: l.tableHint,
+                border: const OutlineInputBorder(),
+                prefixIcon: const Icon(Icons.table_restaurant),
               ),
               keyboardType: TextInputType.number,
               enabled: !_isLoading,
@@ -180,7 +189,7 @@ class _TableEntryPageState extends ConsumerState<TableEntryPage> {
             OutlinedButton.icon(
               onPressed: _isLoading ? null : _showScanQRDialog,
               icon: const Icon(Icons.qr_code_scanner),
-              label: const Text('QR Codeni Skanerlang'),
+              label: Text(l.scanQr),
             ),
             const SizedBox(height: 16),
             FilledButton.icon(
@@ -192,17 +201,11 @@ class _TableEntryPageState extends ConsumerState<TableEntryPage> {
                       child: CircularProgressIndicator(strokeWidth: 2),
                     )
                   : const Icon(Icons.arrow_forward),
-              label: Text(_isLoading ? 'Tekshirilmoqda...' : 'Menyuga o\'tish'),
+              label: Text(_isLoading ? l.checking : l.goToMenu),
             ),
           ],
         ),
       ),
     );
-  }
-
-  @override
-  void dispose() {
-    _tableIdController.dispose();
-    super.dispose();
   }
 }

@@ -374,7 +374,8 @@ class _AdminIngredientsPageState extends ConsumerState<AdminIngredientsPage> {
                   'lastUpdated': Timestamp.now(),
                 });
 
-                if (context.mounted) Navigator.pop(context);
+                if (!context.mounted) return;
+                Navigator.pop(context);
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(content: Text('Massaliq qo\'shildi')),
                 );
@@ -478,7 +479,8 @@ class _AdminIngredientsPageState extends ConsumerState<AdminIngredientsPage> {
                   'lastUpdated': Timestamp.now(),
                 });
 
-                if (context.mounted) Navigator.pop(context);
+                if (!context.mounted) return;
+                Navigator.pop(context);
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(content: Text('Massaliq yangilandi')),
                 );
@@ -511,7 +513,8 @@ class _AdminIngredientsPageState extends ConsumerState<AdminIngredientsPage> {
                   .doc(ingredientId)
                   .delete();
 
-              if (context.mounted) Navigator.pop(context);
+              if (!context.mounted) return;
+              Navigator.pop(context);
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(content: Text('Massaliq o\'chirildi')),
               );

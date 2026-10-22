@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:firebase_auth/firebase_auth.dart';
+import '../../../../l10n/app_localizations.dart';
 import '../../domain/auth_provider.dart';
 
 class AdminSignupPage extends ConsumerStatefulWidget {
@@ -113,7 +114,8 @@ class _AdminSignupPageState extends ConsumerState<AdminSignupPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Admin ro\'yxatdan o\'tish'),
+        title: Text(AppLocalizations.of(context)?.adminSignup ??
+            'Admin ro\'yxatdan o\'tish'),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () => Navigator.of(context).pop(),
@@ -174,7 +176,8 @@ class _AdminSignupPageState extends ConsumerState<AdminSignupPage> {
                   onPressed: _isLoading ? null : _onSignup,
                   child: _isLoading
                       ? const CircularProgressIndicator(color: Colors.white)
-                      : const Text('Ro\'yxatdan o\'tish'),
+                      : Text(AppLocalizations.of(context)?.register ??
+                          'Ro\'yxatdan o\'tish'),
                 ),
               ),
               const SizedBox(height: 16),
