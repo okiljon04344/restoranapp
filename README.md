@@ -1,8 +1,6 @@
 # Universal Restaurant App (QR オーダー & 店舗管理システム)
 
-> 顧客向け QR テーブルオーダー・キッチンディスプレイ（KDS）・管理者ダッシュボードを1つに統合した多言語対応レストランシステム。  
-> Multi-role, multilingual restaurant ordering & management platform built with Flutter, Riverpod, and Firebase.
-
+[![CI](https://github.com/okiljon04344/restoranapp/actions/workflows/ci.yml/badge.svg)](https://github.com/okiljon04344/restoranapp/actions/workflows/ci.yml)
 ![Flutter](https://img.shields.io/badge/Flutter-02569B?logo=flutter&logoColor=white)
 ![Dart](https://img.shields.io/badge/Dart-0175C2?logo=dart&logoColor=white)
 ![Riverpod](https://img.shields.io/badge/Riverpod-2D6A4F?logo=flutter&logoColor=white)
