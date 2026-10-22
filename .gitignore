@@ -7,4 +7,4 @@ build/
 .idea/
 .vscode/
 *.iml
-lib/firebase_options.dart
+
