@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+
 import '../../../../core/widgets/app_scaffold.dart';
+import '../../../../services/firestore_service.dart';
 import '../../../orders/domain/order_providers.dart';
 
 class AdminMenuManagementPageEnhanced extends ConsumerStatefulWidget {
@@ -78,9 +80,11 @@ class _AdminMenuManagementPageEnhancedState
   Widget build(BuildContext context) {
     final categoriesAsync = ref.watch(categoriesProvider);
     final itemsAsync = ref.watch(menuItemsProvider);
+    final theme = Theme.of(context);
 
     return AppScaffold(
       title: 'Menu Management',
+      maxContentWidth: 1100,
       actions: [
         IconButton(
           icon: const Icon(Icons.arrow_back),
@@ -94,47 +98,35 @@ class _AdminMenuManagementPageEnhancedState
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Form section
               Expanded(
-                flex: 1,
                 child: Card(
-                  elevation: 4,
                   child: Padding(
                     padding: const EdgeInsets.all(20),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        const Text(
+                        Text(
                           'Add New Menu Item',
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                          ),
+                          style: theme.textTheme.titleLarge,
                         ),
                         const SizedBox(height: 20),
                         TextField(
                           controller: _nameController,
-                          decoration: InputDecoration(
+                          decoration: const InputDecoration(
                             labelText: 'Item Name *',
                             hintText: 'e.g., Chicken Biryani',
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            prefixIcon: const Icon(Icons.fastfood),
+                            prefixIcon: Icon(Icons.restaurant_outlined),
                           ),
                         ),
                         const SizedBox(height: 16),
                         TextField(
                           controller: _descriptionController,
                           maxLines: 3,
-                          decoration: InputDecoration(
+                          decoration: const InputDecoration(
                             labelText: 'Description',
                             hintText: 'Item description...',
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            prefixIcon: const Icon(Icons.description),
+                            prefixIcon: Icon(Icons.notes_outlined),
                             alignLabelWithHint: true,
                           ),
                         ),
@@ -142,13 +134,10 @@ class _AdminMenuManagementPageEnhancedState
                         TextField(
                           controller: _priceController,
                           keyboardType: TextInputType.number,
-                          decoration: InputDecoration(
+                          decoration: const InputDecoration(
                             labelText: 'Price *',
                             hintText: '50000',
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            prefixIcon: const Icon(Icons.attach_money),
+                            prefixIcon: Icon(Icons.payments_outlined),
                           ),
                         ),
                         const SizedBox(height: 16),
@@ -160,13 +149,10 @@ class _AdminMenuManagementPageEnhancedState
                                   Expanded(
                                     child: DropdownButtonFormField<String>(
                                       initialValue: _selectedCategoryId,
-                                      decoration: InputDecoration(
+                                      decoration: const InputDecoration(
                                         labelText: 'Category *',
-                                        border: OutlineInputBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(8),
-                                        ),
-                                        prefixIcon: const Icon(Icons.category),
+                                        prefixIcon:
+                                            Icon(Icons.category_outlined),
                                       ),
                                       items: categories
                                           .map((cat) => DropdownMenuItem(
@@ -196,13 +182,10 @@ class _AdminMenuManagementPageEnhancedState
                         const SizedBox(height: 16),
                         TextField(
                           controller: _imageUrlController,
-                          decoration: InputDecoration(
+                          decoration: const InputDecoration(
                             labelText: 'Image URL',
                             hintText: 'https://example.com/image.jpg',
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            prefixIcon: const Icon(Icons.image),
+                            prefixIcon: Icon(Icons.image_outlined),
                           ),
                         ),
                         const SizedBox(height: 20),
@@ -212,13 +195,14 @@ class _AdminMenuManagementPageEnhancedState
                           child: FilledButton.icon(
                             onPressed: _isLoading ? null : _submitForm,
                             icon: _isLoading
-                                ? const SizedBox(
+                                ? SizedBox(
                                     width: 20,
                                     height: 20,
                                     child: CircularProgressIndicator(
                                       strokeWidth: 2,
-                                      valueColor:
-                                          AlwaysStoppedAnimation(Colors.white),
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .onPrimary,
                                     ),
                                   )
                                 : const Icon(Icons.add),
@@ -231,20 +215,12 @@ class _AdminMenuManagementPageEnhancedState
                   ),
                 ),
               ),
-              const SizedBox(width: 20),
-              // Items list section
+              const SizedBox(width: 24),
               Expanded(
-                flex: 1,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text(
-                      'Menu Items',
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
+                    Text('Menu Items', style: theme.textTheme.titleLarge),
                     const SizedBox(height: 12),
                     itemsAsync.when(
                       data: (items) => items.isEmpty
@@ -256,6 +232,7 @@ class _AdminMenuManagementPageEnhancedState
                             )
                           : ListView.builder(
                               shrinkWrap: true,
+                              physics: const NeverScrollableScrollPhysics(),
                               itemCount: items.length,
                               itemBuilder: (context, index) {
                                 final item = items[index];
@@ -275,9 +252,10 @@ class _AdminMenuManagementPageEnhancedState
                                                   Container(
                                                 width: 50,
                                                 height: 50,
-                                                color: Colors.grey[200],
-                                                child: const Icon(
-                                                    Icons.image_not_supported),
+                                                color: theme.colorScheme
+                                                    .surfaceContainer,
+                                                child: const Icon(Icons
+                                                    .image_not_supported_outlined),
                                               ),
                                             ),
                                           )
@@ -285,11 +263,13 @@ class _AdminMenuManagementPageEnhancedState
                                             width: 50,
                                             height: 50,
                                             decoration: BoxDecoration(
-                                              color: Colors.grey[200],
+                                              color: theme
+                                                  .colorScheme.surfaceContainer,
                                               borderRadius:
                                                   BorderRadius.circular(4),
                                             ),
-                                            child: const Icon(Icons.fastfood),
+                                            child: const Icon(
+                                                Icons.restaurant_outlined),
                                           ),
                                     title: Text(item.name),
                                     subtitle: Text(
@@ -334,7 +314,9 @@ class _AdminMenuManagementPageEnhancedState
             child: const Text('Cancel'),
           ),
           FilledButton(
-            style: FilledButton.styleFrom(backgroundColor: Colors.red),
+            style: FilledButton.styleFrom(
+              backgroundColor: Theme.of(context).colorScheme.error,
+            ),
             onPressed: () async {
               try {
                 await ref.read(firestoreServiceProvider).deleteMenuItem(itemId);
@@ -366,11 +348,8 @@ class _AdminMenuManagementPageEnhancedState
         title: const Text('Create New Category'),
         content: TextField(
           controller: categoryNameController,
-          decoration: InputDecoration(
+          decoration: const InputDecoration(
             hintText: 'Category name',
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8),
-            ),
           ),
         ),
         actions: [

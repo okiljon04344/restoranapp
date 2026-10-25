@@ -1,7 +1,12 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+
+import '../../../../core/theme/app_theme.dart';
+import '../../../../core/widgets/status_badge.dart';
 import '../../domain/ingredients_provider.dart';
+
+const _units = ['dona', 'kg', 'g', 'l', 'ml', 'box', 'pack'];
 
 class AdminIngredientsPage extends ConsumerStatefulWidget {
   const AdminIngredientsPage({super.key});
@@ -12,20 +17,16 @@ class AdminIngredientsPage extends ConsumerStatefulWidget {
 }
 
 class _AdminIngredientsPageState extends ConsumerState<AdminIngredientsPage> {
-  late TextEditingController _nameController;
-  late TextEditingController _quantityController;
-  late TextEditingController _minimumController;
-  String _selectedUnit = 'dona';
+  final _nameController = TextEditingController();
+  final _quantityController = TextEditingController();
+  final _minimumController = TextEditingController();
+  String _selectedUnit = _units.first;
 
-  final units = ['dona', 'kg', 'g', 'l', 'ml', 'box', 'pack'];
-
-  @override
-  void initState() {
-    super.initState();
-    _nameController = TextEditingController();
-    _quantityController = TextEditingController();
-    _minimumController = TextEditingController();
-  }
+  CollectionReference<Map<String, dynamic>> get _collection =>
+      FirebaseFirestore.instance
+          .collection('cafes')
+          .doc('main_cafe')
+          .collection('ingredients');
 
   @override
   void dispose() {
@@ -37,8 +38,11 @@ class _AdminIngredientsPageState extends ConsumerState<AdminIngredientsPage> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final scheme = theme.colorScheme;
     final ingredientsAsync = ref.watch(ingredientsProvider);
     final outOfStockAsync = ref.watch(outOfStockIngredientsProvider);
+    final outOfStock = outOfStockAsync.value ?? const <Ingredient>[];
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -46,106 +50,85 @@ class _AdminIngredientsPageState extends ConsumerState<AdminIngredientsPage> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            const Text(
+            Text(
               'Massaliqlar Boshqaruvi',
-              style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
+              style: theme.textTheme.headlineMedium,
             ),
             FilledButton.icon(
               icon: const Icon(Icons.add),
               label: const Text('Yangi Massaliq'),
-              onPressed: () => _showAddIngredientDialog(),
+              onPressed: _showIngredientDialog,
             ),
           ],
         ),
-        const SizedBox(height: 8),
+        const SizedBox(height: 4),
         Text(
           'Taom tayyorlash uchun kerak bo\'lgan massaliqlar ro\'yxati',
-          style: TextStyle(fontSize: 14, color: Colors.grey.shade600),
+          style: theme.textTheme.bodyMedium?.copyWith(
+            color: scheme.onSurfaceVariant,
+          ),
         ),
         const SizedBox(height: 24),
-
-        // Out of Stock Alert
-        outOfStockAsync.when(
-          data: (outOfStock) => outOfStock.isNotEmpty
-              ? Container(
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Colors.red.shade300, width: 2),
-                    borderRadius: BorderRadius.circular(8),
-                    color: Colors.red.shade50,
-                  ),
-                  padding: const EdgeInsets.all(16),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        children: [
-                          const Icon(Icons.warning,
-                              color: Colors.red, size: 28),
-                          const SizedBox(width: 12),
-                          Expanded(
-                            child: Text(
-                              '⚠️ Sotib Bo\'lindi (${outOfStock.length} massaliq)',
-                              style: const TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.red,
-                              ),
-                            ),
-                          ),
-                        ],
+        if (outOfStock.isNotEmpty) ...[
+          Container(
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: scheme.error.withValues(alpha: 0.08),
+              border: Border.all(color: scheme.error.withValues(alpha: 0.4)),
+              borderRadius: BorderRadius.circular(AppTheme.radius),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Icon(Icons.warning_amber_rounded, color: scheme.error),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Text(
+                        'Sotib Bo\'lindi (${outOfStock.length} massaliq)',
+                        style: theme.textTheme.titleMedium?.copyWith(
+                          color: scheme.error,
+                        ),
                       ),
-                      const SizedBox(height: 12),
-                      ...outOfStock.map(
-                        (ing) => Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 8),
-                          child: Row(
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 8),
+                for (final ing in outOfStock)
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 6),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              const Icon(Icons.error_outline,
-                                  color: Colors.red),
-                              const SizedBox(width: 12),
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      ing.name,
-                                      style: const TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                    Text(
-                                      '${ing.quantity} / ${ing.minimumQuantity} ${ing.unit}',
-                                      style: TextStyle(
-                                        fontSize: 12,
-                                        color: Colors.grey.shade600,
-                                      ),
-                                    ),
-                                  ],
+                              Text(ing.name, style: theme.textTheme.bodyLarge),
+                              Text(
+                                '${ing.quantity} / ${ing.minimumQuantity} ${ing.unit}',
+                                style: theme.textTheme.bodySmall?.copyWith(
+                                  color: scheme.onSurfaceVariant,
                                 ),
-                              ),
-                              FilledButton.tonal(
-                                onPressed: () => _showEditIngredientDialog(ing),
-                                child: const Text('Yangilash'),
                               ),
                             ],
                           ),
                         ),
-                      ),
-                    ],
+                        OutlinedButton(
+                          onPressed: () => _showIngredientDialog(ing),
+                          style: OutlinedButton.styleFrom(
+                            minimumSize: const Size(0, 40),
+                          ),
+                          child: const Text('Yangilash'),
+                        ),
+                      ],
+                    ),
                   ),
-                )
-              : const SizedBox.shrink(),
-          loading: () => const SizedBox.shrink(),
-          error: (err, stack) => const SizedBox.shrink(),
-        ),
-
-        if (outOfStockAsync.maybeWhen(
-          data: (outOfStock) => outOfStock.isNotEmpty,
-          orElse: () => false,
-        ))
+              ],
+            ),
+          ),
           const SizedBox(height: 24),
-
-        // Ingredients List
+        ],
         ingredientsAsync.when(
           data: (ingredients) => ingredients.isEmpty
               ? Card(
@@ -154,12 +137,17 @@ class _AdminIngredientsPageState extends ConsumerState<AdminIngredientsPage> {
                     child: Center(
                       child: Column(
                         children: [
-                          Icon(Icons.inventory_2,
-                              size: 48, color: Colors.grey.shade300),
+                          Icon(
+                            Icons.inventory_2_outlined,
+                            size: 40,
+                            color: scheme.onSurfaceVariant,
+                          ),
                           const SizedBox(height: 12),
                           Text(
                             'Massaliq topilmadi',
-                            style: TextStyle(color: Colors.grey.shade600),
+                            style: theme.textTheme.bodyMedium?.copyWith(
+                              color: scheme.onSurfaceVariant,
+                            ),
                           ),
                         ],
                       ),
@@ -169,116 +157,15 @@ class _AdminIngredientsPageState extends ConsumerState<AdminIngredientsPage> {
               : GridView.builder(
                   shrinkWrap: true,
                   physics: const NeverScrollableScrollPhysics(),
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount:
-                        MediaQuery.of(context).size.width > 1200 ? 3 : 2,
+                  gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+                    maxCrossAxisExtent: 320,
+                    mainAxisExtent: 200,
                     crossAxisSpacing: 16,
                     mainAxisSpacing: 16,
-                    childAspectRatio: 1.1,
                   ),
                   itemCount: ingredients.length,
-                  itemBuilder: (_, idx) {
-                    final ing = ingredients[idx];
-                    final percentage =
-                        (ing.quantity / ing.minimumQuantity * 100)
-                            .clamp(0, 100);
-                    final isLow = ing.quantity <= ing.minimumQuantity;
-
-                    return Card(
-                      elevation: isLow ? 2 : 1,
-                      color: isLow ? Colors.red.shade50 : null,
-                      child: Padding(
-                        padding: const EdgeInsets.all(16),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Expanded(
-                                  child: Text(
-                                    ing.name,
-                                    style: const TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-                                ),
-                                if (isLow)
-                                  Container(
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: 8,
-                                      vertical: 4,
-                                    ),
-                                    decoration: BoxDecoration(
-                                      color: Colors.red.shade200,
-                                      borderRadius: BorderRadius.circular(12),
-                                    ),
-                                    child: const Text(
-                                      'Sotib Bo\'lindi',
-                                      style: TextStyle(
-                                        fontSize: 11,
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.red,
-                                      ),
-                                    ),
-                                  ),
-                              ],
-                            ),
-                            const SizedBox(height: 12),
-                            Text(
-                              '${ing.quantity} ${ing.unit}',
-                              style: const TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            const SizedBox(height: 4),
-                            Text(
-                              'Min: ${ing.minimumQuantity} ${ing.unit}',
-                              style: TextStyle(
-                                fontSize: 12,
-                                color: Colors.grey.shade600,
-                              ),
-                            ),
-                            const SizedBox(height: 12),
-                            ClipRRect(
-                              borderRadius: BorderRadius.circular(8),
-                              child: LinearProgressIndicator(
-                                value: percentage / 100,
-                                minHeight: 8,
-                                backgroundColor: Colors.grey.shade300,
-                                valueColor: AlwaysStoppedAnimation(
-                                  isLow ? Colors.red : Colors.green,
-                                ),
-                              ),
-                            ),
-                            const SizedBox(height: 12),
-                            Row(
-                              children: [
-                                Expanded(
-                                  child: FilledButton.tonal(
-                                    onPressed: () =>
-                                        _showEditIngredientDialog(ing),
-                                    child: const Text('Tahrirlash'),
-                                  ),
-                                ),
-                                const SizedBox(width: 8),
-                                IconButton(
-                                  icon: const Icon(Icons.delete_outline,
-                                      color: Colors.red),
-                                  onPressed: () => _deleteIngredient(ing.id),
-                                  tooltip: 'O\'chirish',
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-                    );
-                  },
+                  itemBuilder: (_, idx) =>
+                      _buildIngredientCard(context, ingredients[idx]),
                 ),
           loading: () => const Center(child: CircularProgressIndicator()),
           error: (err, stack) => Text('Xato: $err'),
@@ -287,100 +174,73 @@ class _AdminIngredientsPageState extends ConsumerState<AdminIngredientsPage> {
     );
   }
 
-  void _showAddIngredientDialog() {
-    _nameController.clear();
-    _quantityController.clear();
-    _minimumController.clear();
-    _selectedUnit = 'dona';
+  Widget _buildIngredientCard(BuildContext context, Ingredient ing) {
+    final theme = Theme.of(context);
+    final scheme = theme.colorScheme;
+    final isLow = ing.quantity <= ing.minimumQuantity;
+    final fill = ing.minimumQuantity == 0
+        ? 1.0
+        : (ing.quantity / ing.minimumQuantity).clamp(0.0, 1.0);
 
-    showDialog(
-      context: context,
-      builder: (context) => StatefulBuilder(
-        builder: (context, setState) => AlertDialog(
-          title: const Text('Yangi Massaliq Qo\'shish'),
-          content: SingleChildScrollView(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
               children: [
-                TextField(
-                  controller: _nameController,
-                  decoration: const InputDecoration(
-                    labelText: 'Massaliq Nomi',
-                    border: OutlineInputBorder(),
+                Expanded(
+                  child: Text(
+                    ing.name,
+                    style: theme.textTheme.titleMedium,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                   ),
                 ),
-                const SizedBox(height: 12),
-                DropdownButtonFormField<String>(
-                  initialValue: _selectedUnit,
-                  decoration: const InputDecoration(
-                    labelText: 'Birlik',
-                    border: OutlineInputBorder(),
-                  ),
-                  items: units
-                      .map((u) => DropdownMenuItem(value: u, child: Text(u)))
-                      .toList(),
-                  onChanged: (value) {
-                    setState(() => _selectedUnit = value ?? 'dona');
-                  },
-                ),
-                const SizedBox(height: 12),
-                TextField(
-                  controller: _quantityController,
-                  keyboardType: TextInputType.number,
-                  decoration: const InputDecoration(
-                    labelText: 'Miqdori',
-                    border: OutlineInputBorder(),
-                  ),
-                ),
-                const SizedBox(height: 12),
-                TextField(
-                  controller: _minimumController,
-                  keyboardType: TextInputType.number,
-                  decoration: const InputDecoration(
-                    labelText: 'Minimal Miqdori',
-                    border: OutlineInputBorder(),
-                  ),
-                ),
+                if (isLow)
+                  StatusBadge(label: 'Sotib Bo\'lindi', color: scheme.error),
               ],
             ),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: const Text('Bekor qilish'),
+            const SizedBox(height: 8),
+            Text(
+              '${ing.quantity} ${ing.unit}',
+              style: theme.textTheme.titleLarge,
             ),
-            FilledButton(
-              onPressed: () async {
-                if (_nameController.text.isEmpty ||
-                    _quantityController.text.isEmpty ||
-                    _minimumController.text.isEmpty) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                        content: Text('Barcha maydonlarni to\'ldiring')),
-                  );
-                  return;
-                }
-
-                await FirebaseFirestore.instance
-                    .collection('cafes')
-                    .doc('main_cafe')
-                    .collection('ingredients')
-                    .add({
-                  'name': _nameController.text,
-                  'unit': _selectedUnit,
-                  'quantity': double.parse(_quantityController.text),
-                  'minimumQuantity': double.parse(_minimumController.text),
-                  'isOutOfStock': false,
-                  'lastUpdated': Timestamp.now(),
-                });
-
-                if (!context.mounted) return;
-                Navigator.pop(context);
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Massaliq qo\'shildi')),
-                );
-              },
-              child: const Text('Qo\'shish'),
+            Text(
+              'Min: ${ing.minimumQuantity} ${ing.unit}',
+              style: theme.textTheme.bodySmall?.copyWith(
+                color: scheme.onSurfaceVariant,
+              ),
+            ),
+            const SizedBox(height: 12),
+            ClipRRect(
+              borderRadius: BorderRadius.circular(4),
+              child: LinearProgressIndicator(
+                value: fill,
+                minHeight: 6,
+                color: isLow ? scheme.error : context.palette.success,
+              ),
+            ),
+            const Spacer(),
+            Row(
+              children: [
+                Expanded(
+                  child: OutlinedButton(
+                    onPressed: () => _showIngredientDialog(ing),
+                    style: OutlinedButton.styleFrom(
+                      minimumSize: const Size(0, 40),
+                    ),
+                    child: const Text('Tahrirlash'),
+                  ),
+                ),
+                const SizedBox(width: 8),
+                IconButton(
+                  icon: Icon(Icons.delete_outline, color: scheme.error),
+                  onPressed: () => _deleteIngredient(ing.id),
+                  tooltip: 'O\'chirish',
+                ),
+              ],
             ),
           ],
         ),
@@ -388,17 +248,22 @@ class _AdminIngredientsPageState extends ConsumerState<AdminIngredientsPage> {
     );
   }
 
-  void _showEditIngredientDialog(Ingredient ingredient) {
-    _nameController.text = ingredient.name;
-    _quantityController.text = ingredient.quantity.toString();
-    _minimumController.text = ingredient.minimumQuantity.toString();
-    _selectedUnit = ingredient.unit;
+  /// Shows the add form, or the edit form when [ingredient] is given.
+  void _showIngredientDialog([Ingredient? ingredient]) {
+    _nameController.text = ingredient?.name ?? '';
+    _quantityController.text = ingredient?.quantity.toString() ?? '';
+    _minimumController.text = ingredient?.minimumQuantity.toString() ?? '';
+    _selectedUnit = ingredient?.unit ?? _units.first;
 
     showDialog(
       context: context,
       builder: (context) => StatefulBuilder(
         builder: (context, setState) => AlertDialog(
-          title: const Text('Massaliq Tahrirlash'),
+          title: Text(
+            ingredient == null
+                ? 'Yangi Massaliq Qo\'shish'
+                : 'Massaliq Tahrirlash',
+          ),
           content: SingleChildScrollView(
             child: Column(
               mainAxisSize: MainAxisSize.min,
@@ -407,40 +272,31 @@ class _AdminIngredientsPageState extends ConsumerState<AdminIngredientsPage> {
                   controller: _nameController,
                   decoration: const InputDecoration(
                     labelText: 'Massaliq Nomi',
-                    border: OutlineInputBorder(),
                   ),
                 ),
                 const SizedBox(height: 12),
                 DropdownButtonFormField<String>(
                   initialValue: _selectedUnit,
-                  decoration: const InputDecoration(
-                    labelText: 'Birlik',
-                    border: OutlineInputBorder(),
-                  ),
-                  items: units
+                  decoration: const InputDecoration(labelText: 'Birlik'),
+                  items: _units
                       .map((u) => DropdownMenuItem(value: u, child: Text(u)))
                       .toList(),
                   onChanged: (value) {
-                    setState(() => _selectedUnit = value ?? 'dona');
+                    setState(() => _selectedUnit = value ?? _units.first);
                   },
                 ),
                 const SizedBox(height: 12),
                 TextField(
                   controller: _quantityController,
                   keyboardType: TextInputType.number,
-                  decoration: const InputDecoration(
-                    labelText: 'Miqdori',
-                    border: OutlineInputBorder(),
-                  ),
+                  decoration: const InputDecoration(labelText: 'Miqdori'),
                 ),
                 const SizedBox(height: 12),
                 TextField(
                   controller: _minimumController,
                   keyboardType: TextInputType.number,
-                  decoration: const InputDecoration(
-                    labelText: 'Minimal Miqdori',
-                    border: OutlineInputBorder(),
-                  ),
+                  decoration:
+                      const InputDecoration(labelText: 'Minimal Miqdori'),
                 ),
               ],
             ),
@@ -451,43 +307,49 @@ class _AdminIngredientsPageState extends ConsumerState<AdminIngredientsPage> {
               child: const Text('Bekor qilish'),
             ),
             FilledButton(
-              onPressed: () async {
-                if (_nameController.text.isEmpty ||
-                    _quantityController.text.isEmpty ||
-                    _minimumController.text.isEmpty) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                        content: Text('Barcha maydonlarni to\'ldiring')),
-                  );
-                  return;
-                }
-
-                final quantity = double.parse(_quantityController.text);
-                final minimum = double.parse(_minimumController.text);
-
-                await FirebaseFirestore.instance
-                    .collection('cafes')
-                    .doc('main_cafe')
-                    .collection('ingredients')
-                    .doc(ingredient.id)
-                    .update({
-                  'name': _nameController.text,
-                  'unit': _selectedUnit,
-                  'quantity': quantity,
-                  'minimumQuantity': minimum,
-                  'isOutOfStock': quantity <= minimum,
-                  'lastUpdated': Timestamp.now(),
-                });
-
-                if (!context.mounted) return;
-                Navigator.pop(context);
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Massaliq yangilandi')),
-                );
-              },
-              child: const Text('Saqlash'),
+              onPressed: () => _saveIngredient(context, ingredient),
+              child: Text(ingredient == null ? 'Qo\'shish' : 'Saqlash'),
             ),
           ],
+        ),
+      ),
+    );
+  }
+
+  Future<void> _saveIngredient(
+      BuildContext dialogContext, Ingredient? ingredient) async {
+    if (_nameController.text.isEmpty ||
+        _quantityController.text.isEmpty ||
+        _minimumController.text.isEmpty) {
+      ScaffoldMessenger.of(dialogContext).showSnackBar(
+        const SnackBar(content: Text('Barcha maydonlarni to\'ldiring')),
+      );
+      return;
+    }
+
+    final quantity = double.parse(_quantityController.text);
+    final minimum = double.parse(_minimumController.text);
+    final data = {
+      'name': _nameController.text,
+      'unit': _selectedUnit,
+      'quantity': quantity,
+      'minimumQuantity': minimum,
+      'isOutOfStock': ingredient == null ? false : quantity <= minimum,
+      'lastUpdated': Timestamp.now(),
+    };
+
+    if (ingredient == null) {
+      await _collection.add(data);
+    } else {
+      await _collection.doc(ingredient.id).update(data);
+    }
+
+    if (!dialogContext.mounted) return;
+    Navigator.pop(dialogContext);
+    ScaffoldMessenger.of(dialogContext).showSnackBar(
+      SnackBar(
+        content: Text(
+          ingredient == null ? 'Massaliq qo\'shildi' : 'Massaliq yangilandi',
         ),
       ),
     );
@@ -506,12 +368,7 @@ class _AdminIngredientsPageState extends ConsumerState<AdminIngredientsPage> {
           ),
           FilledButton(
             onPressed: () async {
-              await FirebaseFirestore.instance
-                  .collection('cafes')
-                  .doc('main_cafe')
-                  .collection('ingredients')
-                  .doc(ingredientId)
-                  .delete();
+              await _collection.doc(ingredientId).delete();
 
               if (!context.mounted) return;
               Navigator.pop(context);
@@ -519,6 +376,9 @@ class _AdminIngredientsPageState extends ConsumerState<AdminIngredientsPage> {
                 const SnackBar(content: Text('Massaliq o\'chirildi')),
               );
             },
+            style: FilledButton.styleFrom(
+              backgroundColor: Theme.of(context).colorScheme.error,
+            ),
             child: const Text('Ha, O\'chirish'),
           ),
         ],

@@ -1,29 +1,37 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+
+import '../../../../core/theme/app_theme.dart';
+import '../../../../core/widgets/stat_tile.dart';
+import '../../../../core/widgets/status_badge.dart';
+import '../../../../models/order_model.dart';
+import '../../../../services/firestore_service.dart';
+import '../../../auth/domain/auth_provider.dart';
 import '../../../orders/domain/order_providers.dart';
+import '../../domain/analytics_provider.dart';
 import '../../domain/staff_call_action_provider.dart';
 import '../../domain/staff_calls_provider.dart';
-import '../../domain/analytics_provider.dart';
-import '../../../auth/domain/auth_provider.dart';
 import 'admin_ingredients_page.dart';
 
 final _orderSearchProvider = StateProvider<String>((ref) => '');
 final _orderStatusFilterProvider = StateProvider<String>((ref) => 'all');
 final _selectedSectionProvider = StateProvider<String>((ref) => 'dashboard');
 
+/// Width below which the sidebar becomes a drawer.
+const _mobileBreakpoint = 900.0;
+
 class AdminDashboardClean extends ConsumerWidget {
   const AdminDashboardClean({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final isMobile = MediaQuery.of(context).size.width < 900;
+    final isMobile = MediaQuery.sizeOf(context).width < _mobileBreakpoint;
     final selectedSection = ref.watch(_selectedSectionProvider);
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('🍽️ Admin Panel'),
-        elevation: 0,
+        title: const Text('Admin Panel'),
         actions: [
           IconButton(
             icon: const Icon(Icons.logout),
@@ -35,19 +43,23 @@ class AdminDashboardClean extends ConsumerWidget {
       drawer: isMobile ? _buildSidebar(context, ref, selectedSection) : null,
       body: Row(
         children: [
-          // Sidebar (Desktop only)
           if (!isMobile)
             Container(
               width: 260,
-              color: Colors.grey.shade50,
+              decoration: BoxDecoration(
+                color: Theme.of(context).colorScheme.surface,
+                border: Border(
+                  right: BorderSide(
+                    color: Theme.of(context).colorScheme.outlineVariant,
+                  ),
+                ),
+              ),
               child: _buildSidebar(context, ref, selectedSection),
             ),
-
-          // Main content
           Expanded(
             child: SingleChildScrollView(
               child: Padding(
-                padding: const EdgeInsets.all(20),
+                padding: const EdgeInsets.all(24),
                 child: _buildMainContent(context, ref, selectedSection),
               ),
             ),
@@ -59,31 +71,50 @@ class AdminDashboardClean extends ConsumerWidget {
 
   Widget _buildSidebar(
       BuildContext context, WidgetRef ref, String selectedSection) {
-    final sidebarItems = [
-      ('dashboard', Icons.dashboard, '📊 Dashboard'),
-      ('orders', Icons.receipt, '📋 Sifarishlar'),
-      ('staff_calls', Icons.phone_in_talk, '🔔 Staff Calls'),
-      ('kitchen', Icons.restaurant, '👨‍🍳 Oshxona'),
-      ('ingredients', Icons.inventory_2, '🥘 Massaliqlar'),
-      ('qr', Icons.qr_code_2, '🔲 QR Kodlar'),
-      ('menu', Icons.restaurant_menu, '📖 Menyu'),
+    const sidebarItems = [
+      ('dashboard', Icons.dashboard_outlined, 'Dashboard'),
+      ('orders', Icons.receipt_long_outlined, 'Sifarishlar'),
+      ('staff_calls', Icons.notifications_none, 'Staff Calls'),
+      ('kitchen', Icons.soup_kitchen_outlined, 'Oshxona'),
+      ('ingredients', Icons.inventory_2_outlined, 'Massaliqlar'),
+      ('qr', Icons.qr_code_2, 'QR Kodlar'),
+      ('menu', Icons.menu_book_outlined, 'Menyu'),
     ];
+    final theme = Theme.of(context);
 
     return Column(
       children: [
-        const Padding(
-          padding: EdgeInsets.all(16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+        Padding(
+          padding: const EdgeInsets.all(20),
+          child: Row(
             children: [
-              Text(
-                'Admin Panel',
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              Container(
+                width: 36,
+                height: 36,
+                decoration: BoxDecoration(
+                  color: theme.colorScheme.primary,
+                  borderRadius: BorderRadius.circular(AppTheme.radiusSmall),
+                ),
+                child: Icon(
+                  Icons.restaurant,
+                  size: 20,
+                  color: theme.colorScheme.onPrimary,
+                ),
               ),
-              SizedBox(height: 4),
-              Text(
-                'Restoran Boshqaruvi',
-                style: TextStyle(fontSize: 12, color: Colors.grey),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text('Admin Panel', style: theme.textTheme.titleMedium),
+                    Text(
+                      'Restoran Boshqaruvi',
+                      style: theme.textTheme.bodySmall?.copyWith(
+                        color: theme.colorScheme.onSurfaceVariant,
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ],
           ),
@@ -91,17 +122,21 @@ class AdminDashboardClean extends ConsumerWidget {
         const Divider(),
         Expanded(
           child: ListView(
-            padding: const EdgeInsets.symmetric(horizontal: 8),
-            children: sidebarItems
-                .map((item) => _buildSidebarItem(
-                      context,
-                      ref,
-                      item.$1,
-                      item.$2,
-                      item.$3,
-                      selectedSection == item.$1,
-                    ))
-                .toList(),
+            padding: const EdgeInsets.all(12),
+            children: [
+              for (final item in sidebarItems)
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 4),
+                  child: _buildSidebarItem(
+                    context,
+                    ref,
+                    item.$1,
+                    item.$2,
+                    item.$3,
+                    selectedSection == item.$1,
+                  ),
+                ),
+            ],
           ),
         ),
       ],
@@ -112,13 +147,16 @@ class AdminDashboardClean extends ConsumerWidget {
       IconData icon, String label, bool isSelected) {
     return ListTile(
       selected: isSelected,
-      leading: Icon(icon, size: 24),
+      leading: Icon(icon, size: 22),
       title: Text(label),
-      selectedTileColor: Colors.blue.withValues(alpha: 0.1),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+      selectedTileColor: Theme.of(context).colorScheme.primaryContainer,
+      selectedColor: Theme.of(context).colorScheme.onPrimaryContainer,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(AppTheme.radiusSmall),
+      ),
       onTap: () {
         ref.read(_selectedSectionProvider.notifier).state = id;
-        if (MediaQuery.of(context).size.width < 900) {
+        if (MediaQuery.sizeOf(context).width < _mobileBreakpoint) {
           Navigator.pop(context);
         }
       },
@@ -128,26 +166,43 @@ class AdminDashboardClean extends ConsumerWidget {
   Widget _buildMainContent(
       BuildContext context, WidgetRef ref, String selectedSection) {
     switch (selectedSection) {
-      case 'dashboard':
-        return _buildDashboardSection(context, ref);
       case 'orders':
         return _buildOrdersSection(context, ref);
       case 'staff_calls':
         return _buildStaffCallsSection(context, ref);
       case 'kitchen':
-        return _buildKitchenSection(context, ref);
+        return _buildLinkSection(
+          context,
+          icon: Icons.soup_kitchen_outlined,
+          title: 'Oshxona ko\'rinishi',
+          buttonLabel: 'Oshxonaga o\'tish',
+          route: '/admin/kitchen',
+        );
       case 'ingredients':
         return const AdminIngredientsPage();
       case 'qr':
-        return _buildQRSection(context, ref);
+        return _buildLinkSection(
+          context,
+          icon: Icons.qr_code_2,
+          title: 'QR Kod Generator',
+          buttonLabel: 'QR Kodlarni Boshqarish',
+          route: '/admin/qr',
+        );
       case 'menu':
-        return _buildMenuSection(context, ref);
+        return _buildLinkSection(
+          context,
+          icon: Icons.menu_book_outlined,
+          title: 'Menyu Boshqaruvi',
+          buttonLabel: 'Menyunu Tahrirlash',
+          route: '/admin/menu',
+        );
       default:
         return _buildDashboardSection(context, ref);
     }
   }
 
   Widget _buildDashboardSection(BuildContext context, WidgetRef ref) {
+    final theme = Theme.of(context);
     final orders = ref.watch(ordersProvider);
     final analytics = ref.watch(analyticsProvider);
     final staffCallsAsync = ref.watch(staffCallsProvider);
@@ -155,141 +210,74 @@ class AdminDashboardClean extends ConsumerWidget {
     final itemsAsync = ref.watch(menuItemsProvider);
 
     final todayStats = analytics.getTodayStats(orders);
-    final topItems = analytics.getTopItems(orders);
+    final topItems = analytics.getTopItems(orders).take(5).toList();
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
-          'Dashboard',
-          style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
-        ),
-        const SizedBox(height: 8),
+        Text('Dashboard', style: theme.textTheme.headlineMedium),
+        const SizedBox(height: 4),
         Text(
           'Bugungi statistika va real-time ma\'lumotlar',
-          style: TextStyle(fontSize: 14, color: Colors.grey.shade600),
+          style: theme.textTheme.bodyMedium?.copyWith(
+            color: theme.colorScheme.onSurfaceVariant,
+          ),
         ),
         const SizedBox(height: 24),
-
-        // Revenue Card
-        Container(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [Colors.green.shade400, Colors.green.shade600],
+        Card(
+          child: Padding(
+            padding: const EdgeInsets.all(24),
+            child: Wrap(
+              spacing: 48,
+              runSpacing: 16,
+              crossAxisAlignment: WrapCrossAlignment.end,
+              children: [
+                _LabeledValue(
+                  label: 'Bugungi Daromad',
+                  value: '${todayStats['totalRevenue'] ?? 0} so\'m',
+                  large: true,
+                ),
+                _LabeledValue(
+                  label: 'Sifarish soni',
+                  value: '${todayStats['totalOrders'] ?? 0}',
+                ),
+                _LabeledValue(
+                  label: 'O\'rtacha Sifarish',
+                  value: '${todayStats['avgOrderValue'] ?? 0} so\'m',
+                ),
+              ],
             ),
-            borderRadius: BorderRadius.circular(12),
-          ),
-          padding: const EdgeInsets.all(24),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Text(
-                'Bugungi Daromad',
-                style: TextStyle(
-                  color: Colors.white70,
-                  fontSize: 14,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-              const SizedBox(height: 8),
-              Text(
-                '${todayStats['totalRevenue'] ?? 0} so\'m',
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 32,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              const SizedBox(height: 12),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Sifarish soni',
-                        style: TextStyle(
-                          color: Colors.white.withValues(alpha: 0.8),
-                          fontSize: 12,
-                        ),
-                      ),
-                      Text(
-                        '${todayStats['totalOrders'] ?? 0}',
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ],
-                  ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'O\'rtacha Sifarish',
-                        style: TextStyle(
-                          color: Colors.white.withValues(alpha: 0.8),
-                          fontSize: 12,
-                        ),
-                      ),
-                      Text(
-                        '${todayStats['avgOrderValue'] ?? 0} so\'m',
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ],
           ),
         ),
-        const SizedBox(height: 24),
-
-        // Statistics Grid
-        GridView.count(
-          crossAxisCount: MediaQuery.of(context).size.width > 1200 ? 4 : 2,
+        const SizedBox(height: 16),
+        GridView(
           shrinkWrap: true,
           physics: const NeverScrollableScrollPhysics(),
-          mainAxisSpacing: 16,
-          crossAxisSpacing: 16,
+          gridDelegate: StatTile.gridDelegate,
           children: [
-            _buildStatisticCard(
-              title: 'Kutilmoqdagi',
+            StatTile(
+              label: 'Kutilmoqdagi',
               value: '${todayStats['pendingOrders'] ?? 0}',
               icon: Icons.schedule,
-              color: Colors.orange,
             ),
-            _buildStatisticCard(
-              title: 'Tayyor',
+            StatTile(
+              label: 'Tayyor',
               value: '${todayStats['completedOrders'] ?? 0}',
-              icon: Icons.check_circle,
-              color: Colors.green,
+              icon: Icons.check_circle_outline,
             ),
-            _buildStatisticCard(
-              title: 'Menyu Mahsulotlari',
+            StatTile(
+              label: 'Menyu Mahsulotlari',
               value: '${itemsAsync.value?.length ?? 0}',
-              icon: Icons.fastfood,
-              color: Colors.blue,
+              icon: Icons.restaurant_menu,
             ),
-            _buildStatisticCard(
-              title: 'Kategoriyalar',
+            StatTile(
+              label: 'Kategoriyalar',
               value: '${categoriesAsync.value?.length ?? 0}',
-              icon: Icons.category,
-              color: Colors.purple,
+              icon: Icons.category_outlined,
             ),
           ],
         ),
         const SizedBox(height: 24),
-
-        // Staff Calls Alert
         staffCallsAsync.when(
           data: (calls) => calls.isNotEmpty
               ? _buildStaffCallsAlert(calls, context, ref)
@@ -297,179 +285,104 @@ class AdminDashboardClean extends ConsumerWidget {
           loading: () => const SizedBox.shrink(),
           error: (err, stack) => const SizedBox.shrink(),
         ),
-
-        // Top Items
-        if (topItems.isNotEmpty)
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const SizedBox(height: 24),
-              const Text(
-                'Eng ko\'p buyurtilgan',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 12),
-              Card(
-                elevation: 1,
-                child: Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: ListView.builder(
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    itemCount: topItems.length > 5 ? 5 : topItems.length,
-                    itemBuilder: (_, idx) {
-                      final item = topItems[idx];
-                      return Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 8),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Expanded(
-                              child: Text(
-                                item.name,
-                                style: const TextStyle(
-                                  fontWeight: FontWeight.w500,
-                                  fontSize: 14,
-                                ),
-                              ),
+        if (topItems.isNotEmpty) ...[
+          const SizedBox(height: 24),
+          Text('Eng ko\'p buyurtilgan', style: theme.textTheme.titleLarge),
+          const SizedBox(height: 12),
+          Card(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              child: Column(
+                children: [
+                  for (final item in topItems)
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 8),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: Text(
+                              item.name,
+                              style: theme.textTheme.bodyLarge,
                             ),
-                            Container(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 12,
-                                vertical: 6,
-                              ),
-                              decoration: BoxDecoration(
-                                color: Colors.blue.withValues(alpha: 0.1),
-                                borderRadius: BorderRadius.circular(20),
-                              ),
-                              child: Text(
-                                '${item.orderCount}x',
-                                style: const TextStyle(
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.blue,
-                                ),
-                              ),
+                          ),
+                          Text(
+                            '${item.orderCount}x',
+                            style: theme.textTheme.labelLarge?.copyWith(
+                              color: theme.colorScheme.onSurfaceVariant,
                             ),
-                          ],
-                        ),
-                      );
-                    },
-                  ),
-                ),
+                          ),
+                        ],
+                      ),
+                    ),
+                ],
               ),
-            ],
+            ),
           ),
+        ],
       ],
-    );
-  }
-
-  Widget _buildStatisticCard({
-    required String title,
-    required String value,
-    required IconData icon,
-    required Color color,
-  }) {
-    return Card(
-      elevation: 1,
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(icon, size: 32, color: color),
-            const SizedBox(height: 12),
-            Text(
-              value,
-              style: const TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              title,
-              style: TextStyle(
-                fontSize: 12,
-                color: Colors.grey.shade600,
-              ),
-            ),
-          ],
-        ),
-      ),
     );
   }
 
   Widget _buildStaffCallsAlert(
       List<StaffCall> calls, BuildContext context, WidgetRef ref) {
+    final theme = Theme.of(context);
+    final scheme = theme.colorScheme;
+
     return Container(
-      decoration: BoxDecoration(
-        border: Border.all(color: Colors.red.shade300, width: 2),
-        borderRadius: BorderRadius.circular(8),
-        color: Colors.red.shade50,
-      ),
       padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: scheme.primaryContainer,
+        borderRadius: BorderRadius.circular(AppTheme.radius),
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             children: [
-              const Icon(Icons.phone_in_talk, color: Colors.red, size: 28),
+              Icon(Icons.notifications_active_outlined, color: scheme.primary),
               const SizedBox(width: 12),
-              const Expanded(
+              Expanded(
                 child: Text(
-                  '🔔 Staff Calls (Xodimlar chaqirilmoqda)',
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.red,
+                  'Staff Calls (Xodimlar chaqirilmoqda)',
+                  style: theme.textTheme.titleMedium?.copyWith(
+                    color: scheme.onPrimaryContainer,
                   ),
                 ),
               ),
-              Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                decoration: BoxDecoration(
-                  color: Colors.red,
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Text(
-                  '${calls.length}',
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
+              StatusBadge(label: '${calls.length}', color: scheme.primary),
             ],
           ),
-          const SizedBox(height: 12),
-          ...calls.take(3).map(
-                (call) => Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 6),
-                  child: Row(
-                    children: [
-                      const Icon(Icons.table_restaurant, size: 20),
-                      const SizedBox(width: 12),
-                      Expanded(
-                        child:
-                            Text('Stol ${call.tableNumber} - Xodim chaqirdi'),
+          const SizedBox(height: 8),
+          for (final call in calls.take(3))
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 6),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Text(
+                      'Stol ${call.tableNumber} - Xodim chaqirdi',
+                      style: theme.textTheme.bodyLarge?.copyWith(
+                        color: scheme.onPrimaryContainer,
                       ),
-                      FilledButton.tonal(
-                        onPressed: () =>
-                            _resolveStaffCall(ref, call.id, context),
-                        child: const Text('Tayyorlandi'),
-                      ),
-                    ],
+                    ),
                   ),
-                ),
+                  FilledButton(
+                    onPressed: () => _resolveStaffCall(ref, call.id, context),
+                    style: FilledButton.styleFrom(
+                      minimumSize: const Size(0, 40),
+                    ),
+                    child: const Text('Tayyorlandi'),
+                  ),
+                ],
               ),
+            ),
         ],
       ),
     );
   }
 
   Widget _buildOrdersSection(BuildContext context, WidgetRef ref) {
+    final theme = Theme.of(context);
     final orders = ref.watch(ordersProvider);
     final searchQuery = ref.watch(_orderSearchProvider);
     final statusFilter = ref.watch(_orderStatusFilterProvider);
@@ -483,20 +396,16 @@ class AdminDashboardClean extends ConsumerWidget {
       filteredOrders = filteredOrders
           .where((o) =>
               o.tableNumber.toString().contains(searchQuery) ||
-              o.orderNumber.toString().contains(searchQuery))
+              o.orderNumber.contains(searchQuery))
           .toList();
     }
+    final visibleOrders = filteredOrders.take(20).toList();
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
-          'Sifarishlar',
-          style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
-        ),
+        Text('Sifarishlar', style: theme.textTheme.headlineMedium),
         const SizedBox(height: 24),
-
-        // Search & Filter
         Row(
           children: [
             Expanded(
@@ -504,76 +413,80 @@ class AdminDashboardClean extends ConsumerWidget {
                 onChanged: (value) {
                   ref.read(_orderSearchProvider.notifier).state = value;
                 },
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   hintText: 'Stol yoki order ID buldan qidiring...',
-                  prefixIcon: const Icon(Icons.search),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8),
-                  ),
+                  prefixIcon: Icon(Icons.search),
                 ),
               ),
             ),
             const SizedBox(width: 12),
-            DropdownButton<String>(
-              value: statusFilter,
-              items: const [
-                DropdownMenuItem(value: 'all', child: Text('Hammasini')),
-                DropdownMenuItem(value: 'pending', child: Text('Kutilmoqda')),
-                DropdownMenuItem(
-                    value: 'preparing', child: Text('Tayyorlanmoqda')),
-                DropdownMenuItem(value: 'ready', child: Text('Tayyor')),
-                DropdownMenuItem(value: 'completed', child: Text('Tugallandi')),
-              ],
-              onChanged: (value) {
-                if (value != null) {
-                  ref.read(_orderStatusFilterProvider.notifier).state = value;
-                }
-              },
+            Container(
+              height: 52,
+              padding: const EdgeInsets.symmetric(horizontal: 12),
+              decoration: BoxDecoration(
+                color: theme.colorScheme.surface,
+                border: Border.all(color: theme.colorScheme.outline),
+                borderRadius: BorderRadius.circular(AppTheme.radiusSmall + 2),
+              ),
+              child: DropdownButtonHideUnderline(
+                child: DropdownButton<String>(
+                  value: statusFilter,
+                  borderRadius: BorderRadius.circular(AppTheme.radiusSmall),
+                  items: const [
+                    DropdownMenuItem(value: 'all', child: Text('Hammasini')),
+                    DropdownMenuItem(
+                        value: 'pending', child: Text('Kutilmoqda')),
+                    DropdownMenuItem(
+                        value: 'preparing', child: Text('Tayyorlanmoqda')),
+                    DropdownMenuItem(value: 'ready', child: Text('Tayyor')),
+                    DropdownMenuItem(
+                        value: 'completed', child: Text('Tugallandi')),
+                  ],
+                  onChanged: (value) {
+                    if (value != null) {
+                      ref.read(_orderStatusFilterProvider.notifier).state =
+                          value;
+                    }
+                  },
+                ),
+              ),
             ),
           ],
         ),
         const SizedBox(height: 16),
-
-        // Orders List
-        if (filteredOrders.isEmpty)
-          Card(
-            child: Padding(
-              padding: const EdgeInsets.all(24),
-              child: Center(
-                child: Text(
-                  'Sifarish topilmadi',
-                  style: TextStyle(color: Colors.grey.shade600),
-                ),
-              ),
-            ),
-          )
+        if (visibleOrders.isEmpty)
+          const _EmptyCard(message: 'Sifarish topilmadi')
         else
-          ListView.builder(
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            itemCount: filteredOrders.length > 20 ? 20 : filteredOrders.length,
-            itemBuilder: (_, idx) => _buildOrderCard(
-              filteredOrders[idx],
-              () => _confirmCancelOrder(context, ref, filteredOrders[idx]),
+          for (final order in visibleOrders) ...[
+            _buildOrderCard(
+              context,
+              order,
+              () => _confirmCancelOrder(context, ref, order),
             ),
-          ),
+            const SizedBox(height: 12),
+          ],
       ],
     );
   }
 
-  Widget _buildOrderCard(dynamic order, VoidCallback onCancel) {
+  Widget _buildOrderCard(
+      BuildContext context, OrderModel order, VoidCallback onCancel) {
+    final theme = Theme.of(context);
+    final color = context.palette.statusColor(theme.colorScheme, order.status);
+
     return Card(
-      margin: const EdgeInsets.only(bottom: 12),
       child: Padding(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.fromLTRB(16, 12, 8, 12),
         child: Row(
           children: [
-            CircleAvatar(
-              backgroundColor: _getStatusColor(order.status),
-              child: Icon(
-                _getStatusIcon(order.status),
-                color: Colors.white,
+            Container(
+              width: 40,
+              height: 40,
+              decoration: BoxDecoration(
+                color: color.withValues(alpha: 0.12),
+                borderRadius: BorderRadius.circular(10),
               ),
+              child: Icon(_statusIcon(order.status), color: color, size: 20),
             ),
             const SizedBox(width: 16),
             Expanded(
@@ -582,36 +495,21 @@ class AdminDashboardClean extends ConsumerWidget {
                 children: [
                   Text(
                     'Stol #${order.tableNumber}',
-                    style: const TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                    ),
+                    style: theme.textTheme.titleMedium,
                   ),
-                  const SizedBox(height: 4),
                   Text(
                     'Order #${order.orderNumber}',
-                    style: TextStyle(fontSize: 12, color: Colors.grey.shade600),
+                    style: theme.textTheme.bodySmall?.copyWith(
+                      color: theme.colorScheme.onSurfaceVariant,
+                    ),
                   ),
                 ],
               ),
             ),
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-              decoration: BoxDecoration(
-                color: _getStatusColor(order.status).withValues(alpha: 0.2),
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Text(
-                _getStatusText(order.status),
-                style: TextStyle(
-                  fontWeight: FontWeight.w500,
-                  color: _getStatusColor(order.status),
-                ),
-              ),
-            ),
-            const SizedBox(width: 12),
+            StatusBadge(label: _statusText(order.status), color: color),
+            const SizedBox(width: 8),
             IconButton(
-              icon: const Icon(Icons.close, color: Colors.red),
+              icon: Icon(Icons.close, color: theme.colorScheme.error),
               onPressed: onCancel,
               tooltip: 'Bekor qilish',
             ),
@@ -622,99 +520,71 @@ class AdminDashboardClean extends ConsumerWidget {
   }
 
   Widget _buildStaffCallsSection(BuildContext context, WidgetRef ref) {
+    final theme = Theme.of(context);
     final staffCallsAsync = ref.watch(staffCallsProvider);
 
     return staffCallsAsync.when(
       data: (calls) => Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
-            'Staff Calls',
-            style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
-          ),
+          Text('Staff Calls', style: theme.textTheme.headlineMedium),
           const SizedBox(height: 24),
           if (calls.isEmpty)
-            Card(
-              child: Padding(
-                padding: const EdgeInsets.all(24),
-                child: Center(
-                  child: Column(
+            const _EmptyCard(
+              message: 'Hech qanday chaqiruv yo\'q',
+              icon: Icons.check_circle_outline,
+            )
+          else
+            for (final call in calls) ...[
+              Card(
+                child: Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Row(
                     children: [
-                      Icon(Icons.check_circle,
-                          size: 48, color: Colors.green.shade200),
-                      const SizedBox(height: 12),
-                      Text(
-                        'Hech qanday chaqiruv yo\'q',
-                        style: TextStyle(color: Colors.grey.shade600),
+                      Container(
+                        width: 48,
+                        height: 48,
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                          color: theme.colorScheme.primaryContainer,
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Text(
+                          '${call.tableNumber}',
+                          style: theme.textTheme.titleLarge?.copyWith(
+                            color: theme.colorScheme.onPrimaryContainer,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 16),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Stol #${call.tableNumber}',
+                              style: theme.textTheme.titleMedium,
+                            ),
+                            Text(
+                              'Xodim chaqirilmoqda',
+                              style: theme.textTheme.bodyMedium?.copyWith(
+                                color: theme.colorScheme.onSurfaceVariant,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      FilledButton(
+                        onPressed: () =>
+                            _resolveStaffCall(ref, call.id, context),
+                        child: const Text('Tayyorlandi'),
                       ),
                     ],
                   ),
                 ),
               ),
-            )
-          else
-            ListView.builder(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              itemCount: calls.length,
-              itemBuilder: (_, idx) {
-                final call = calls[idx];
-                return Card(
-                  margin: const EdgeInsets.only(bottom: 12),
-                  elevation: 2,
-                  child: Padding(
-                    padding: const EdgeInsets.all(16),
-                    child: Row(
-                      children: [
-                        Container(
-                          width: 60,
-                          height: 60,
-                          decoration: BoxDecoration(
-                            color: Colors.red.shade100,
-                            borderRadius: BorderRadius.circular(30),
-                          ),
-                          child: Center(
-                            child: Text(
-                              '${call.tableNumber}',
-                              style: const TextStyle(
-                                fontSize: 24,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.red,
-                              ),
-                            ),
-                          ),
-                        ),
-                        const SizedBox(width: 16),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'Stol #${call.tableNumber}',
-                                style: const TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              const SizedBox(height: 4),
-                              const Text(
-                                'Xodim chaqirilmoqda',
-                                style: TextStyle(fontSize: 14),
-                              ),
-                            ],
-                          ),
-                        ),
-                        FilledButton.tonal(
-                          onPressed: () =>
-                              _resolveStaffCall(ref, call.id, context),
-                          child: const Text('Tayyorlandi'),
-                        ),
-                      ],
-                    ),
-                  ),
-                );
-              },
-            ),
+              const SizedBox(height: 12),
+            ],
         ],
       ),
       loading: () => const Center(child: CircularProgressIndicator()),
@@ -722,85 +592,36 @@ class AdminDashboardClean extends ConsumerWidget {
     );
   }
 
-  Widget _buildKitchenSection(BuildContext context, WidgetRef ref) {
+  Widget _buildLinkSection(
+    BuildContext context, {
+    required IconData icon,
+    required String title,
+    required String buttonLabel,
+    required String route,
+  }) {
+    final theme = Theme.of(context);
+
     return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          const Icon(Icons.restaurant, size: 64, color: Colors.orange),
-          const SizedBox(height: 16),
-          const Text(
-            'Oshxona ko\'rinishi',
-            style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-          ),
-          const SizedBox(height: 8),
-          FilledButton(
-            onPressed: () => context.go('/admin/kitchen'),
-            child: const Text('Oshxonaga o\'tish'),
-          ),
-        ],
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 64),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(icon, size: 48, color: theme.colorScheme.onSurfaceVariant),
+            const SizedBox(height: 16),
+            Text(title, style: theme.textTheme.titleLarge),
+            const SizedBox(height: 16),
+            FilledButton(
+              onPressed: () => context.go(route),
+              child: Text(buttonLabel),
+            ),
+          ],
+        ),
       ),
     );
   }
 
-  Widget _buildQRSection(BuildContext context, WidgetRef ref) {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          const Icon(Icons.qr_code_2, size: 64, color: Colors.blue),
-          const SizedBox(height: 16),
-          const Text(
-            'QR Kod Generator',
-            style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-          ),
-          const SizedBox(height: 8),
-          FilledButton(
-            onPressed: () => context.go('/admin/qr'),
-            child: const Text('QR Kodlarni Boshqarish'),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildMenuSection(BuildContext context, WidgetRef ref) {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          const Icon(Icons.restaurant_menu, size: 64, color: Colors.green),
-          const SizedBox(height: 16),
-          const Text(
-            'Menyu Boshqaruvi',
-            style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-          ),
-          const SizedBox(height: 8),
-          FilledButton(
-            onPressed: () => context.go('/admin/menu'),
-            child: const Text('Menyunu Tahrirlash'),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Color _getStatusColor(String status) {
-    switch (status) {
-      case 'pending':
-        return Colors.orange;
-      case 'preparing':
-        return Colors.blue;
-      case 'ready':
-        return Colors.green;
-      case 'completed':
-        return Colors.grey;
-      default:
-        return Colors.grey;
-    }
-  }
-
-  IconData _getStatusIcon(String status) {
+  IconData _statusIcon(String status) {
     switch (status) {
       case 'pending':
         return Icons.schedule;
@@ -809,13 +630,13 @@ class AdminDashboardClean extends ConsumerWidget {
       case 'ready':
         return Icons.done;
       case 'completed':
-        return Icons.check_circle;
+        return Icons.check_circle_outline;
       default:
-        return Icons.help;
+        return Icons.help_outline;
     }
   }
 
-  String _getStatusText(String status) {
+  String _statusText(String status) {
     switch (status) {
       case 'pending':
         return 'Kutilmoqda';
@@ -830,7 +651,8 @@ class AdminDashboardClean extends ConsumerWidget {
     }
   }
 
-  void _confirmCancelOrder(BuildContext context, WidgetRef ref, dynamic order) {
+  void _confirmCancelOrder(
+      BuildContext context, WidgetRef ref, OrderModel order) {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -846,6 +668,9 @@ class AdminDashboardClean extends ConsumerWidget {
               await ref.read(firestoreServiceProvider).cancelOrder(order.id);
               if (context.mounted) Navigator.pop(context);
             },
+            style: FilledButton.styleFrom(
+              backgroundColor: Theme.of(context).colorScheme.error,
+            ),
             child: const Text('Ha, Bekor Qilish'),
           ),
         ],
@@ -879,6 +704,76 @@ class AdminDashboardClean extends ConsumerWidget {
             child: const Text('Ha, Chiqish'),
           ),
         ],
+      ),
+    );
+  }
+}
+
+class _LabeledValue extends StatelessWidget {
+  final String label;
+  final String value;
+  final bool large;
+
+  const _LabeledValue({
+    required this.label,
+    required this.value,
+    this.large = false,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Text(
+          label,
+          style: theme.textTheme.bodySmall?.copyWith(
+            color: theme.colorScheme.onSurfaceVariant,
+          ),
+        ),
+        const SizedBox(height: 4),
+        Text(
+          value,
+          style: large
+              ? theme.textTheme.headlineMedium?.copyWith(fontSize: 32)
+              : theme.textTheme.titleLarge,
+        ),
+      ],
+    );
+  }
+}
+
+class _EmptyCard extends StatelessWidget {
+  final String message;
+  final IconData? icon;
+
+  const _EmptyCard({required this.message, this.icon});
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final muted = theme.colorScheme.onSurfaceVariant;
+
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(24),
+        child: Center(
+          child: Column(
+            children: [
+              if (icon != null) ...[
+                Icon(icon, size: 40, color: muted),
+                const SizedBox(height: 12),
+              ],
+              Text(
+                message,
+                style: theme.textTheme.bodyMedium?.copyWith(color: muted),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }

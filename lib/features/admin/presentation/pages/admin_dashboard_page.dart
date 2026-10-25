@@ -1,10 +1,16 @@
 import 'package:audioplayers/audioplayers.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+
+import '../../../../core/theme/app_theme.dart';
 import '../../../../core/widgets/app_scaffold.dart';
+import '../../../../core/widgets/stat_tile.dart';
+import '../../../../core/widgets/status_badge.dart';
 import '../../../../l10n/app_localizations.dart';
+import '../../../../models/order_model.dart';
+import '../../../../services/firestore_service.dart';
 import '../../../orders/domain/order_providers.dart';
 import '../../domain/staff_calls_provider.dart';
 
@@ -40,8 +46,11 @@ class _AdminDashboardPageState extends ConsumerState<AdminDashboardPage> {
       }
     });
 
+    final theme = Theme.of(context);
+
     return AppScaffold(
       title: l.adminPanel,
+      maxContentWidth: 960,
       actions: [
         IconButton(
           icon: const Icon(Icons.restaurant_menu),
@@ -49,7 +58,7 @@ class _AdminDashboardPageState extends ConsumerState<AdminDashboardPage> {
           onPressed: () => context.go('/admin/menu'),
         ),
         IconButton(
-          icon: const Icon(Icons.cancel),
+          icon: const Icon(Icons.cancel_outlined),
           tooltip: 'Cancel Order by Table',
           onPressed: () => _showCancelOrderDialog(context, ref),
         ),
@@ -57,70 +66,82 @@ class _AdminDashboardPageState extends ConsumerState<AdminDashboardPage> {
       child: ListView(
         padding: const EdgeInsets.all(16),
         children: [
-          _StatGrid(
-            categoryCount: categoriesAsync.value?.length ?? 0,
-            itemCount: itemsAsync.value?.length ?? 0,
-            orderCount: orders.length,
+          GridView(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            gridDelegate: StatTile.gridDelegate,
+            children: [
+              StatTile(
+                label: 'Categories',
+                value: '${categoriesAsync.value?.length ?? 0}',
+                icon: Icons.category_outlined,
+              ),
+              StatTile(
+                label: 'Menu Items',
+                value: '${itemsAsync.value?.length ?? 0}',
+                icon: Icons.restaurant_menu,
+              ),
+              StatTile(
+                label: 'Active Orders',
+                value: '${orders.length}',
+                icon: Icons.receipt_long_outlined,
+              ),
+              const StatTile(
+                label: 'System',
+                value: 'Live',
+                icon: Icons.sensors,
+              ),
+            ],
           ),
-          const SizedBox(height: 24),
-          // STAFF CALLS SECTION
+          const SizedBox(height: 32),
           staffCallsAsync.when(
-            data: (calls) => calls.isNotEmpty
-                ? Column(
+            data: (calls) => calls.isEmpty
+                ? const SizedBox.shrink()
+                : Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Row(
                         children: [
-                          const Icon(Icons.phone_in_talk,
-                              color: Colors.red, size: 24),
+                          Text('Staff Calls',
+                              style: theme.textTheme.titleLarge),
                           const SizedBox(width: 8),
-                          const Text(
-                            'Staff Calls',
-                            style: TextStyle(
-                                fontSize: 20, fontWeight: FontWeight.bold),
-                          ),
-                          const Spacer(),
-                          Container(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 8, vertical: 4),
-                            decoration: BoxDecoration(
-                              color: Colors.red,
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            child: Text(
-                              '${calls.length}',
-                              style: const TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold),
-                            ),
+                          StatusBadge(
+                            label: '${calls.length}',
+                            color: theme.colorScheme.primary,
                           ),
                         ],
                       ),
                       const SizedBox(height: 12),
-                      ...calls.map((call) => _StaffCallCard(
-                            call: call,
-                            onResolve: () =>
-                                _resolveStaffCall(ref, call.id, context),
-                          )),
+                      for (final call in calls) ...[
+                        _StaffCallCard(
+                          call: call,
+                          onResolve: () =>
+                              _resolveStaffCall(ref, call.id, context),
+                        ),
+                        const SizedBox(height: 8),
+                      ],
                       const SizedBox(height: 24),
                     ],
-                  )
-                : const SizedBox.shrink(),
+                  ),
             loading: () => const SizedBox.shrink(),
             error: (err, stack) => const SizedBox.shrink(),
           ),
-          Text(
-            l.orders,
-            style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-          ),
+          Text(l.orders, style: theme.textTheme.titleLarge),
           const SizedBox(height: 12),
           if (orders.isEmpty)
             const Card(
-                child: Padding(
-                    padding: EdgeInsets.all(16), child: Text('No orders yet'))),
-          ...orders.take(10).map((order) => _OrderCard(
-                order: order,
-                onCancel: () => _confirmCancelOrder(context, ref, order),
-              )),
+              child: Padding(
+                padding: EdgeInsets.all(16),
+                child: Text('No orders yet'),
+              ),
+            ),
+          for (final order in orders.take(10)) ...[
+            _OrderCard(
+              order: order,
+              onCancel: () => _confirmCancelOrder(context, ref, order),
+            ),
+            const SizedBox(height: 8),
+          ],
         ],
       ),
     );
@@ -132,7 +153,7 @@ class _AdminDashboardPageState extends ConsumerState<AdminDashboardPage> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('📊 Cancel Order by Table'),
+        title: const Text('Cancel Order by Table'),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -227,11 +248,12 @@ class _AdminDashboardPageState extends ConsumerState<AdminDashboardPage> {
     }
   }
 
-  void _confirmCancelOrder(BuildContext context, WidgetRef ref, dynamic order) {
+  void _confirmCancelOrder(
+      BuildContext context, WidgetRef ref, OrderModel order) {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('⚠️ Confirm'),
+        title: const Text('Confirm'),
         content: Text('Cancel order for table #${order.tableNumber}?'),
         actions: [
           TextButton(
@@ -244,7 +266,9 @@ class _AdminDashboardPageState extends ConsumerState<AdminDashboardPage> {
               if (!context.mounted) return;
               Navigator.pop(context);
             },
-            style: FilledButton.styleFrom(backgroundColor: Colors.red),
+            style: FilledButton.styleFrom(
+              backgroundColor: Theme.of(context).colorScheme.error,
+            ),
             child: Text(AppLocalizations.of(context)?.yes ?? 'Yes, Cancel'),
           ),
         ],
@@ -270,76 +294,59 @@ class _AdminDashboardPageState extends ConsumerState<AdminDashboardPage> {
 }
 
 class _OrderCard extends StatelessWidget {
-  final dynamic order;
+  final OrderModel order;
   final VoidCallback onCancel;
 
   const _OrderCard({required this.order, required this.onCancel});
 
   @override
   Widget build(BuildContext context) {
-    final statusColor = _getStatusColor(order.status);
+    final theme = Theme.of(context);
+    final statusColor =
+        context.palette.statusColor(theme.colorScheme, order.status);
 
     return Card(
-      child: ListTile(
-        title: Text('Order #${order.orderNumber}'),
-        subtitle: Text('Table #${order.tableNumber} • ${order.status}'),
-        trailing: SizedBox(
-          width: 120,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.end,
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(16, 12, 4, 12),
+        child: Row(
+          children: [
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    '${order.total.toStringAsFixed(0)}',
-                    style: const TextStyle(fontWeight: FontWeight.bold),
+                    'Order #${order.orderNumber}',
+                    style: theme.textTheme.titleMedium,
                   ),
-                  Container(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                    decoration: BoxDecoration(
-                      color: statusColor.withValues(alpha: 0.2),
-                      borderRadius: BorderRadius.circular(4),
-                    ),
-                    child: Text(
-                      order.status,
-                      style: TextStyle(fontSize: 11, color: statusColor),
+                  Text(
+                    'Table #${order.tableNumber}',
+                    style: theme.textTheme.bodySmall?.copyWith(
+                      color: theme.colorScheme.onSurfaceVariant,
                     ),
                   ),
                 ],
               ),
-              PopupMenuButton(
-                itemBuilder: (context) => [
-                  PopupMenuItem(
-                    onTap: onCancel,
-                    child: const Text('Cancel'),
-                  ),
-                ],
-              ),
-            ],
-          ),
+            ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                Text(
+                  order.total.toStringAsFixed(0),
+                  style: theme.textTheme.titleMedium,
+                ),
+                const SizedBox(height: 4),
+                StatusBadge(label: order.status, color: statusColor),
+              ],
+            ),
+            PopupMenuButton<void>(
+              itemBuilder: (context) => [
+                PopupMenuItem(onTap: onCancel, child: const Text('Cancel')),
+              ],
+            ),
+          ],
         ),
       ),
     );
-  }
-
-  Color _getStatusColor(String status) {
-    switch (status) {
-      case 'pending':
-        return Colors.orange;
-      case 'preparing':
-        return Colors.blue;
-      case 'ready':
-        return Colors.green;
-      case 'completed':
-        return Colors.grey;
-      case 'cancelled':
-        return Colors.red;
-      default:
-        return Colors.grey;
-    }
   }
 }
 
@@ -351,115 +358,45 @@ class _StaffCallCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      color: Colors.red.shade50,
-      child: ListTile(
-        leading: Container(
-          decoration: BoxDecoration(
-            color: Colors.red,
-            borderRadius: BorderRadius.circular(8),
-          ),
-          padding: const EdgeInsets.all(8),
-          child: const Icon(Icons.phone_callback, color: Colors.white),
-        ),
-        title: Text(
-          'Table #${call.tableNumber}',
-          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
-        ),
-        subtitle: Text(
-          'Called at ${call.createdAt.hour}:${call.createdAt.minute.toString().padLeft(2, '0')}',
-          style: TextStyle(color: Colors.grey.shade700),
-        ),
-        trailing: FilledButton.tonal(
-          onPressed: onResolve,
-          style: FilledButton.styleFrom(
-            backgroundColor: Colors.green.shade100,
-          ),
-          child: const Text(
-            'Resolve',
-            style: TextStyle(color: Colors.green),
-          ),
-        ),
+    final theme = Theme.of(context);
+    final scheme = theme.colorScheme;
+    final minute = call.createdAt.minute.toString().padLeft(2, '0');
+
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      decoration: BoxDecoration(
+        color: scheme.primaryContainer,
+        borderRadius: BorderRadius.circular(AppTheme.radius),
       ),
-    );
-  }
-}
-
-class _StatGrid extends StatelessWidget {
-  final int categoryCount;
-  final int itemCount;
-  final int orderCount;
-
-  const _StatGrid(
-      {required this.categoryCount,
-      required this.itemCount,
-      required this.orderCount});
-
-  @override
-  Widget build(BuildContext context) {
-    return GridView.count(
-      crossAxisCount: 2,
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      mainAxisSpacing: 12,
-      crossAxisSpacing: 12,
-      childAspectRatio: 1.5,
-      children: [
-        _StatCard(
-            title: 'Categories',
-            value: '$categoryCount',
-            icon: Icons.category,
-            color: Colors.blue),
-        _StatCard(
-            title: 'Menu Items',
-            value: '$itemCount',
-            icon: Icons.fastfood,
-            color: Colors.orange),
-        _StatCard(
-            title: 'Active Orders',
-            value: '$orderCount',
-            icon: Icons.receipt,
-            color: Colors.green),
-        const _StatCard(
-            title: 'System',
-            value: 'Live',
-            icon: Icons.settings,
-            color: Colors.grey),
-      ],
-    );
-  }
-}
-
-class _StatCard extends StatelessWidget {
-  final String title;
-  final String value;
-  final IconData icon;
-  final Color color;
-
-  const _StatCard(
-      {required this.title,
-      required this.value,
-      required this.icon,
-      required this.color});
-
-  @override
-  Widget build(BuildContext context) {
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(12.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(icon, color: color),
-            const SizedBox(height: 8),
-            Text(value,
-                style:
-                    const TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-            Text(title,
-                style: const TextStyle(color: Colors.grey, fontSize: 12)),
-          ],
-        ),
+      child: Row(
+        children: [
+          Icon(Icons.notifications_active_outlined, color: scheme.primary),
+          const SizedBox(width: 16),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Table #${call.tableNumber}',
+                  style: theme.textTheme.titleMedium?.copyWith(
+                    color: scheme.onPrimaryContainer,
+                  ),
+                ),
+                Text(
+                  'Called at ${call.createdAt.hour}:$minute',
+                  style: theme.textTheme.bodySmall?.copyWith(
+                    color: scheme.onPrimaryContainer,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          FilledButton(
+            onPressed: onResolve,
+            style: FilledButton.styleFrom(minimumSize: const Size(0, 40)),
+            child: const Text('Resolve'),
+          ),
+        ],
       ),
     );
   }

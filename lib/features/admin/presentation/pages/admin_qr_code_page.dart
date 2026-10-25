@@ -2,17 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:qr_flutter/qr_flutter.dart';
+
+import '../../../../core/theme/app_theme.dart';
 import '../../../../core/widgets/app_scaffold.dart';
-import '../../../orders/domain/order_providers.dart';
 import '../../../../services/qr_code_service.dart';
+import '../../../orders/domain/order_providers.dart';
 
-final _tablesListProvider = FutureProvider<List<int>>((ref) async {
-  // Generate list of tables (1-50 for now, can be customized)
-  return List.generate(50, (i) => i + 1);
-});
+/// Table numbers offered for QR generation.
+final _tableNumbers = List.generate(50, (i) => i + 1);
 
-final _selectedTablesProvider =
-    StateProvider<Set<int>>((ref) => <int>{}.toSet());
+final _selectedTablesProvider = StateProvider<Set<int>>((ref) => <int>{});
 
 class AdminQRCodePage extends ConsumerWidget {
   const AdminQRCodePage({super.key});
@@ -20,12 +19,13 @@ class AdminQRCodePage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final orders = ref.watch(ordersProvider);
-    final tablesAsync = ref.watch(_tablesListProvider);
     final selectedTables = ref.watch(_selectedTablesProvider);
-    final qrService = ref.watch(qrCodeServiceProvider);
+    final theme = Theme.of(context);
+    final scheme = theme.colorScheme;
 
     return AppScaffold(
       title: 'QR Code Generator',
+      maxContentWidth: 960,
       actions: [
         IconButton(
           icon: const Icon(Icons.arrow_back),
@@ -39,161 +39,126 @@ class AdminQRCodePage extends ConsumerWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Card(
-              elevation: 2,
               child: Padding(
                 padding: const EdgeInsets.all(16),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text(
+                    Text(
                       'Generate Table QR Codes',
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                      ),
+                      style: theme.textTheme.titleMedium,
                     ),
                     const SizedBox(height: 8),
                     Text(
                       'Select tables to generate QR codes for. Customers can scan these QR codes at their table with their phone.',
-                      style: TextStyle(color: Colors.grey.shade600),
+                      style: theme.textTheme.bodyMedium?.copyWith(
+                        color: scheme.onSurfaceVariant,
+                      ),
                     ),
                   ],
                 ),
               ),
             ),
             const SizedBox(height: 24),
-            if (selectedTables.isNotEmpty)
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+            if (selectedTables.isNotEmpty) ...[
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        'Selected Tables: ${selectedTables.length}',
-                        style: const TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      FilledButton(
-                        onPressed: () {
-                          ref
-                              .read(_selectedTablesProvider.notifier)
-                              .state
-                              .clear();
-                        },
-                        style:
-                            FilledButton.styleFrom(backgroundColor: Colors.red),
-                        child: const Text('Clear All'),
-                      ),
-                    ],
+                  Text(
+                    'Selected Tables: ${selectedTables.length}',
+                    style: theme.textTheme.titleMedium,
                   ),
-                  const SizedBox(height: 16),
-                  _QRPreviewGrid(selectedTables: selectedTables),
-                  const SizedBox(height: 24),
-                  SizedBox(
-                    width: double.infinity,
-                    child: FilledButton.icon(
-                      onPressed: () => _downloadQRCodes(
-                        context,
-                        selectedTables,
-                        qrService,
-                      ),
-                      icon: const Icon(Icons.download),
-                      label: const Text('Download QR Codes'),
-                    ),
+                  OutlinedButton(
+                    onPressed: () {
+                      ref.read(_selectedTablesProvider.notifier).state = {};
+                    },
+                    child: const Text('Clear All'),
                   ),
                 ],
-              )
-            else
-              const SizedBox.shrink(),
-            const SizedBox(height: 24),
-            const Text(
-              'Select Tables',
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
               ),
-            ),
-            const SizedBox(height: 12),
-            tablesAsync.when(
-              data: (tables) => GridView.builder(
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 5,
-                  crossAxisSpacing: 8,
-                  mainAxisSpacing: 8,
+              const SizedBox(height: 16),
+              _QRPreviewGrid(selectedTables: selectedTables),
+              const SizedBox(height: 24),
+              SizedBox(
+                width: double.infinity,
+                child: FilledButton.icon(
+                  onPressed: () => _downloadQRCodes(context, selectedTables),
+                  icon: const Icon(Icons.download),
+                  label: const Text('Download QR Codes'),
                 ),
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                itemCount: tables.length,
-                itemBuilder: (context, index) {
-                  final tableNum = tables[index];
-                  final isSelected = selectedTables.contains(tableNum);
-                  final activeOrders =
-                      orders.where((o) => o.tableNumber == tableNum).length;
+              ),
+              const SizedBox(height: 24),
+            ],
+            Text('Select Tables', style: theme.textTheme.titleMedium),
+            const SizedBox(height: 12),
+            GridView.builder(
+              gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+                maxCrossAxisExtent: 88,
+                crossAxisSpacing: 8,
+                mainAxisSpacing: 8,
+              ),
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              itemCount: _tableNumbers.length,
+              itemBuilder: (context, index) {
+                final tableNum = _tableNumbers[index];
+                final isSelected = selectedTables.contains(tableNum);
+                final activeOrders =
+                    orders.where((o) => o.tableNumber == tableNum).length;
 
-                  return GestureDetector(
+                return Material(
+                  color: isSelected ? scheme.primaryContainer : scheme.surface,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(AppTheme.radiusSmall),
+                    side: BorderSide(
+                      color:
+                          isSelected ? scheme.primary : scheme.outlineVariant,
+                      width: isSelected ? 1.5 : 1,
+                    ),
+                  ),
+                  child: InkWell(
+                    borderRadius: BorderRadius.circular(AppTheme.radiusSmall),
                     onTap: () {
                       final newSet = Set<int>.from(selectedTables);
-                      if (isSelected) {
-                        newSet.remove(tableNum);
-                      } else {
-                        newSet.add(tableNum);
-                      }
+                      if (!newSet.remove(tableNum)) newSet.add(tableNum);
                       ref.read(_selectedTablesProvider.notifier).state = newSet;
                     },
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: isSelected
-                            ? Colors.blue.shade100
-                            : Colors.grey.shade100,
-                        border: Border.all(
-                          color:
-                              isSelected ? Colors.blue : Colors.grey.shade300,
-                          width: isSelected ? 2 : 1,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          '$tableNum',
+                          style: theme.textTheme.titleLarge?.copyWith(
+                            color: isSelected
+                                ? scheme.onPrimaryContainer
+                                : scheme.onSurface,
+                          ),
                         ),
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            tableNum.toString(),
-                            style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                              color: isSelected ? Colors.blue : Colors.black,
+                        if (activeOrders > 0)
+                          Container(
+                            margin: const EdgeInsets.only(top: 4),
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 6,
+                              vertical: 2,
+                            ),
+                            decoration: BoxDecoration(
+                              color: scheme.primary,
+                              borderRadius: BorderRadius.circular(4),
+                            ),
+                            child: Text(
+                              '$activeOrders',
+                              style: theme.textTheme.bodySmall?.copyWith(
+                                color: scheme.onPrimary,
+                                fontSize: 10,
+                                fontWeight: FontWeight.w600,
+                              ),
                             ),
                           ),
-                          if (activeOrders > 0)
-                            Container(
-                              margin: const EdgeInsets.only(top: 4),
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 6,
-                                vertical: 2,
-                              ),
-                              decoration: BoxDecoration(
-                                color: Colors.red,
-                                borderRadius: BorderRadius.circular(4),
-                              ),
-                              child: Text(
-                                '$activeOrders',
-                                style: const TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 10,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ),
-                        ],
-                      ),
+                      ],
                     ),
-                  );
-                },
-              ),
-              loading: () => const Center(child: CircularProgressIndicator()),
-              error: (err, stack) => Center(child: Text('Error: $err')),
+                  ),
+                );
+              },
             ),
           ],
         ),
@@ -201,11 +166,7 @@ class AdminQRCodePage extends ConsumerWidget {
     );
   }
 
-  void _downloadQRCodes(
-    BuildContext context,
-    Set<int> tables,
-    QRCodeService qrService,
-  ) {
+  void _downloadQRCodes(BuildContext context, Set<int> tables) {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -224,38 +185,38 @@ class AdminQRCodePage extends ConsumerWidget {
   }
 }
 
-class _QRPreviewGrid extends StatelessWidget {
+class _QRPreviewGrid extends ConsumerWidget {
   final Set<int> selectedTables;
 
   const _QRPreviewGrid({required this.selectedTables});
 
   @override
-  Widget build(BuildContext context) {
-    final qrService = ProviderContainer().read(qrCodeServiceProvider);
+  Widget build(BuildContext context, WidgetRef ref) {
+    final qrService = ref.watch(qrCodeServiceProvider);
+    final theme = Theme.of(context);
+    final tables = selectedTables.toList();
 
     return GridView.builder(
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 4,
+      gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+        maxCrossAxisExtent: 200,
         crossAxisSpacing: 12,
         mainAxisSpacing: 12,
-        childAspectRatio: 1,
       ),
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
-      itemCount: selectedTables.length,
+      itemCount: tables.length,
       itemBuilder: (context, index) {
-        final tableNum = selectedTables.toList()[index];
-        final qrData = qrService.generateTableQRData(tableNum);
+        final tableNum = tables[index];
 
         return Card(
-          elevation: 2,
+          clipBehavior: Clip.antiAlias,
           child: Column(
             children: [
               Expanded(
                 child: Padding(
                   padding: const EdgeInsets.all(8),
                   child: QrImageView(
-                    data: qrData,
+                    data: qrService.generateTableQRData(tableNum),
                     version: QrVersions.auto,
                     size: 150,
                   ),
@@ -264,20 +225,11 @@ class _QRPreviewGrid extends StatelessWidget {
               Container(
                 width: double.infinity,
                 padding: const EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                  color: Colors.grey.shade100,
-                  borderRadius: const BorderRadius.only(
-                    bottomLeft: Radius.circular(4),
-                    bottomRight: Radius.circular(4),
-                  ),
-                ),
+                color: theme.colorScheme.surfaceContainer,
                 child: Text(
                   'Table $tableNum',
                   textAlign: TextAlign.center,
-                  style: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 12,
-                  ),
+                  style: theme.textTheme.labelLarge,
                 ),
               ),
             ],

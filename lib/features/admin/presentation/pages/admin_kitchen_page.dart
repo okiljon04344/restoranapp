@@ -1,7 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import '../../../../core/theme/app_theme.dart';
 import '../../../../core/widgets/app_scaffold.dart';
+import '../../../../core/widgets/stat_tile.dart';
+import '../../../../models/order_model.dart';
 import '../../../orders/domain/order_providers.dart';
+
+final _statusFilterProvider = StateProvider<String>((ref) => 'all');
 
 class AdminKitchenPage extends ConsumerWidget {
   const AdminKitchenPage({super.key});
@@ -10,117 +16,92 @@ class AdminKitchenPage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final orders = ref.watch(ordersProvider);
     final currentStatus = ref.watch(_statusFilterProvider);
+    final theme = Theme.of(context);
 
-    // Filter orders by status
     final filteredOrders = orders
-        .where((o) => currentStatus == 'all' ? true : o.status == currentStatus)
-        .toList();
+        .where((o) => currentStatus == 'all' || o.status == currentStatus)
+        .toList()
+      ..sort((a, b) => a.tableNumber.compareTo(b.tableNumber));
 
-    // Sort by table and created time
-    filteredOrders.sort((a, b) => a.tableNumber.compareTo(b.tableNumber));
+    int countOf(String status) =>
+        orders.where((o) => o.status == status).length;
 
     return AppScaffold(
       title: 'Kitchen Orders',
       actions: [
-        Container(
-          margin: const EdgeInsets.all(8),
-          child: Row(
-            children: [
-              _StatusFilter(
-                currentStatus: currentStatus,
-                onStatusChanged: (status) {
-                  ref.read(_statusFilterProvider.notifier).state = status;
-                },
-              ),
-            ],
+        Padding(
+          padding: const EdgeInsets.only(right: 8),
+          child: _StatusFilter(
+            currentStatus: currentStatus,
+            onStatusChanged: (status) {
+              ref.read(_statusFilterProvider.notifier).state = status;
+            },
           ),
         ),
       ],
       child: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            children: [
-              // Summary cards
-              GridView.count(
-                crossAxisCount: 3,
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                mainAxisSpacing: 12,
-                crossAxisSpacing: 12,
-                childAspectRatio: 1.2,
-                children: [
-                  _KitchenStat(
-                    label: 'Pending',
-                    value: orders
-                        .where((o) => o.status == 'pending')
-                        .length
-                        .toString(),
-                    color: Colors.orange,
-                    icon: Icons.schedule,
-                  ),
-                  _KitchenStat(
-                    label: 'Preparing',
-                    value: orders
-                        .where((o) => o.status == 'preparing')
-                        .length
-                        .toString(),
-                    color: Colors.blue,
-                    icon: Icons.restaurant,
-                  ),
-                  _KitchenStat(
-                    label: 'Ready',
-                    value: orders
-                        .where((o) => o.status == 'ready')
-                        .length
-                        .toString(),
-                    color: Colors.green,
-                    icon: Icons.check_circle,
-                  ),
-                ],
-              ),
-              const SizedBox(height: 24),
-              // Orders grid for kitchen display
-              if (filteredOrders.isEmpty)
-                const Card(
-                  child: Padding(
-                    padding: EdgeInsets.all(32),
-                    child: Text(
-                      'No orders at the moment',
-                      style: TextStyle(fontSize: 16, color: Colors.grey),
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          children: [
+            GridView(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              gridDelegate: StatTile.gridDelegate,
+              children: [
+                StatTile(
+                  label: 'Pending',
+                  value: '${countOf('pending')}',
+                  icon: Icons.schedule,
+                ),
+                StatTile(
+                  label: 'Preparing',
+                  value: '${countOf('preparing')}',
+                  icon: Icons.restaurant,
+                ),
+                StatTile(
+                  label: 'Ready',
+                  value: '${countOf('ready')}',
+                  icon: Icons.check_circle_outline,
+                ),
+              ],
+            ),
+            const SizedBox(height: 24),
+            if (filteredOrders.isEmpty)
+              Card(
+                child: Padding(
+                  padding: const EdgeInsets.all(32),
+                  child: Text(
+                    'No orders at the moment',
+                    style: theme.textTheme.bodyLarge?.copyWith(
+                      color: theme.colorScheme.onSurfaceVariant,
                     ),
                   ),
-                )
-              else
-                GridView.builder(
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount:
-                        MediaQuery.of(context).size.width > 1200 ? 4 : 2,
-                    childAspectRatio: 1,
-                    mainAxisSpacing: 12,
-                    crossAxisSpacing: 12,
-                  ),
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  itemCount: filteredOrders.length,
-                  itemBuilder: (context, index) {
-                    final order = filteredOrders[index];
-                    return _KitchenOrderCard(order: order);
-                  },
                 ),
-            ],
-          ),
+              )
+            else
+              GridView.builder(
+                gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+                  maxCrossAxisExtent: 300,
+                  mainAxisExtent: 280,
+                  mainAxisSpacing: 16,
+                  crossAxisSpacing: 16,
+                ),
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                itemCount: filteredOrders.length,
+                itemBuilder: (context, index) =>
+                    _KitchenOrderCard(order: filteredOrders[index]),
+              ),
+          ],
         ),
       ),
     );
   }
 }
 
-final _statusFilterProvider = StateProvider<String>((ref) => 'all');
-
 class _StatusFilter extends StatelessWidget {
   final String currentStatus;
-  final Function(String) onStatusChanged;
+  final ValueChanged<String> onStatusChanged;
 
   const _StatusFilter({
     required this.currentStatus,
@@ -130,226 +111,110 @@ class _StatusFilter extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
-      children: ['all', 'pending', 'preparing', 'ready'].map((status) {
-        final isSelected = currentStatus == status;
-        return Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 4),
-          child: FilledButton.tonal(
-            onPressed: () => onStatusChanged(status),
-            style: FilledButton.styleFrom(
-              backgroundColor: isSelected
-                  ? _getStatusColor(status)
-                  : Colors.grey.withValues(alpha: 0.2),
-              foregroundColor: isSelected ? Colors.white : Colors.grey.shade700,
+      children: [
+        for (final status in const ['all', 'pending', 'preparing', 'ready'])
+          Padding(
+            padding: const EdgeInsets.only(left: 8),
+            child: ChoiceChip(
+              label: Text(status.toUpperCase()),
+              selected: currentStatus == status,
+              onSelected: (_) => onStatusChanged(status),
+              showCheckmark: false,
+              labelStyle: Theme.of(context).textTheme.labelLarge?.copyWith(
+                    color: currentStatus == status
+                        ? Theme.of(context).colorScheme.onPrimary
+                        : Theme.of(context).colorScheme.onSurface,
+                  ),
             ),
-            child: Text(status.toUpperCase()),
           ),
-        );
-      }).toList(),
+      ],
     );
-  }
-
-  Color _getStatusColor(String status) {
-    switch (status) {
-      case 'pending':
-        return Colors.orange;
-      case 'preparing':
-        return Colors.blue;
-      case 'ready':
-        return Colors.green;
-      default:
-        return Colors.grey;
-    }
   }
 }
 
 class _KitchenOrderCard extends StatelessWidget {
-  final dynamic order;
+  final OrderModel order;
+
   const _KitchenOrderCard({required this.order});
 
   @override
   Widget build(BuildContext context) {
-    final statusColor = _getStatusColor(order.status);
+    final theme = Theme.of(context);
+    final statusColor =
+        context.palette.statusColor(theme.colorScheme, order.status);
+    final minute = order.createdAt.minute.toString().padLeft(2, '0');
 
     return Card(
-      elevation: 4,
-      child: Container(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: statusColor, width: 3),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              // Order number and table
-              Column(
+      clipBehavior: Clip.antiAlias,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(height: 4, color: statusColor),
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Container(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                    decoration: BoxDecoration(
-                      color: statusColor,
-                      borderRadius: BorderRadius.circular(4),
-                    ),
-                    child: Text(
-                      'Order #${order.orderNumber}',
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 14,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 8),
                   Text(
                     'Table ${order.tableNumber}',
-                    style: const TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
+                    style: theme.textTheme.titleLarge,
+                  ),
+                  Text(
+                    'Order #${order.orderNumber}',
+                    style: theme.textTheme.bodySmall?.copyWith(
+                      color: theme.colorScheme.onSurfaceVariant,
                     ),
                   ),
-                ],
-              ),
-              // Items list
-              Expanded(
-                child: ListView(
-                  children: order.items
-                      .map<Widget>((item) => Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 4),
+                  const SizedBox(height: 12),
+                  Expanded(
+                    child: ListView(
+                      children: [
+                        for (final item in order.items)
+                          Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 3),
                             child: Text(
                               '${item.quantity}x ${item.name}',
-                              style: const TextStyle(fontSize: 12),
                               maxLines: 2,
                               overflow: TextOverflow.ellipsis,
                             ),
-                          ))
-                      .toList(),
-                ),
-              ),
-              // Status and time
-              Divider(color: statusColor.withValues(alpha: 0.3)),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                          ),
+                      ],
+                    ),
+                  ),
+                  const Divider(height: 24),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(
-                        order.status.toUpperCase(),
-                        style: TextStyle(
-                          color: statusColor,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 12,
-                        ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            order.status.toUpperCase(),
+                            style: theme.textTheme.bodySmall?.copyWith(
+                              color: statusColor,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                          Text(
+                            '${order.createdAt.hour}:$minute',
+                            style: theme.textTheme.bodySmall?.copyWith(
+                              color: theme.colorScheme.onSurfaceVariant,
+                            ),
+                          ),
+                        ],
                       ),
                       Text(
-                        '${order.createdAt.hour}:${order.createdAt.minute.toString().padLeft(2, '0')}',
-                        style:
-                            const TextStyle(fontSize: 10, color: Colors.grey),
+                        order.total.toStringAsFixed(0),
+                        style: theme.textTheme.titleMedium,
                       ),
                     ],
                   ),
-                  Container(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
-                    decoration: BoxDecoration(
-                      color: statusColor.withValues(alpha: 0.1),
-                      borderRadius: BorderRadius.circular(4),
-                    ),
-                    child: Text(
-                      '${order.total.toStringAsFixed(0)}',
-                      style: TextStyle(
-                        color: statusColor,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 12,
-                      ),
-                    ),
-                  ),
                 ],
               ),
-            ],
+            ),
           ),
-        ),
-      ),
-    );
-  }
-
-  Color _getStatusColor(String status) {
-    switch (status) {
-      case 'pending':
-        return Colors.orange;
-      case 'preparing':
-        return Colors.blue;
-      case 'ready':
-        return Colors.green;
-      case 'completed':
-        return Colors.grey;
-      case 'cancelled':
-        return Colors.red;
-      default:
-        return Colors.grey;
-    }
-  }
-}
-
-class _KitchenStat extends StatelessWidget {
-  final String label;
-  final String value;
-  final Color color;
-  final IconData icon;
-
-  const _KitchenStat({
-    required this.label,
-    required this.value,
-    required this.color,
-    required this.icon,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Card(
-      child: Container(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(12),
-          gradient: LinearGradient(
-            colors: [
-              color.withValues(alpha: 0.1),
-              color.withValues(alpha: 0.05)
-            ],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          ),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.all(12),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(icon, color: color, size: 32),
-              const SizedBox(height: 8),
-              Text(
-                value,
-                style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                  color: color,
-                ),
-              ),
-              const SizedBox(height: 4),
-              Text(
-                label,
-                style: TextStyle(
-                  fontSize: 12,
-                  color: Colors.grey.shade600,
-                ),
-              ),
-            ],
-          ),
-        ),
+        ],
       ),
     );
   }
