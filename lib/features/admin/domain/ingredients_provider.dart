@@ -4,7 +4,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 class Ingredient {
   final String id;
   final String name;
-  final String unit; // kg, l, dona, etc.
+
+  /// kg, l, dona, etc.
+  final String unit;
   final double quantity;
   final double minimumQuantity;
   final bool isOutOfStock;
@@ -33,15 +35,6 @@ class Ingredient {
           : DateTime.now(),
     );
   }
-
-  Map<String, dynamic> toFirestore() => {
-        'name': name,
-        'unit': unit,
-        'quantity': quantity,
-        'minimumQuantity': minimumQuantity,
-        'isOutOfStock': isOutOfStock,
-        'lastUpdated': Timestamp.now(),
-      };
 }
 
 final ingredientsProvider = StreamProvider<List<Ingredient>>((ref) {

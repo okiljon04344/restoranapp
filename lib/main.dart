@@ -12,9 +12,9 @@ Future<void> main() async {
     await Firebase.initializeApp(
       options: DefaultFirebaseOptions.currentPlatform,
     );
-  } catch (_) {}
+  } catch (_) {
+    // Already initialised (hot restart) or unavailable; the UI copes either way.
+  }
 
-  // Har doim tilni tanlash sahifasidan boshlanadi (restoran uchun to'g'ri)
-  // Hive localeInitializerProvider ichida ishga tushiriladi
   runApp(const ProviderScope(child: RestaurantUniversalApp()));
 }

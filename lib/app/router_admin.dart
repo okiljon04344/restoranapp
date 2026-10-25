@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../features/admin/presentation/pages/admin_dashboard_clean.dart';
+import '../features/admin/presentation/pages/admin_kitchen_page.dart';
+import '../features/admin/presentation/pages/admin_menu_management_enhanced.dart';
+import '../features/admin/presentation/pages/admin_qr_code_page.dart';
 import '../features/auth/presentation/pages/admin_login_page.dart';
 import '../features/auth/presentation/pages/admin_signup_page.dart';
-import '../features/admin/presentation/pages/admin_dashboard_clean.dart';
-import '../features/admin/presentation/pages/admin_menu_management_enhanced.dart';
-import '../features/admin/presentation/pages/admin_kitchen_page.dart';
-import '../features/admin/presentation/pages/admin_qr_code_page.dart';
 
 final adminRouterProvider = Provider<GoRouter>((ref) {
   return GoRouter(
@@ -57,11 +57,18 @@ class ErrorPage extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Icon(Icons.error_outline, size: 64, color: Colors.red),
+            Icon(
+              Icons.error_outline,
+              size: 48,
+              color: Theme.of(context).colorScheme.onSurfaceVariant,
+            ),
             const SizedBox(height: 16),
-            const Text('Sahifa topilmadi', style: TextStyle(fontSize: 18)),
+            Text(
+              'Sahifa topilmadi',
+              style: Theme.of(context).textTheme.titleMedium,
+            ),
             const SizedBox(height: 24),
-            ElevatedButton(
+            FilledButton(
               onPressed: () => context.go('/login'),
               child: const Text('Login-ga qaytish'),
             ),

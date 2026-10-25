@@ -1,15 +1,11 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../models/category_model.dart';
 import '../../../models/menu_item_model.dart';
 import '../../../models/order_item_model.dart';
 import '../../../models/order_model.dart';
-import '../../../models/category_model.dart';
 import '../../../services/firestore_service.dart';
 
-// Firestore Service
-final firestoreServiceProvider = Provider((ref) => FirestoreService());
-
-// Streams
 final categoriesProvider = StreamProvider<List<CategoryModel>>((ref) {
   return ref.watch(firestoreServiceProvider).getCategories();
 });
@@ -22,7 +18,6 @@ final ordersStreamProvider = StreamProvider<List<OrderModel>>((ref) {
   return ref.watch(firestoreServiceProvider).getOrders();
 });
 
-// Cart Logic
 class CartNotifier extends StateNotifier<List<OrderItemModel>> {
   CartNotifier() : super([]);
 
@@ -80,7 +75,6 @@ class CartNotifier extends StateNotifier<List<OrderItemModel>> {
 final cartProvider = StateNotifierProvider<CartNotifier, List<OrderItemModel>>(
     (ref) => CartNotifier());
 
-// Orders Logic
 final ordersProvider = Provider<List<OrderModel>>((ref) {
   return ref.watch(ordersStreamProvider).value ?? [];
 });

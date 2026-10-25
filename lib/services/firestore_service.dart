@@ -1,16 +1,16 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../models/order_model.dart';
-import '../models/menu_item_model.dart';
 import '../models/category_model.dart';
+import '../models/menu_item_model.dart';
+import '../models/order_model.dart';
 
 final firestoreServiceProvider = Provider((ref) => FirestoreService());
 
 class FirestoreService {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
-  final String cafeId = "main_cafe"; // Rules'dagi cafeId ga mos
+  // Must match the cafe document id used in firestore.rules.
+  final String cafeId = 'main_cafe';
 
-  // Orders
   Stream<List<OrderModel>> getOrders() {
     return _db
         .collection('cafes')
@@ -49,7 +49,6 @@ class FirestoreService {
         .update({'status': 'cancelled'});
   }
 
-  // Categories & Menu Items
   Stream<List<CategoryModel>> getCategories() {
     return _db
         .collection('cafes')
@@ -72,16 +71,6 @@ class FirestoreService {
             .toList());
   }
 
-  // Call Staff
-  Future<void> callStaff(int tableNumber) async {
-    await _db.collection('cafes').doc(cafeId).collection('calls').add({
-      'tableNumber': tableNumber,
-      'status': 'pending',
-      'createdAt': FieldValue.serverTimestamp(),
-    });
-  }
-
-  // Admin: Create Menu Item
   Future<String> createMenuItem({
     required String name,
     required String description,
@@ -103,7 +92,6 @@ class FirestoreService {
     return docRef.id;
   }
 
-  // Admin: Create Category
   Future<String> createCategory({
     required String name,
     required String icon,
@@ -120,17 +108,6 @@ class FirestoreService {
     return docRef.id;
   }
 
-  // Admin: Update Menu Item
-  Future<void> updateMenuItem(String itemId, Map<String, dynamic> data) async {
-    await _db
-        .collection('cafes')
-        .doc(cafeId)
-        .collection('menuItems')
-        .doc(itemId)
-        .update({...data, 'updatedAt': FieldValue.serverTimestamp()});
-  }
-
-  // Admin: Delete Menu Item
   Future<void> deleteMenuItem(String itemId) async {
     await _db
         .collection('cafes')

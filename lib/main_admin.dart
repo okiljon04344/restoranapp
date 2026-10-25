@@ -12,7 +12,9 @@ Future<void> main() async {
     await Firebase.initializeApp(
       options: DefaultFirebaseOptions.currentPlatform,
     );
-  } catch (_) {}
+  } catch (_) {
+    // Already initialised (hot restart) or unavailable; the UI copes either way.
+  }
 
   runApp(const ProviderScope(child: AdminApp()));
 }

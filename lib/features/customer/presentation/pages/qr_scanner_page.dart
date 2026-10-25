@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
+
 import '../../../../l10n/app_localizations.dart';
 
 class QRScannerPage extends StatefulWidget {
@@ -13,7 +14,7 @@ class QRScannerPage extends StatefulWidget {
 
 class _QRScannerPageState extends State<QRScannerPage>
     with WidgetsBindingObserver {
-  late MobileScannerController controller;
+  late final MobileScannerController controller;
   bool _isProcessing = false;
   bool _isTorchOn = false;
   bool _isPageActive = true;
@@ -22,10 +23,6 @@ class _QRScannerPageState extends State<QRScannerPage>
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
-    _initializeScanner();
-  }
-
-  void _initializeScanner() {
     controller = MobileScannerController(
       facing: CameraFacing.back,
       torchEnabled: false,
@@ -60,7 +57,6 @@ class _QRScannerPageState extends State<QRScannerPage>
   }
 
   void _handleBarcode(BarcodeCapture barcodes) {
-    // Avoid processing multiple barcodes at once
     if (_isProcessing || !_isPageActive) return;
     _isProcessing = true;
 
@@ -68,10 +64,9 @@ class _QRScannerPageState extends State<QRScannerPage>
       if (barcodes.barcodes.isNotEmpty) {
         final String code = barcodes.barcodes.first.rawValue ?? '';
         if (code.isNotEmpty) {
-          // Call the callback
           widget.onQRScanned(code);
 
-          // Pop after small delay to ensure callback is processed
+          // Let the callback's snackbar show before leaving the scanner.
           Future.delayed(const Duration(milliseconds: 500), () {
             if (mounted && _isPageActive) {
               Navigator.of(context).pop();
@@ -85,13 +80,11 @@ class _QRScannerPageState extends State<QRScannerPage>
     }
   }
 
-  void _toggleTorch() async {
+  Future<void> _toggleTorch() async {
     try {
       await controller.toggleTorch();
       if (mounted) {
-        setState(() {
-          _isTorchOn = !_isTorchOn;
-        });
+        setState(() => _isTorchOn = !_isTorchOn);
       }
     } catch (e) {
       debugPrint('Error toggling torch: $e');
@@ -118,7 +111,6 @@ class _QRScannerPageState extends State<QRScannerPage>
         ),
         body: Stack(
           children: [
-            // Camera view
             MobileScanner(
               controller: controller,
               onDetect: _handleBarcode,
@@ -127,7 +119,11 @@ class _QRScannerPageState extends State<QRScannerPage>
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const Icon(Icons.error, color: Colors.red, size: 64),
+                      Icon(
+                        Icons.error_outline,
+                        color: Theme.of(context).colorScheme.error,
+                        size: 48,
+                      ),
                       const SizedBox(height: 16),
                       Text('Camera Error: $error'),
                       const SizedBox(height: 16),
@@ -141,7 +137,6 @@ class _QRScannerPageState extends State<QRScannerPage>
                 );
               },
             ),
-            // Semi-transparent overlay with centered cutout
             Positioned.fill(
               child: Container(
                 decoration: BoxDecoration(
@@ -151,15 +146,11 @@ class _QRScannerPageState extends State<QRScannerPage>
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      // Cutout box for QR code
                       Container(
                         width: 250,
                         height: 250,
                         decoration: BoxDecoration(
-                          border: Border.all(
-                            color: Colors.white,
-                            width: 3,
-                          ),
+                          border: Border.all(color: Colors.white, width: 2),
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: const Center(
@@ -185,11 +176,10 @@ class _QRScannerPageState extends State<QRScannerPage>
                         ),
                       ),
                       const SizedBox(height: 40),
-                      // Torch toggle button
                       Container(
                         decoration: BoxDecoration(
                           color: Colors.white.withValues(alpha: 0.2),
-                          borderRadius: BorderRadius.circular(50),
+                          shape: BoxShape.circle,
                         ),
                         child: IconButton(
                           icon: Icon(
@@ -204,7 +194,6 @@ class _QRScannerPageState extends State<QRScannerPage>
                 ),
               ),
             ),
-            // Cancel button at the bottom
             Positioned(
               bottom: 30,
               left: 0,

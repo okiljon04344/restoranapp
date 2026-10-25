@@ -1,17 +1,17 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../core/platform.dart';
 import '../features/admin/presentation/pages/admin_dashboard_page.dart';
-import '../features/auth/presentation/pages/role_select_page.dart';
 import '../features/auth/presentation/pages/admin_login_page.dart';
+import '../features/auth/presentation/pages/role_select_page.dart';
 import '../features/customer/presentation/pages/cart_page.dart';
 import '../features/customer/presentation/pages/customer_home_page.dart';
 import '../features/customer/presentation/pages/menu_page.dart';
 import '../features/customer/presentation/pages/order_tracking_page.dart';
+import '../features/customer/presentation/pages/table_entry_page.dart';
 import '../features/kitchen/presentation/pages/kitchen_orders_page.dart';
 import '../features/onboarding/presentation/pages/language_selection_page.dart';
-import '../features/customer/presentation/pages/table_entry_page.dart';
 
 final appRouterProvider = Provider<GoRouter>((ref) {
   return GoRouter(
@@ -24,14 +24,9 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: '/role-select',
         builder: (context, state) {
-          if (kIsWeb ||
-              defaultTargetPlatform == TargetPlatform.macOS ||
-              defaultTargetPlatform == TargetPlatform.windows ||
-              defaultTargetPlatform == TargetPlatform.linux) {
-            return const RoleSelectPage();
-          } else {
-            return const TableEntryPage();
-          }
+          return isDesktopLike
+              ? const RoleSelectPage()
+              : const TableEntryPage();
         },
       ),
       GoRoute(
@@ -71,7 +66,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         path: '/admin',
         builder: (context, state) => const AdminDashboardPage(),
       ),
-      // AdminLoginPage navigates to '/dashboard' (the admin web app's route).
+      // AdminLoginPage navigates to '/dashboard', which only the admin web app defines.
       GoRoute(
         path: '/dashboard',
         redirect: (context, state) => '/admin',

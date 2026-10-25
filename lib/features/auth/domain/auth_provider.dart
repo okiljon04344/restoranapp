@@ -1,13 +1,11 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-final firebaseAuthProvider = Provider<FirebaseAuth>((ref) => FirebaseAuth.instance);
+final firebaseAuthProvider =
+    Provider<FirebaseAuth>((ref) => FirebaseAuth.instance);
 
-final authStateProvider = StreamProvider<User?>((ref) {
-  return ref.watch(firebaseAuthProvider).authStateChanges();
-});
-
-final authRepositoryProvider = Provider((ref) => AuthRepository(ref.watch(firebaseAuthProvider)));
+final authRepositoryProvider =
+    Provider((ref) => AuthRepository(ref.watch(firebaseAuthProvider)));
 
 /// Staff roles granted through Firebase Auth custom claims.
 ///
@@ -35,12 +33,10 @@ class AuthRepository {
   AuthRepository(this._auth);
 
   Future<UserCredential> signIn(String email, String password) async {
-    return await _auth.signInWithEmailAndPassword(email: email, password: password);
+    return _auth.signInWithEmailAndPassword(email: email, password: password);
   }
 
-  Future<void> signOut() async {
-    await _auth.signOut();
-  }
+  Future<void> signOut() => _auth.signOut();
 
   /// Force-refreshes the ID token so freshly granted claims are picked up.
   Future<bool> hasRole(User user, StaffRole role) async {
