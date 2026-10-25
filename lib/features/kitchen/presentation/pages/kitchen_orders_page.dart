@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import '../../../../core/theme/app_theme.dart';
 import '../../../../core/widgets/app_scaffold.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../../models/order_model.dart';
@@ -10,43 +12,43 @@ class KitchenOrdersPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // StreamProvider'dan ma'lumotlarni watch qilamiz
     final ordersAsync = ref.watch(ordersStreamProvider);
-
     final l = AppLocalizations.of(context)!;
+    final scheme = Theme.of(context).colorScheme;
+    final palette = context.palette;
 
     return AppScaffold(
       title: l.kitchenScreen,
+      maxContentWidth: 800,
       child: ordersAsync.when(
         data: (orders) {
-          final pending = orders.where((e) => e.status == 'pending').toList();
-          final cooking = orders.where((e) => e.status == 'cooking').toList();
-          final ready = orders.where((e) => e.status == 'ready').toList();
+          List<OrderModel> withStatus(String status) =>
+              orders.where((e) => e.status == status).toList();
 
           return ListView(
             padding: const EdgeInsets.all(16),
             children: [
               _KitchenSection(
                 title: l.newOrders,
-                orders: pending,
+                orders: withStatus('pending'),
                 nextStatus: 'cooking',
-                color: Colors.red,
+                color: scheme.primary,
                 buttonText: l.startCooking,
               ),
-              const SizedBox(height: 24),
+              const SizedBox(height: 32),
               _KitchenSection(
                 title: l.cooking,
-                orders: cooking,
+                orders: withStatus('cooking'),
                 nextStatus: 'ready',
-                color: Colors.orange,
+                color: palette.warning,
                 buttonText: l.markReady,
               ),
-              const SizedBox(height: 24),
+              const SizedBox(height: 32),
               _KitchenSection(
                 title: l.ready,
-                orders: ready,
+                orders: withStatus('ready'),
                 nextStatus: 'served',
-                color: Colors.green,
+                color: palette.success,
                 buttonText: l.markServed,
               ),
             ],
@@ -76,84 +78,96 @@ class _KitchenSection extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final theme = Theme.of(context);
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Row(
           children: [
-            Container(width: 4, height: 24, color: color),
+            Container(
+              width: 10,
+              height: 10,
+              decoration: BoxDecoration(color: color, shape: BoxShape.circle),
+            ),
             const SizedBox(width: 8),
-            Text(title,
-                style:
-                    const TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+            Text(title, style: theme.textTheme.titleLarge),
             const SizedBox(width: 8),
-            Chip(
-              label: Text('${orders.length}',
-                  style: const TextStyle(color: Colors.white, fontSize: 12)),
-              backgroundColor: color,
-              visualDensity: VisualDensity.compact,
+            Text(
+              '${orders.length}',
+              style: theme.textTheme.titleMedium?.copyWith(
+                color: theme.colorScheme.onSurfaceVariant,
+              ),
             ),
           ],
         ),
         const SizedBox(height: 12),
         if (orders.isEmpty)
           Text(
-              AppLocalizations.of(context)?.noOrdersInStage ??
-                  'No orders in this stage.',
-              style: const TextStyle(color: Colors.grey, fontSize: 14)),
-        ...orders.map((order) => Card(
-              margin: const EdgeInsets.only(bottom: 12),
-              elevation: 2,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12)),
-              child: ExpansionTile(
-                leading: CircleAvatar(
-                  backgroundColor: color.withValues(alpha: 0.1),
-                  child: Text(order.tableName.replaceAll(RegExp(r'[^0-9]'), ''),
-                      style:
-                          TextStyle(color: color, fontWeight: FontWeight.bold)),
+            AppLocalizations.of(context)?.noOrdersInStage ??
+                'No orders in this stage.',
+            style: theme.textTheme.bodyMedium?.copyWith(
+              color: theme.colorScheme.onSurfaceVariant,
+            ),
+          ),
+        for (final order in orders)
+          Card(
+            margin: const EdgeInsets.only(bottom: 12),
+            clipBehavior: Clip.antiAlias,
+            child: ExpansionTile(
+              leading: CircleAvatar(
+                backgroundColor: color.withValues(alpha: 0.12),
+                child: Text(
+                  order.tableName.replaceAll(RegExp(r'[^0-9]'), ''),
+                  style: TextStyle(color: color, fontWeight: FontWeight.w600),
                 ),
-                title: Text(
-                    'Order #${order.orderNumber.substring(order.orderNumber.length - 4)}'),
-                subtitle: Text(
-                    '${order.items.length} items • ${order.total.toStringAsFixed(0)} so\'m'),
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Column(
-                      children: [
-                        ...order.items.map((item) => Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 4),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text('${item.quantity}x ${item.name}',
-                                      style: const TextStyle(fontSize: 15)),
-                                  const Icon(Icons.check_circle_outline,
-                                      size: 18, color: Colors.grey),
-                                ],
+              ),
+              title: Text(
+                'Order #${order.orderNumber.substring(order.orderNumber.length - 4)}',
+              ),
+              subtitle: Text(
+                "${order.items.length} items • ${order.total.toStringAsFixed(0)} so'm",
+              ),
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Column(
+                    children: [
+                      for (final item in order.items)
+                        Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 4),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                '${item.quantity}x ${item.name}',
+                                style: theme.textTheme.bodyLarge,
                               ),
-                            )),
-                        const Divider(height: 32),
-                        SizedBox(
-                          width: double.infinity,
-                          height: 48,
-                          child: FilledButton(
-                            style:
-                                FilledButton.styleFrom(backgroundColor: color),
-                            onPressed: () => ref
-                                .read(ordersActionProvider)
-                                .updateStatus(order.id, nextStatus),
-                            child: Text(buttonText),
+                              Icon(
+                                Icons.check_circle_outline,
+                                size: 18,
+                                color: theme.colorScheme.outline,
+                              ),
+                            ],
                           ),
                         ),
-                      ],
-                    ),
+                      const Divider(height: 32),
+                      SizedBox(
+                        width: double.infinity,
+                        child: FilledButton(
+                          style: FilledButton.styleFrom(backgroundColor: color),
+                          onPressed: () => ref
+                              .read(ordersActionProvider)
+                              .updateStatus(order.id, nextStatus),
+                          child: Text(buttonText),
+                        ),
+                      ),
+                    ],
                   ),
-                ],
-              ),
-            )),
+                ),
+              ],
+            ),
+          ),
       ],
     );
   }

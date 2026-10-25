@@ -1,11 +1,18 @@
+import 'dart:math' as math;
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../../core/theme/app_theme.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../../models/menu_item_model.dart';
+import '../../../../models/order_item_model.dart';
 import '../../../orders/domain/order_providers.dart';
+
+/// Widest the menu content grows on large screens.
+const _maxContentWidth = 1000.0;
 
 class MenuPage extends ConsumerStatefulWidget {
   const MenuPage({super.key});
@@ -31,7 +38,7 @@ class _MenuPageState extends ConsumerState<MenuPage>
       duration: const Duration(milliseconds: 200),
     );
     _fabScaleAnim = Tween<double>(begin: 0, end: 1).animate(
-      CurvedAnimation(parent: _fabAnimController, curve: Curves.elasticOut),
+      CurvedAnimation(parent: _fabAnimController, curve: Curves.easeOutBack),
     );
   }
 
@@ -56,83 +63,52 @@ class _MenuPageState extends ConsumerState<MenuPage>
       _fabAnimController.reverse();
     }
 
+    // Centres the slivers once the window is wider than the content.
+    final width = MediaQuery.sizeOf(context).width;
+    final gutter = math.max(16.0, (width - _maxContentWidth) / 2);
+
     return Scaffold(
-      backgroundColor: Colors.grey[50],
       body: CustomScrollView(
         slivers: [
           SliverAppBar(
-            expandedHeight: 110,
             floating: true,
             snap: true,
-            pinned: false,
-            elevation: 0,
-            backgroundColor: theme.colorScheme.primary,
             leading: IconButton(
-              icon: const Icon(Icons.arrow_back, color: Colors.white),
+              icon: const Icon(Icons.arrow_back_ios_new_rounded),
               onPressed: () => context.go('/customer'),
             ),
-            title: Text(
-              l.menu,
-              style: const TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 22),
-            ),
+            title: Text(l.menu),
             actions: [
               IconButton(
                 icon: Icon(
                   _isGridView
                       ? Icons.view_list_rounded
                       : Icons.grid_view_rounded,
-                  color: Colors.white,
                 ),
                 onPressed: () => setState(() => _isGridView = !_isGridView),
               ),
               const SizedBox(width: 8),
             ],
-            flexibleSpace: FlexibleSpaceBar(
-              background: Container(
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [
-                      theme.colorScheme.primary,
-                      theme.colorScheme.primary.withValues(alpha: 0.75),
-                    ],
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                  ),
-                ),
-              ),
-            ),
           ),
           SliverToBoxAdapter(
             child: Padding(
-              padding: const EdgeInsets.fromLTRB(16, 12, 16, 0),
-              child: Material(
-                elevation: 2,
-                borderRadius: BorderRadius.circular(16),
-                child: TextField(
-                  controller: _searchController,
-                  onChanged: (val) => setState(() => searchQuery = val),
-                  decoration: InputDecoration(
-                    hintText: l.searchFood,
-                    prefixIcon: const Icon(Icons.search),
-                    suffixIcon: searchQuery.isNotEmpty
-                        ? IconButton(
-                            icon: const Icon(Icons.clear),
-                            onPressed: () {
-                              _searchController.clear();
-                              setState(() => searchQuery = '');
-                            })
-                        : null,
-                    filled: true,
-                    fillColor: Colors.white,
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(16),
-                      borderSide: BorderSide.none,
-                    ),
-                    contentPadding: const EdgeInsets.symmetric(vertical: 12),
-                  ),
+              padding: EdgeInsets.fromLTRB(gutter, 16, gutter, 0),
+              child: TextField(
+                controller: _searchController,
+                onChanged: (val) => setState(() => searchQuery = val),
+                decoration: InputDecoration(
+                  hintText: l.searchFood,
+                  prefixIcon: const Icon(Icons.search),
+                  suffixIcon: searchQuery.isNotEmpty
+                      ? IconButton(
+                          icon: const Icon(Icons.clear),
+                          onPressed: () {
+                            _searchController.clear();
+                            setState(() => searchQuery = '');
+                          },
+                        )
+                      : null,
+                  contentPadding: const EdgeInsets.symmetric(vertical: 12),
                 ),
               ),
             ),
@@ -140,65 +116,71 @@ class _MenuPageState extends ConsumerState<MenuPage>
           SliverToBoxAdapter(
             child: categoriesAsync.when(
               data: (categories) => SizedBox(
-                height: 52,
+                height: 56,
                 child: ListView(
                   scrollDirection: Axis.horizontal,
-                  padding: const EdgeInsets.fromLTRB(16, 8, 16, 4),
+                  padding: EdgeInsets.fromLTRB(gutter, 12, gutter, 4),
                   children: [
                     _CategoryChip(
                       label: l.all,
-                      icon: Icons.apps_rounded,
                       isSelected: selectedCategoryId == 'all',
                       onTap: () => setState(() => selectedCategoryId = 'all'),
                     ),
-                    ...categories.map((cat) => Padding(
-                          padding: const EdgeInsets.only(left: 8),
-                          child: _CategoryChip(
-                            label: cat.name,
-                            icon: Icons.restaurant_menu,
-                            isSelected: selectedCategoryId == cat.id,
-                            onTap: () =>
-                                setState(() => selectedCategoryId = cat.id),
-                          ),
-                        )),
+                    for (final cat in categories) ...[
+                      const SizedBox(width: 8),
+                      _CategoryChip(
+                        label: cat.name,
+                        isSelected: selectedCategoryId == cat.id,
+                        onTap: () =>
+                            setState(() => selectedCategoryId = cat.id),
+                      ),
+                    ],
                   ],
                 ),
               ),
-              loading: () => const SizedBox(height: 52),
+              loading: () => const SizedBox(height: 56),
               error: (_, __) => const SizedBox(height: 8),
             ),
           ),
           itemsAsync.when(
             data: (items) {
+              final query = searchQuery.toLowerCase();
               final filtered = items.where((item) {
                 final matchesCat = selectedCategoryId == 'all' ||
                     item.categoryId == selectedCategoryId;
-                final matchesSearch =
-                    item.name.toLowerCase().contains(searchQuery.toLowerCase());
-                return matchesCat && matchesSearch;
+                return matchesCat && item.name.toLowerCase().contains(query);
               }).toList();
 
               if (filtered.isEmpty) {
                 return SliverFillRemaining(
+                  hasScrollBody: false,
                   child: Center(
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Icon(Icons.search_off_rounded,
-                            size: 64, color: Colors.grey[400]),
+                        Icon(
+                          Icons.search_off_rounded,
+                          size: 48,
+                          color: theme.colorScheme.onSurfaceVariant,
+                        ),
                         const SizedBox(height: 16),
-                        Text(l.noItemsFound,
-                            style: TextStyle(
-                                color: Colors.grey[600], fontSize: 16)),
+                        Text(
+                          l.noItemsFound,
+                          style: theme.textTheme.bodyLarge?.copyWith(
+                            color: theme.colorScheme.onSurfaceVariant,
+                          ),
+                        ),
                       ],
                     ),
                   ),
                 );
               }
 
+              final padding = EdgeInsets.fromLTRB(gutter, 12, gutter, 100);
+
               if (_isGridView) {
                 return SliverPadding(
-                  padding: const EdgeInsets.fromLTRB(16, 12, 16, 100),
+                  padding: padding,
                   sliver: SliverGrid(
                     delegate: SliverChildBuilderDelegate(
                       (context, index) => _GridMenuCard(
@@ -209,18 +191,18 @@ class _MenuPageState extends ConsumerState<MenuPage>
                       childCount: filtered.length,
                     ),
                     gridDelegate:
-                        const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2,
-                      mainAxisSpacing: 12,
-                      crossAxisSpacing: 12,
-                      childAspectRatio: 0.72,
+                        const SliverGridDelegateWithMaxCrossAxisExtent(
+                      maxCrossAxisExtent: 240,
+                      mainAxisSpacing: 16,
+                      crossAxisSpacing: 16,
+                      childAspectRatio: 0.78,
                     ),
                   ),
                 );
               }
 
               return SliverPadding(
-                padding: const EdgeInsets.fromLTRB(16, 12, 16, 100),
+                padding: padding,
                 sliver: SliverList(
                   delegate: SliverChildBuilderDelegate(
                     (context, index) => Padding(
@@ -240,9 +222,7 @@ class _MenuPageState extends ConsumerState<MenuPage>
               child: Center(child: CircularProgressIndicator()),
             ),
             error: (e, _) => SliverFillRemaining(
-              child: Center(
-                  child:
-                      Text(AppLocalizations.of(context)!.error(e.toString()))),
+              child: Center(child: Text(l.error(e.toString()))),
             ),
           ),
         ],
@@ -251,12 +231,12 @@ class _MenuPageState extends ConsumerState<MenuPage>
         scale: _fabScaleAnim,
         child: FloatingActionButton.extended(
           onPressed: () => context.go('/customer/cart'),
-          backgroundColor: theme.colorScheme.primary,
-          icon: const Icon(Icons.shopping_cart_rounded, color: Colors.white),
+          icon: const Icon(Icons.shopping_cart_outlined),
           label: Text(
-            '${cartItems.length}  ${AppLocalizations.of(context)!.cart}',
-            style: const TextStyle(
-                color: Colors.white, fontWeight: FontWeight.bold),
+            '${cartItems.length}  ${l.cart}',
+            style: theme.textTheme.labelLarge?.copyWith(
+              color: theme.colorScheme.onPrimary,
+            ),
           ),
         ),
       ),
@@ -269,10 +249,7 @@ class _MenuPageState extends ConsumerState<MenuPage>
       SnackBar(
         content: Text(AppLocalizations.of(context)!.addedToCart(item.name)),
         duration: const Duration(seconds: 1),
-        behavior: SnackBarBehavior.floating,
         margin: const EdgeInsets.fromLTRB(16, 0, 16, 90),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-        backgroundColor: Colors.green[700],
       ),
     );
   }
@@ -280,54 +257,42 @@ class _MenuPageState extends ConsumerState<MenuPage>
 
 class _CategoryChip extends StatelessWidget {
   final String label;
-  final IconData icon;
   final bool isSelected;
   final VoidCallback onTap;
 
   const _CategoryChip({
     required this.label,
-    required this.icon,
     required this.isSelected,
     required this.onTap,
   });
 
   @override
   Widget build(BuildContext context) {
-    final color = Theme.of(context).colorScheme.primary;
-    return GestureDetector(
-      onTap: onTap,
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 200),
-        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
-        decoration: BoxDecoration(
-          color: isSelected ? color : Colors.white,
-          borderRadius: BorderRadius.circular(24),
-          border: Border.all(color: isSelected ? color : Colors.grey[300]!),
-          boxShadow: isSelected
-              ? [
-                  BoxShadow(
-                    color: color.withValues(alpha: 0.3),
-                    blurRadius: 8,
-                    offset: const Offset(0, 3),
-                  )
-                ]
-              : [],
+    final theme = Theme.of(context);
+    final scheme = theme.colorScheme;
+
+    return Material(
+      color: isSelected ? scheme.primary : scheme.surface,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(AppTheme.radiusSmall),
+        side: BorderSide(
+          color: isSelected ? scheme.primary : scheme.outlineVariant,
         ),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(icon,
-                size: 15, color: isSelected ? Colors.white : Colors.grey[600]),
-            const SizedBox(width: 6),
-            Text(
+      ),
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(AppTheme.radiusSmall),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: Center(
+            child: Text(
               label,
-              style: TextStyle(
-                color: isSelected ? Colors.white : Colors.grey[700],
-                fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-                fontSize: 13,
+              style: theme.textTheme.bodyMedium?.copyWith(
+                color: isSelected ? scheme.onPrimary : scheme.onSurface,
+                fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
               ),
             ),
-          ],
+          ),
         ),
       ),
     );
@@ -336,75 +301,59 @@ class _CategoryChip extends StatelessWidget {
 
 class _GridMenuCard extends StatelessWidget {
   final MenuItemModel item;
-  final List cartItems;
+  final List<OrderItemModel> cartItems;
   final VoidCallback onAdd;
 
-  const _GridMenuCard(
-      {required this.item, required this.cartItems, required this.onAdd});
+  const _GridMenuCard({
+    required this.item,
+    required this.cartItems,
+    required this.onAdd,
+  });
 
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context)!;
+    final theme = Theme.of(context);
     final inCart = cartItems.any((c) => c.menuItemId == item.id);
-    final color = Theme.of(context).colorScheme.primary;
 
     return Material(
-      color: Colors.white,
-      borderRadius: BorderRadius.circular(20),
-      elevation: 2,
-      shadowColor: Colors.black.withValues(alpha: 0.08),
+      color: theme.colorScheme.surface,
+      clipBehavior: Clip.antiAlias,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(AppTheme.radius),
+        side: BorderSide(color: theme.colorScheme.outlineVariant),
+      ),
       child: InkWell(
-        borderRadius: BorderRadius.circular(20),
         onTap: onAdd,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Expanded(
-              flex: 5,
-              child: ClipRRect(
-                borderRadius:
-                    const BorderRadius.vertical(top: Radius.circular(20)),
-                child: item.imageUrl.isNotEmpty
-                    ? CachedNetworkImage(
-                        imageUrl: item.imageUrl,
-                        fit: BoxFit.cover,
-                        width: double.infinity,
-                        placeholder: (_, __) => Container(
-                            color: Colors.blue[50],
-                            child: const Center(
-                                child:
-                                    CircularProgressIndicator(strokeWidth: 2))),
-                        errorWidget: (_, __, ___) => _Placeholder(),
-                      )
-                    : _Placeholder(),
-              ),
-            ),
+            Expanded(flex: 5, child: _MenuImage(url: item.imageUrl)),
             Expanded(
               flex: 4,
               child: Padding(
-                padding: const EdgeInsets.fromLTRB(10, 8, 10, 10),
+                padding: const EdgeInsets.fromLTRB(12, 10, 12, 12),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(item.name,
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                        style: const TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 13,
-                            height: 1.2)),
+                    Text(
+                      item.name,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: theme.textTheme.titleMedium?.copyWith(
+                        fontSize: 14,
+                      ),
+                    ),
                     const Spacer(),
                     Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Expanded(
                           child: Text(
                             '${item.price.toStringAsFixed(0)} ${l.som}',
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: color,
-                                fontSize: 13),
                             overflow: TextOverflow.ellipsis,
+                            style: theme.textTheme.labelLarge?.copyWith(
+                              color: theme.colorScheme.primary,
+                            ),
                           ),
                         ),
                         _AddButton(inCart: inCart, onTap: onAdd),
@@ -423,79 +372,65 @@ class _GridMenuCard extends StatelessWidget {
 
 class _ListMenuCard extends StatelessWidget {
   final MenuItemModel item;
-  final List cartItems;
+  final List<OrderItemModel> cartItems;
   final VoidCallback onAdd;
 
-  const _ListMenuCard(
-      {required this.item, required this.cartItems, required this.onAdd});
+  const _ListMenuCard({
+    required this.item,
+    required this.cartItems,
+    required this.onAdd,
+  });
 
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context)!;
+    final theme = Theme.of(context);
     final inCart = cartItems.any((c) => c.menuItemId == item.id);
-    final color = Theme.of(context).colorScheme.primary;
 
     return Material(
-      color: Colors.white,
-      borderRadius: BorderRadius.circular(20),
-      elevation: 2,
-      shadowColor: Colors.black.withValues(alpha: 0.08),
+      color: theme.colorScheme.surface,
+      clipBehavior: Clip.antiAlias,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(AppTheme.radius),
+        side: BorderSide(color: theme.colorScheme.outlineVariant),
+      ),
       child: InkWell(
-        borderRadius: BorderRadius.circular(20),
         onTap: onAdd,
         child: SizedBox(
-          height: 120,
+          height: 112,
           child: Row(
             children: [
-              ClipRRect(
-                borderRadius:
-                    const BorderRadius.horizontal(left: Radius.circular(20)),
-                child: SizedBox(
-                  width: 120,
-                  height: double.infinity,
-                  child: item.imageUrl.isNotEmpty
-                      ? CachedNetworkImage(
-                          imageUrl: item.imageUrl,
-                          fit: BoxFit.cover,
-                          placeholder: (_, __) => Container(
-                              color: Colors.blue[50],
-                              child: const Center(
-                                  child: CircularProgressIndicator(
-                                      strokeWidth: 2))),
-                          errorWidget: (_, __, ___) => _Placeholder(),
-                        )
-                      : _Placeholder(),
-                ),
-              ),
+              SizedBox(width: 112, child: _MenuImage(url: item.imageUrl)),
               Expanded(
                 child: Padding(
-                  padding: const EdgeInsets.fromLTRB(14, 12, 12, 12),
+                  padding: const EdgeInsets.fromLTRB(16, 12, 12, 12),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(item.name,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: const TextStyle(
-                              fontWeight: FontWeight.bold, fontSize: 16)),
+                      Text(
+                        item.name,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: theme.textTheme.titleMedium,
+                      ),
                       const SizedBox(height: 4),
-                      Text(item.description,
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
-                              fontSize: 12,
-                              color: Colors.grey[600],
-                              height: 1.3)),
+                      Text(
+                        item.description,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        style: theme.textTheme.bodySmall?.copyWith(
+                          color: theme.colorScheme.onSurfaceVariant,
+                        ),
+                      ),
                       const Spacer(),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
                             '${item.price.toStringAsFixed(0)} ${l.som}',
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 16,
-                                color: color),
+                            style: theme.textTheme.titleMedium?.copyWith(
+                              color: theme.colorScheme.primary,
+                            ),
                           ),
                           _AddButton(inCart: inCart, onTap: onAdd),
                         ],
@@ -512,14 +447,44 @@ class _ListMenuCard extends StatelessWidget {
   }
 }
 
-class _Placeholder extends StatelessWidget {
+class _MenuImage extends StatelessWidget {
+  final String url;
+
+  const _MenuImage({required this.url});
+
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: Colors.blue[50],
+    // Admin-entered URLs are free text; anything that is not absolute would
+    // resolve against the app's own origin and 404.
+    if (!url.startsWith('http')) return const _Placeholder();
+
+    return CachedNetworkImage(
+      imageUrl: url,
+      fit: BoxFit.cover,
       width: double.infinity,
       height: double.infinity,
-      child: Icon(Icons.fastfood_rounded, size: 36, color: Colors.blue[200]),
+      placeholder: (_, __) => const _Placeholder(),
+      errorWidget: (_, __, ___) => const _Placeholder(),
+    );
+  }
+}
+
+class _Placeholder extends StatelessWidget {
+  const _Placeholder();
+
+  @override
+  Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
+
+    return Container(
+      color: scheme.surfaceContainer,
+      width: double.infinity,
+      height: double.infinity,
+      child: Icon(
+        Icons.restaurant_outlined,
+        size: 32,
+        color: scheme.outline,
+      ),
     );
   }
 }
@@ -532,26 +497,23 @@ class _AddButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final color = Theme.of(context).colorScheme.primary;
+    final scheme = Theme.of(context).colorScheme;
+
     return GestureDetector(
       onTap: onTap,
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
-        width: 34,
-        height: 34,
+        width: 32,
+        height: 32,
         decoration: BoxDecoration(
-          color: inCart ? Colors.green : color,
-          shape: BoxShape.circle,
-          boxShadow: [
-            BoxShadow(
-              color: (inCart ? Colors.green : color).withValues(alpha: 0.4),
-              blurRadius: 8,
-              offset: const Offset(0, 3),
-            )
-          ],
+          color: inCart ? scheme.primaryContainer : scheme.primary,
+          borderRadius: BorderRadius.circular(AppTheme.radiusSmall),
         ),
-        child: Icon(inCart ? Icons.check : Icons.add,
-            color: Colors.white, size: 18),
+        child: Icon(
+          inCart ? Icons.check : Icons.add,
+          color: inCart ? scheme.primary : scheme.onPrimary,
+          size: 18,
+        ),
       ),
     );
   }

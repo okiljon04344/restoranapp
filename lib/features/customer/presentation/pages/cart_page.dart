@@ -13,14 +13,23 @@ class CartPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l = AppLocalizations.of(context)!;
+    final theme = Theme.of(context);
     final cartItems = ref.watch(cartProvider);
     final tableId = ref.watch(tableIdProvider);
     final total = cartItems.fold<double>(0, (sum, item) => sum + item.total);
 
     return AppScaffold(
       title: l.yourCart,
+      maxContentWidth: 720,
       child: cartItems.isEmpty
-          ? Center(child: Text(l.cartEmpty))
+          ? Center(
+              child: Text(
+                l.cartEmpty,
+                style: theme.textTheme.bodyLarge?.copyWith(
+                  color: theme.colorScheme.onSurfaceVariant,
+                ),
+              ),
+            )
           : Column(
               children: [
                 Expanded(
@@ -31,9 +40,10 @@ class CartPage extends ConsumerWidget {
                     itemBuilder: (context, index) {
                       final item = cartItems[index];
                       return ListTile(
-                        title: Text(item.name,
-                            style:
-                                const TextStyle(fontWeight: FontWeight.bold)),
+                        title: Text(
+                          item.name,
+                          style: theme.textTheme.titleMedium,
+                        ),
                         subtitle:
                             Text('${item.price.toStringAsFixed(0)} ${l.som}'),
                         trailing: Row(
@@ -45,9 +55,10 @@ class CartPage extends ConsumerWidget {
                                   .read(cartProvider.notifier)
                                   .decrement(item.menuItemId),
                             ),
-                            Text('${item.quantity}',
-                                style: const TextStyle(
-                                    fontSize: 16, fontWeight: FontWeight.bold)),
+                            Text(
+                              '${item.quantity}',
+                              style: theme.textTheme.titleMedium,
+                            ),
                             IconButton(
                               icon: const Icon(Icons.add_circle_outline),
                               onPressed: () => ref
@@ -63,34 +74,27 @@ class CartPage extends ConsumerWidget {
                 Container(
                   padding: const EdgeInsets.all(24),
                   decoration: BoxDecoration(
-                    color: Colors.white,
-                    boxShadow: [
-                      BoxShadow(
-                          color: Colors.black.withValues(alpha: 0.05),
-                          blurRadius: 10,
-                          offset: const Offset(0, -5))
-                    ],
+                    color: theme.colorScheme.surface,
+                    border: Border(
+                      top: BorderSide(color: theme.colorScheme.outlineVariant),
+                    ),
                   ),
                   child: Column(
                     children: [
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text(l.totalAmount,
-                              style: const TextStyle(fontSize: 16)),
+                          Text(l.totalAmount, style: theme.textTheme.bodyLarge),
                           Text(
                             '${total.toStringAsFixed(0)} ${l.som}',
-                            style: const TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.green),
+                            style: theme.textTheme.titleLarge,
                           ),
                         ],
                       ),
                       const SizedBox(height: 16),
                       SizedBox(
                         width: double.infinity,
-                        height: 56,
+                        height: 52,
                         child: FilledButton(
                           onPressed: () async {
                             await ref.read(ordersActionProvider).placeOrder(
@@ -102,7 +106,7 @@ class CartPage extends ConsumerWidget {
                                 );
                             ref.read(cartProvider.notifier).clear();
                             if (context.mounted) {
-                              context.go('/customer/tracking');
+                              context.go('/customer/order-tracking');
                             }
                           },
                           child: Text(l.placeOrder),

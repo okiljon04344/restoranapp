@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import '../../domain/table_provider.dart';
-import '../../../orders/domain/order_providers.dart';
+
+import '../../../../core/theme/app_theme.dart';
+import '../../../../core/widgets/status_badge.dart';
 import '../../../../l10n/app_localizations.dart';
+import '../../../orders/domain/order_providers.dart';
+import '../../domain/table_provider.dart';
 
 class OrderTrackingPage extends ConsumerWidget {
   const OrderTrackingPage({super.key});
@@ -11,6 +14,7 @@ class OrderTrackingPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l = AppLocalizations.of(context)!;
+    final theme = Theme.of(context);
     final tableId = ref.watch(tableIdProvider);
     final orders = ref.watch(ordersProvider);
 
@@ -20,87 +24,104 @@ class OrderTrackingPage extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('${l.table} $tableId - ${l.orders}'),
+        title: Text('${l.table} ${tableId ?? '-'} - ${l.orders}'),
         leading: IconButton(
           icon: const Icon(Icons.close),
           onPressed: () => context.go('/customer'),
         ),
       ),
       body: tableOrders.isEmpty
-          ? Center(child: Text(l.noActiveOrders))
-          : ListView.builder(
-              padding: const EdgeInsets.all(16),
-              itemCount: tableOrders.length,
-              itemBuilder: (context, index) {
-                final order = tableOrders[index];
-                return Card(
-                  margin: const EdgeInsets.only(bottom: 16),
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(16)),
-                  child: Padding(
-                    padding: const EdgeInsets.all(16),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          ? Center(
+              child: Text(
+                l.noActiveOrders,
+                style: theme.textTheme.bodyLarge?.copyWith(
+                  color: theme.colorScheme.onSurfaceVariant,
+                ),
+              ),
+            )
+          : Align(
+              alignment: Alignment.topCenter,
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 720),
+                child: ListView.builder(
+                  padding: const EdgeInsets.all(16),
+                  itemCount: tableOrders.length,
+                  itemBuilder: (context, index) {
+                    final order = tableOrders[index];
+                    return Card(
+                      margin: const EdgeInsets.only(bottom: 16),
+                      child: Padding(
+                        padding: const EdgeInsets.all(16),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(
-                              'Order #${order.id.substring(0, 5)}',
-                              style:
-                                  const TextStyle(fontWeight: FontWeight.bold),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  'Order #${order.id.substring(0, 5)}',
+                                  style: theme.textTheme.titleMedium,
+                                ),
+                                _OrderStatusBadge(status: order.status),
+                              ],
                             ),
-                            _StatusBadge(status: order.status),
-                          ],
-                        ),
-                        const Divider(height: 24),
-                        ...order.items.map((item) => Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 4),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text('${item.quantity}x ${item.name}'),
-                                  Text(
-                                      (item.price * item.quantity).toStringAsFixed(0)),
-                                ],
+                            const Divider(height: 24),
+                            for (final item in order.items)
+                              Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 4,
+                                ),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text('${item.quantity}x ${item.name}'),
+                                    Text(item.total.toStringAsFixed(0)),
+                                  ],
+                                ),
                               ),
-                            )),
-                        const Divider(height: 24),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(l.subtotal,
-                                style: const TextStyle(
-                                    fontWeight: FontWeight.bold)),
-                            Text(
-                              order.total.toStringAsFixed(0),
-                              style: const TextStyle(
-                                  fontWeight: FontWeight.bold, fontSize: 18),
+                            const Divider(height: 24),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  l.subtotal,
+                                  style: theme.textTheme.titleMedium,
+                                ),
+                                Text(
+                                  order.total.toStringAsFixed(0),
+                                  style: theme.textTheme.titleLarge,
+                                ),
+                              ],
                             ),
                           ],
                         ),
-                      ],
-                    ),
-                  ),
-                );
-              },
+                      ),
+                    );
+                  },
+                ),
+              ),
             ),
       bottomNavigationBar: tableOrders.isNotEmpty
           ? SafeArea(
               child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: FilledButton.icon(
-                  onPressed: () {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text(l.billRequested)),
-                    );
-                  },
-                  icon: const Icon(Icons.receipt_long),
-                  label: Text(l.requestBill),
-                  style: FilledButton.styleFrom(
-                    backgroundColor: Colors.orange[800],
-                    minimumSize: const Size(double.infinity, 56),
+                padding: const EdgeInsets.all(16),
+                child: Center(
+                  heightFactor: 1,
+                  child: ConstrainedBox(
+                    constraints: const BoxConstraints(maxWidth: 720),
+                    child: FilledButton.icon(
+                      onPressed: () {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text(l.billRequested)),
+                        );
+                      },
+                      icon: const Icon(Icons.receipt_long_outlined),
+                      label: Text(l.requestBill),
+                      style: FilledButton.styleFrom(
+                        minimumSize: const Size(double.infinity, 52),
+                      ),
+                    ),
                   ),
                 ),
               ),
@@ -110,46 +131,25 @@ class OrderTrackingPage extends ConsumerWidget {
   }
 }
 
-class _StatusBadge extends StatelessWidget {
+class _OrderStatusBadge extends StatelessWidget {
   final String status;
-  const _StatusBadge({required this.status});
+
+  const _OrderStatusBadge({required this.status});
 
   @override
   Widget build(BuildContext context) {
-    Color color;
-    String text;
     final l = AppLocalizations.of(context)!;
 
-    switch (status) {
-      case 'pending':
-        color = Colors.orange;
-        text = l.statusPreparing;
-        break;
-      case 'ready':
-        color = Colors.green;
-        text = l.ready;
-        break;
-      case 'delivered':
-        color = Colors.blue;
-        text = l.statusDelivered;
-        break;
-      default:
-        color = Colors.grey;
-        text = status;
-    }
+    final label = switch (status) {
+      'pending' => l.statusPreparing,
+      'ready' => l.ready,
+      'delivered' => l.statusDelivered,
+      _ => status,
+    };
 
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-      decoration: BoxDecoration(
-        color: color.withValues(alpha: 0.1),
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: color),
-      ),
-      child: Text(
-        text,
-        style:
-            TextStyle(color: color, fontSize: 12, fontWeight: FontWeight.bold),
-      ),
+    return StatusBadge(
+      label: label,
+      color: context.palette.statusColor(Theme.of(context).colorScheme, status),
     );
   }
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+
 import '../../../../l10n/app_localizations.dart';
 
 class RoleSelectPage extends StatelessWidget {
@@ -7,65 +8,60 @@ class RoleSelectPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context)!;
+    final theme = Theme.of(context);
+
     return Scaffold(
-      backgroundColor: Colors.grey[50],
       appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
         leading: IconButton(
-          icon:
-              const Icon(Icons.arrow_back_ios_new_rounded, color: Colors.black),
+          icon: const Icon(Icons.arrow_back_ios_new_rounded),
           onPressed: () => context.go('/'),
         ),
       ),
       body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(24),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Spacer(),
-              Builder(builder: (context) {
-                final l = AppLocalizations.of(context)!;
-                return Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      l.welcomeRestaurant,
-                      style:
-                          Theme.of(context).textTheme.headlineMedium?.copyWith(
-                                fontWeight: FontWeight.bold,
-                                color: Colors.black,
-                              ),
+        child: Center(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.all(24),
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 520),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    l.welcomeRestaurant,
+                    style: theme.textTheme.headlineMedium,
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    l.selectRole,
+                    style: theme.textTheme.bodyLarge?.copyWith(
+                      color: theme.colorScheme.onSurfaceVariant,
                     ),
-                    const SizedBox(height: 12),
-                    Text(l.selectRole),
-                    const SizedBox(height: 32),
-                    _RoleButton(
-                      title: l.customerMode,
-                      subtitle: l.customerSubtitle,
-                      icon: Icons.restaurant,
-                      onTap: () => context.go('/customer'),
-                    ),
-                    const SizedBox(height: 16),
-                    _RoleButton(
-                      title: l.adminPanel,
-                      subtitle: l.adminSubtitle,
-                      icon: Icons.admin_panel_settings,
-                      onTap: () => context.push('/login/admin'),
-                    ),
-                    const SizedBox(height: 16),
-                    _RoleButton(
-                      title: l.kitchenDisplay,
-                      subtitle: l.kitchenSubtitle,
-                      icon: Icons.kitchen,
-                      onTap: () => context.push('/login/kitchen'),
-                    ),
-                  ],
-                );
-              }),
-              const Spacer(),
-            ],
+                  ),
+                  const SizedBox(height: 32),
+                  _RoleButton(
+                    title: l.customerMode,
+                    subtitle: l.customerSubtitle,
+                    icon: Icons.restaurant,
+                    onTap: () => context.go('/customer'),
+                  ),
+                  const SizedBox(height: 12),
+                  _RoleButton(
+                    title: l.adminPanel,
+                    subtitle: l.adminSubtitle,
+                    icon: Icons.admin_panel_settings_outlined,
+                    onTap: () => context.push('/login/admin'),
+                  ),
+                  const SizedBox(height: 12),
+                  _RoleButton(
+                    title: l.kitchenDisplay,
+                    subtitle: l.kitchenSubtitle,
+                    icon: Icons.soup_kitchen_outlined,
+                    onTap: () => context.push('/login/kitchen'),
+                  ),
+                ],
+              ),
+            ),
           ),
         ),
       ),
@@ -88,60 +84,49 @@ class _RoleButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(24),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.05),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
-          ),
-        ],
+    final theme = Theme.of(context);
+    final scheme = theme.colorScheme;
+
+    return Material(
+      color: scheme.surface,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12),
+        side: BorderSide(color: scheme.outlineVariant),
       ),
-      child: Material(
-        color: Colors.transparent,
-        child: InkWell(
-          borderRadius: BorderRadius.circular(24),
-          onTap: onTap,
-          child: Padding(
-            padding: const EdgeInsets.all(20),
-            child: Row(
-              children: [
-                CircleAvatar(
-                  radius: 28,
-                  backgroundColor:
-                      Theme.of(context).colorScheme.primaryContainer,
-                  child:
-                      Icon(icon, color: Theme.of(context).colorScheme.primary),
+      child: InkWell(
+        borderRadius: BorderRadius.circular(12),
+        onTap: onTap,
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Row(
+            children: [
+              Container(
+                width: 44,
+                height: 44,
+                decoration: BoxDecoration(
+                  color: scheme.primaryContainer,
+                  borderRadius: BorderRadius.circular(10),
                 ),
-                const SizedBox(width: 16),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        title,
-                        style:
-                            Theme.of(context).textTheme.titleMedium?.copyWith(
-                                  fontWeight: FontWeight.bold,
-                                ),
+                child: Icon(icon, color: scheme.primary),
+              ),
+              const SizedBox(width: 16),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(title, style: theme.textTheme.titleMedium),
+                    const SizedBox(height: 2),
+                    Text(
+                      subtitle,
+                      style: theme.textTheme.bodySmall?.copyWith(
+                        color: scheme.onSurfaceVariant,
                       ),
-                      const SizedBox(height: 4),
-                      Text(
-                        subtitle,
-                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                              color: Colors.grey[600],
-                            ),
-                      ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
-                const Icon(Icons.arrow_forward_ios_rounded,
-                    size: 16, color: Colors.grey),
-              ],
-            ),
+              ),
+              Icon(Icons.chevron_right, color: scheme.onSurfaceVariant),
+            ],
           ),
         ),
       ),
