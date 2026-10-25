@@ -71,6 +71,11 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         path: '/admin',
         builder: (context, state) => const AdminDashboardPage(),
       ),
+      // AdminLoginPage navigates to '/dashboard' (the admin web app's route).
+      GoRoute(
+        path: '/dashboard',
+        redirect: (context, state) => '/admin',
+      ),
     ],
   );
 });

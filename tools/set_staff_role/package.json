@@ -1,0 +1,16 @@
+{
+  "name": "set-staff-role",
+  "private": true,
+  "description": "Grant or revoke restaurant staff roles via Firebase Auth custom claims.",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "firebase-admin": "^12.7.0"
+  }
+}

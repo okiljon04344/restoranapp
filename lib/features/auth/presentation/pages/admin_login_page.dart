@@ -5,7 +5,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../domain/auth_provider.dart';
 import 'admin_signup_page.dart';
-import 'admin_debug_page.dart';
 
 class AdminLoginPage extends ConsumerStatefulWidget {
   final String targetRole; // 'admin' or 'kitchen'
@@ -38,17 +37,14 @@ class _AdminLoginPageState extends ConsumerState<AdminLoginPage> {
           _emailController.text.trim(), _passwordController.text.trim());
 
       final user = ref.read(firebaseAuthProvider).currentUser;
-      if (mounted && widget.targetRole == 'admin') {
-        if (repo.isAdmin(user?.email)) {
-          if (mounted) {
-            context.go('/dashboard');
-          }
-        } else {
-          await repo.signOut();
-          throw 'Sizning admin huquqlaringiz yo\'q.';
-        }
-      } else if (mounted) {
-        context.go('/kitchen');
+      final role = StaffRole.fromName(widget.targetRole);
+      final allowed = user != null && await repo.hasRole(user, role);
+      if (!allowed) {
+        await repo.signOut();
+        throw 'Sizda bu bo\'limga kirish huquqi yo\'q.';
+      }
+      if (mounted) {
+        context.go(role == StaffRole.admin ? '/dashboard' : '/kitchen');
       }
     } on FirebaseAuthException catch (e) {
       String errorMessage = 'Xato: ${e.message}';
@@ -102,7 +98,7 @@ class _AdminLoginPageState extends ConsumerState<AdminLoginPage> {
               controller: _emailController,
               decoration: const InputDecoration(
                   labelText: 'Email',
-                  hintText: 'admin@gmail.com',
+                  hintText: 'staff@example.com',
                   border: OutlineInputBorder(),
                   prefixIcon: Icon(Icons.email)),
             ),
@@ -137,17 +133,6 @@ class _AdminLoginPageState extends ConsumerState<AdminLoginPage> {
                       ),
               child: Text(AppLocalizations.of(context)?.createAdminAccount ??
                   'Yangi admin akkaunt yaratish'),
-            ),
-            const SizedBox(height: 12),
-            TextButton(
-              onPressed: _isLoading
-                  ? null
-                  : () => Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) => const AdminDebugPage(),
-                        ),
-                      ),
-              child: const Text('🔧 Debug - Firebase Status'),
             ),
           ],
         ),

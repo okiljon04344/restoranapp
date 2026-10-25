@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import '../../../orders/domain/order_providers.dart';
+import '../../domain/staff_call_action_provider.dart';
 import '../../domain/staff_calls_provider.dart';
 import '../../domain/analytics_provider.dart';
 import '../../../auth/domain/auth_provider.dart';
@@ -843,10 +843,7 @@ class AdminDashboardClean extends ConsumerWidget {
           ),
           FilledButton(
             onPressed: () async {
-              await FirebaseFirestore.instance
-                  .collection('orders')
-                  .doc(order.id)
-                  .update({'status': 'cancelled'});
+              await ref.read(firestoreServiceProvider).cancelOrder(order.id);
               if (context.mounted) Navigator.pop(context);
             },
             child: const Text('Ha, Bekor Qilish'),
@@ -857,7 +854,7 @@ class AdminDashboardClean extends ConsumerWidget {
   }
 
   void _resolveStaffCall(WidgetRef ref, String callId, BuildContext context) {
-    FirebaseFirestore.instance.collection('staff_calls').doc(callId).delete();
+    ref.read(staffCallActionProvider).resolveCall(callId);
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(content: Text('Staff call tayyorlandi')),
     );

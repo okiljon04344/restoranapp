@@ -39,6 +39,21 @@ flutter test
 flutter run
 ```
 
+### セキュリティ設計（権限管理）
+- 管理者・キッチン権限は **Firebase Auth Custom Claims**（`admin` / `kitchen`）で判定します。メールアドレスでは判定しないため、特定のアドレスで登録しても権限は得られません。
+- 権限の付与はサーバー側（Admin SDK）だけが行えます：
+  ```bash
+  cd tools/set_staff_role && npm install
+  export GOOGLE_APPLICATION_CREDENTIALS=/path/to/service-account.json  # コミット禁止
+  node index.js grant admin owner@example.com
+  node index.js grant kitchen chef@example.com
+  ```
+- `firestore.rules` は注文データの形式（ステータス・金額・数量）も検証し、来店客は「調理前の注文のキャンセル」だけを行えます。
+- ルールは Firestore Emulator 上の自動テスト（`test_rules/`、14件）で検証し、CI でも実行しています：
+  ```bash
+  cd test_rules && npm install && npm test
+  ```
+
 ---
 
 ## English
