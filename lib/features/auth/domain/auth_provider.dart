@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -21,12 +22,18 @@ class AuthRepository {
     await _auth.signOut();
   }
 
-  bool isAdmin(String? email) {
-    final admins = [
-      'admin@gmail.com',
-      'oqiljonnabiyev0434@gmail.com',
-      '123@gmail.com'
-    ];
-    return admins.contains(email);
+  /// Admin role is decided by the existence of a Firestore document at
+  /// `admins/{uid}` (the same check is used in `firestore.rules`).
+  Future<bool> isAdmin(User? user) async {
+    if (user == null) return false;
+    try {
+      final doc = await FirebaseFirestore.instance
+          .collection('admins')
+          .doc(user.uid)
+          .get();
+      return doc.exists;
+    } catch (_) {
+      return false;
+    }
   }
 }

@@ -6,11 +6,11 @@ import 'package:hive_flutter/hive_flutter.dart';
 // LANGUAGE MANAGEMENT SYSTEM - Professional Localization Provider
 // ============================================================================
 
-/// Hive box uchun key
+/// Hive box key
 const String _localeBoxName = 'app_settings';
 const String _languageCodeKey = 'language_code';
-// 'user_confirmed_language' - foydalanuvchi o'zi tanlagan holda saqlanadi
-// Eski 'language_selected' (auto-set) dan farq qiladi — migration uchun
+// 'user_confirmed_language' is stored once the user has chosen a language explicitly
+// (unlike the old auto-set 'language_selected' key, kept for migration)
 const String _languageSelectedKey = 'user_confirmed_language';
 
 /// Default locale (fallback language)
