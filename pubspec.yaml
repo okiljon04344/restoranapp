@@ -1,5 +1,5 @@
 name: restaurant_universal_app
-description: Universal restaurant and oshxona app.
+description: Multilingual QR table-ordering and restaurant management app built with Flutter and Firebase.
 publish_to: 'none'
 version: 1.0.0+1
 
