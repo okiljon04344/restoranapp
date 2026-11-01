@@ -12,7 +12,11 @@ Future<void> main() async {
     await Firebase.initializeApp(
       options: DefaultFirebaseOptions.currentPlatform,
     );
-  } catch (_) {}
+  } catch (e) {
+    // Keep the app running (e.g. in tests or without Firebase config); the
+    // failure is surfaced in the debug console.
+    debugPrint('Firebase initialization failed: $e');
+  }
 
   runApp(const ProviderScope(child: AdminApp()));
 }
