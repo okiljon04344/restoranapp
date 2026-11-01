@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import '../../../../l10n/app_localizations.dart';
-import '../../domain/auth_provider.dart';
+import '../../application/auth_provider.dart';
 
 class AdminSignupPage extends ConsumerStatefulWidget {
   const AdminSignupPage({super.key});

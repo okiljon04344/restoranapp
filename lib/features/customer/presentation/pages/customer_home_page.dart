@@ -5,8 +5,8 @@ import 'package:go_router/go_router.dart';
 import '../../../../core/widgets/app_scaffold.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../admin/data/admin_repository.dart';
-import '../../domain/table_provider.dart';
-import '../../domain/table_status_provider.dart';
+import '../../application/table_provider.dart';
+import '../../application/table_status_provider.dart';
 
 class CustomerHomePage extends ConsumerWidget {
   const CustomerHomePage({super.key});

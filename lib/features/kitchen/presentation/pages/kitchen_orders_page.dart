@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/widgets/app_scaffold.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../../models/order_model.dart';
-import '../../../orders/domain/order_providers.dart';
+import '../../../orders/application/order_providers.dart';
 
 class KitchenOrdersPage extends ConsumerWidget {
   const KitchenOrdersPage({super.key});

@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import '../../../orders/domain/order_providers.dart';
+import '../../../orders/application/order_providers.dart';
 import '../../data/admin_repository.dart';
-import '../../domain/staff_calls_provider.dart';
-import '../../domain/analytics_provider.dart';
-import '../../../auth/domain/auth_provider.dart';
+import '../../application/staff_calls_provider.dart';
+import '../../application/analytics_provider.dart';
+import '../../../auth/application/auth_provider.dart';
 import 'admin_ingredients_page.dart';
 
 final _orderSearchProvider = StateProvider<String>((ref) => '');

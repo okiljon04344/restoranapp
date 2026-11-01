@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import '../../../../core/widgets/app_scaffold.dart';
-import '../../../orders/domain/order_providers.dart';
+import '../../../orders/application/order_providers.dart';
 import '../../../../services/qr_code_service.dart';
 
 final _tablesListProvider = FutureProvider<List<int>>((ref) async {

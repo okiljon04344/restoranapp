@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../orders/domain/order_providers.dart';
+import '../../orders/application/order_providers.dart';
 import '../../../services/firestore_service.dart';
 
 // Provider to check if a table has active orders

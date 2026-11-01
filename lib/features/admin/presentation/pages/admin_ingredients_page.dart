@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../data/ingredients_repository.dart';
-import '../../domain/ingredients_provider.dart';
+import '../../application/ingredients_provider.dart';
 
 class AdminIngredientsPage extends ConsumerStatefulWidget {
   const AdminIngredientsPage({super.key});

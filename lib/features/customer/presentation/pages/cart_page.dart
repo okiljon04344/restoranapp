@@ -4,8 +4,8 @@ import 'package:go_router/go_router.dart';
 
 import '../../../../core/widgets/app_scaffold.dart';
 import '../../../../l10n/app_localizations.dart';
-import '../../../orders/domain/order_providers.dart';
-import '../../domain/table_provider.dart';
+import '../../../orders/application/order_providers.dart';
+import '../../application/table_provider.dart';
 
 class CartPage extends ConsumerWidget {
   const CartPage({super.key});

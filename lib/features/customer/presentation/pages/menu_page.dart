@@ -5,7 +5,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../../../l10n/app_localizations.dart';
 import '../../../../models/menu_item_model.dart';
-import '../../../orders/domain/order_providers.dart';
+import '../../../orders/application/order_providers.dart';
 
 class MenuPage extends ConsumerStatefulWidget {
   const MenuPage({super.key});

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/widgets/app_scaffold.dart';
-import '../../../orders/domain/order_providers.dart';
+import '../../../orders/application/order_providers.dart';
 
 class AdminKitchenPage extends ConsumerWidget {
   const AdminKitchenPage({super.key});

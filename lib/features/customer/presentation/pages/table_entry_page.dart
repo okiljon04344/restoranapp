@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import '../../domain/table_provider.dart';
-import '../../domain/table_status_provider.dart';
+import '../../application/table_provider.dart';
+import '../../application/table_status_provider.dart';
 import '../../../../services/qr_code_service.dart';
 import '../../../../l10n/app_localizations.dart';
 
