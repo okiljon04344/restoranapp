@@ -2,7 +2,10 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import '../features/admin/presentation/pages/admin_dashboard_page.dart';
+import '../features/admin/presentation/pages/admin_dashboard_clean.dart';
+import '../features/admin/presentation/pages/admin_kitchen_page.dart';
+import '../features/admin/presentation/pages/admin_menu_management_enhanced.dart';
+import '../features/admin/presentation/pages/admin_qr_code_page.dart';
 import '../features/auth/presentation/pages/role_select_page.dart';
 import '../features/auth/presentation/pages/admin_login_page.dart';
 import '../features/customer/presentation/pages/cart_page.dart';
@@ -69,7 +72,25 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       ),
       GoRoute(
         path: '/admin',
-        builder: (context, state) => const AdminDashboardPage(),
+        builder: (context, state) => const AdminDashboardClean(),
+      ),
+      // Targets of the navigation buttons inside the admin dashboard.
+      GoRoute(
+        path: '/admin/menu',
+        builder: (context, state) => const AdminMenuManagementPageEnhanced(),
+      ),
+      GoRoute(
+        path: '/admin/kitchen',
+        builder: (context, state) => const AdminKitchenPage(),
+      ),
+      GoRoute(
+        path: '/admin/qr',
+        builder: (context, state) => const AdminQRCodePage(),
+      ),
+      // The dashboard's logout action navigates here.
+      GoRoute(
+        path: '/login',
+        builder: (context, state) => const AdminLoginPage(targetRole: 'admin'),
       ),
     ],
   );
