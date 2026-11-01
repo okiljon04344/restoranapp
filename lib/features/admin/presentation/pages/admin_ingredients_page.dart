@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+import '../../data/ingredients_repository.dart';
 import '../../domain/ingredients_provider.dart';
 
 class AdminIngredientsPage extends ConsumerStatefulWidget {
@@ -361,18 +361,12 @@ class _AdminIngredientsPageState extends ConsumerState<AdminIngredientsPage> {
                   return;
                 }
 
-                await FirebaseFirestore.instance
-                    .collection('cafes')
-                    .doc('main_cafe')
-                    .collection('ingredients')
-                    .add({
-                  'name': _nameController.text,
-                  'unit': _selectedUnit,
-                  'quantity': double.parse(_quantityController.text),
-                  'minimumQuantity': double.parse(_minimumController.text),
-                  'isOutOfStock': false,
-                  'lastUpdated': Timestamp.now(),
-                });
+                await ref.read(ingredientsRepositoryProvider).add(
+                      name: _nameController.text,
+                      unit: _selectedUnit,
+                      quantity: double.parse(_quantityController.text),
+                      minimumQuantity: double.parse(_minimumController.text),
+                    );
 
                 if (!context.mounted) return;
                 Navigator.pop(context);
@@ -465,19 +459,13 @@ class _AdminIngredientsPageState extends ConsumerState<AdminIngredientsPage> {
                 final quantity = double.parse(_quantityController.text);
                 final minimum = double.parse(_minimumController.text);
 
-                await FirebaseFirestore.instance
-                    .collection('cafes')
-                    .doc('main_cafe')
-                    .collection('ingredients')
-                    .doc(ingredient.id)
-                    .update({
-                  'name': _nameController.text,
-                  'unit': _selectedUnit,
-                  'quantity': quantity,
-                  'minimumQuantity': minimum,
-                  'isOutOfStock': quantity <= minimum,
-                  'lastUpdated': Timestamp.now(),
-                });
+                await ref.read(ingredientsRepositoryProvider).update(
+                      ingredient.id,
+                      name: _nameController.text,
+                      unit: _selectedUnit,
+                      quantity: quantity,
+                      minimumQuantity: minimum,
+                    );
 
                 if (!context.mounted) return;
                 Navigator.pop(context);
@@ -506,12 +494,9 @@ class _AdminIngredientsPageState extends ConsumerState<AdminIngredientsPage> {
           ),
           FilledButton(
             onPressed: () async {
-              await FirebaseFirestore.instance
-                  .collection('cafes')
-                  .doc('main_cafe')
-                  .collection('ingredients')
-                  .doc(ingredientId)
-                  .delete();
+              await ref
+                  .read(ingredientsRepositoryProvider)
+                  .delete(ingredientId);
 
               if (!context.mounted) return;
               Navigator.pop(context);

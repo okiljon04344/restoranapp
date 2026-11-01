@@ -1,13 +1,17 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../core/firebase_providers.dart';
 import '../models/order_model.dart';
 import '../models/menu_item_model.dart';
 import '../models/category_model.dart';
 
-final firestoreServiceProvider = Provider((ref) => FirestoreService());
+final firestoreServiceProvider =
+    Provider((ref) => FirestoreService(ref.watch(firestoreProvider)));
 
 class FirestoreService {
-  final FirebaseFirestore _db = FirebaseFirestore.instance;
+  FirestoreService(this._db);
+
+  final FirebaseFirestore _db;
   final String cafeId = "main_cafe"; // Rules'dagi cafeId ga mos
 
   // Orders

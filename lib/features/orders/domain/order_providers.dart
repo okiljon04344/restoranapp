@@ -6,9 +6,6 @@ import '../../../models/order_model.dart';
 import '../../../models/category_model.dart';
 import '../../../services/firestore_service.dart';
 
-// Firestore Service
-final firestoreServiceProvider = Provider((ref) => FirestoreService());
-
 // Streams
 final categoriesProvider = StreamProvider<List<CategoryModel>>((ref) {
   return ref.watch(firestoreServiceProvider).getCategories();

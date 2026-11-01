@@ -1,10 +1,15 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-final qrCodeServiceProvider = Provider((ref) => QRCodeService());
+import '../core/firebase_providers.dart';
+
+final qrCodeServiceProvider =
+    Provider((ref) => QRCodeService(ref.watch(firestoreProvider)));
 
 class QRCodeService {
-  final FirebaseFirestore _db = FirebaseFirestore.instance;
+  QRCodeService(this._db);
+
+  final FirebaseFirestore _db;
   final String cafeId = "main_cafe";
 
   // Generate QR code data for a table

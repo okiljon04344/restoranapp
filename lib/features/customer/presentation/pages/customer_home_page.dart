@@ -4,7 +4,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../../../core/widgets/app_scaffold.dart';
 import '../../../../l10n/app_localizations.dart';
-import '../../../admin/domain/staff_call_action_provider.dart';
+import '../../../admin/data/admin_repository.dart';
 import '../../domain/table_provider.dart';
 import '../../domain/table_status_provider.dart';
 
@@ -165,7 +165,7 @@ class CustomerHomePage extends ConsumerWidget {
                   }
                   try {
                     await ref
-                        .read(staffCallActionProvider)
+                        .read(adminRepositoryProvider)
                         .callStaff(tableNumber);
                     if (context.mounted) {
                       ScaffoldMessenger.of(context).showSnackBar(
