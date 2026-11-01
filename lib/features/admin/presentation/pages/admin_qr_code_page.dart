@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import '../../../../core/widgets/app_scaffold.dart';
+import '../../../../l10n/app_localizations.dart';
 import '../../../orders/application/order_providers.dart';
 import '../../../../services/qr_code_service.dart';
 
@@ -19,17 +20,18 @@ class AdminQRCodePage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l = AppLocalizations.of(context)!;
     final orders = ref.watch(ordersProvider);
     final tablesAsync = ref.watch(_tablesListProvider);
     final selectedTables = ref.watch(_selectedTablesProvider);
     final qrService = ref.watch(qrCodeServiceProvider);
 
     return AppScaffold(
-      title: 'QR Code Generator',
+      title: l.qrGenerator,
       actions: [
         IconButton(
           icon: const Icon(Icons.arrow_back),
-          tooltip: 'Go back',
+          tooltip: l.goBack,
           onPressed: () => context.go('/dashboard'),
         ),
       ],
@@ -45,16 +47,16 @@ class AdminQRCodePage extends ConsumerWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text(
-                      'Generate Table QR Codes',
-                      style: TextStyle(
+                    Text(
+                      l.generateTableQrCodes,
+                      style: const TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
                     const SizedBox(height: 8),
                     Text(
-                      'Select tables to generate QR codes for. Customers can scan these QR codes at their table with their phone.',
+                      l.qrSelectHint,
                       style: TextStyle(color: Colors.grey.shade600),
                     ),
                   ],
@@ -70,7 +72,7 @@ class AdminQRCodePage extends ConsumerWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        'Selected Tables: ${selectedTables.length}',
+                        l.selectedTablesCount('${selectedTables.length}'),
                         style: const TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
@@ -85,7 +87,7 @@ class AdminQRCodePage extends ConsumerWidget {
                         },
                         style:
                             FilledButton.styleFrom(backgroundColor: Colors.red),
-                        child: const Text('Clear All'),
+                        child: Text(l.clearAll),
                       ),
                     ],
                   ),
@@ -101,7 +103,7 @@ class AdminQRCodePage extends ConsumerWidget {
                         qrService,
                       ),
                       icon: const Icon(Icons.download),
-                      label: const Text('Download QR Codes'),
+                      label: Text(l.downloadQrCodes),
                     ),
                   ),
                 ],
@@ -109,9 +111,9 @@ class AdminQRCodePage extends ConsumerWidget {
             else
               const SizedBox.shrink(),
             const SizedBox(height: 24),
-            const Text(
-              'Select Tables',
-              style: TextStyle(
+            Text(
+              l.selectTables,
+              style: const TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
               ),
@@ -193,7 +195,7 @@ class AdminQRCodePage extends ConsumerWidget {
                 },
               ),
               loading: () => const Center(child: CircularProgressIndicator()),
-              error: (err, stack) => Center(child: Text('Error: $err')),
+              error: (err, stack) => Center(child: Text(l.error('$err'))),
             ),
           ],
         ),
@@ -206,17 +208,18 @@ class AdminQRCodePage extends ConsumerWidget {
     Set<int> tables,
     QRCodeService qrService,
   ) {
+    final l = AppLocalizations.of(context)!;
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('QR Codes Ready'),
+        title: Text(l.qrCodesReady),
         content: Text(
-          'Generated QR codes for ${tables.length} tables.\n\nYou can now:\n- Print them\n- Display on screens\n- Share with customers',
+          l.qrGeneratedMessage('${tables.length}'),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('OK'),
+            child: Text(l.ok),
           ),
         ],
       ),
@@ -231,6 +234,7 @@ class _QRPreviewGrid extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context)!;
     final qrService = ProviderContainer().read(qrCodeServiceProvider);
 
     return GridView.builder(
@@ -272,7 +276,7 @@ class _QRPreviewGrid extends StatelessWidget {
                   ),
                 ),
                 child: Text(
-                  'Table $tableNum',
+                  l.tableWithNumber('$tableNum'),
                   textAlign: TextAlign.center,
                   style: const TextStyle(
                     fontWeight: FontWeight.bold,

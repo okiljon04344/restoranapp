@@ -312,4 +312,136 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get enterQrManuallyShort => 'Enter QR code data manually:';
+
+  @override
+  String get adminPanelSubtitle => 'Restaurant management';
+
+  @override
+  String get dashboard => 'Dashboard';
+
+  @override
+  String get dashboardSubtitle => 'Today\'s statistics and real-time data';
+
+  @override
+  String get todayRevenue => 'Today\'s Revenue';
+
+  @override
+  String get orderCount => 'Orders';
+
+  @override
+  String get averageOrder => 'Average Order';
+
+  @override
+  String get menuItemsCount => 'Menu Items';
+
+  @override
+  String get categoriesLabel => 'Categories';
+
+  @override
+  String get topOrdered => 'Most Ordered';
+
+  @override
+  String get statusCompleted => 'Completed';
+
+  @override
+  String get staffCalls => 'Staff Calls';
+
+  @override
+  String staffCallAtTable(String table) {
+    return 'Table $table - staff requested';
+  }
+
+  @override
+  String get markDone => 'Done';
+
+  @override
+  String get staffCallResolved => 'Staff call resolved';
+
+  @override
+  String get noStaffCalls => 'No staff calls';
+
+  @override
+  String get staffRequested => 'Staff requested';
+
+  @override
+  String get searchOrdersHint => 'Search by table or order ID...';
+
+  @override
+  String get noOrdersFound => 'No orders found';
+
+  @override
+  String tableNumberLabel(String table) {
+    return 'Table #$table';
+  }
+
+  @override
+  String orderNumberLabel(String number) {
+    return 'Order #$number';
+  }
+
+  @override
+  String get kitchenView => 'Kitchen View';
+
+  @override
+  String get qrGenerator => 'QR Code Generator';
+
+  @override
+  String get menuManagement => 'Menu Management';
+
+  @override
+  String confirmCancelTableOrder(String table) {
+    return 'Cancel the order for table #$table?';
+  }
+
+  @override
+  String get sidebarKitchen => 'Kitchen';
+
+  @override
+  String get ingredients => 'Ingredients';
+
+  @override
+  String get qrCodes => 'QR Codes';
+
+  @override
+  String get kitchenOrdersTitle => 'Kitchen Orders';
+
+  @override
+  String get noOrdersAtMoment => 'No orders at the moment';
+
+  @override
+  String tableWithNumber(String table) {
+    return 'Table $table';
+  }
+
+  @override
+  String get generateTableQrCodes => 'Generate Table QR Codes';
+
+  @override
+  String get qrSelectHint =>
+      'Select tables to generate QR codes for. Customers can scan these QR codes at their table with their phone.';
+
+  @override
+  String selectedTablesCount(String count) {
+    return 'Selected Tables: $count';
+  }
+
+  @override
+  String get clearAll => 'Clear All';
+
+  @override
+  String get downloadQrCodes => 'Download QR Codes';
+
+  @override
+  String get selectTables => 'Select Tables';
+
+  @override
+  String get qrCodesReady => 'QR Codes Ready';
+
+  @override
+  String qrGeneratedMessage(String count) {
+    return 'Generated QR codes for $count tables.\\n\\nYou can now:\\n- Print them\\n- Display on screens\\n- Share with customers';
+  }
+
+  @override
+  String get ok => 'OK';
 }

@@ -313,4 +313,137 @@ class AppLocalizationsUz extends AppLocalizations {
   @override
   String get enterQrManuallyShort =>
       'QR code ma\'lumotini qo\'lda kiritib chiqing:';
+
+  @override
+  String get adminPanelSubtitle => 'Restoran boshqaruvi';
+
+  @override
+  String get dashboard => 'Boshqaruv paneli';
+
+  @override
+  String get dashboardSubtitle =>
+      'Bugungi statistika va real vaqt ma\'lumotlari';
+
+  @override
+  String get todayRevenue => 'Bugungi daromad';
+
+  @override
+  String get orderCount => 'Buyurtmalar soni';
+
+  @override
+  String get averageOrder => 'O\'rtacha buyurtma';
+
+  @override
+  String get menuItemsCount => 'Menyu mahsulotlari';
+
+  @override
+  String get categoriesLabel => 'Kategoriyalar';
+
+  @override
+  String get topOrdered => 'Eng ko\'p buyurtma qilingan';
+
+  @override
+  String get statusCompleted => 'Tugallandi';
+
+  @override
+  String get staffCalls => 'Xodim chaqiruvlari';
+
+  @override
+  String staffCallAtTable(String table) {
+    return 'Stol $table - xodim chaqirdi';
+  }
+
+  @override
+  String get markDone => 'Tayyorlandi';
+
+  @override
+  String get staffCallResolved => 'Xodim chaqiruvi bajarildi';
+
+  @override
+  String get noStaffCalls => 'Hozircha chaqiruvlar yo\'q';
+
+  @override
+  String get staffRequested => 'Xodim chaqirilmoqda';
+
+  @override
+  String get searchOrdersHint => 'Stol yoki buyurtma ID bo\'yicha qidiring...';
+
+  @override
+  String get noOrdersFound => 'Buyurtmalar topilmadi';
+
+  @override
+  String tableNumberLabel(String table) {
+    return 'Stol #$table';
+  }
+
+  @override
+  String orderNumberLabel(String number) {
+    return 'Buyurtma #$number';
+  }
+
+  @override
+  String get kitchenView => 'Oshxona ko\'rinishi';
+
+  @override
+  String get qrGenerator => 'QR kod generatori';
+
+  @override
+  String get menuManagement => 'Menyu boshqaruvi';
+
+  @override
+  String confirmCancelTableOrder(String table) {
+    return 'Stol #$table buyurtmasini bekor qilmoqchimisiz?';
+  }
+
+  @override
+  String get sidebarKitchen => 'Oshxona';
+
+  @override
+  String get ingredients => 'Masalliqlar';
+
+  @override
+  String get qrCodes => 'QR kodlar';
+
+  @override
+  String get kitchenOrdersTitle => 'Oshxona buyurtmalari';
+
+  @override
+  String get noOrdersAtMoment => 'Hozircha buyurtmalar yo\'q';
+
+  @override
+  String tableWithNumber(String table) {
+    return 'Stol $table';
+  }
+
+  @override
+  String get generateTableQrCodes => 'Stollar uchun QR kodlar yaratish';
+
+  @override
+  String get qrSelectHint =>
+      'QR kod yaratiladigan stollarni tanlang. Mijozlar stolida telefon orqali QR kodni skanerlashi mumkin.';
+
+  @override
+  String selectedTablesCount(String count) {
+    return 'Tanlangan stollar: $count';
+  }
+
+  @override
+  String get clearAll => 'Hammasini tozalash';
+
+  @override
+  String get downloadQrCodes => 'QR kodlarni yuklab olish';
+
+  @override
+  String get selectTables => 'Stollarni tanlang';
+
+  @override
+  String get qrCodesReady => 'QR kodlar tayyor';
+
+  @override
+  String qrGeneratedMessage(String count) {
+    return '$count ta stol uchun QR kodlar yaratildi.\\n\\nEndi siz:\\n- Chop etishingiz\\n- Ekranlarda ko\'rsatishingiz\\n- Mijozlarga ulashishingiz mumkin';
+  }
+
+  @override
+  String get ok => 'OK';
 }

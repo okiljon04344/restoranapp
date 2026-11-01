@@ -119,5 +119,93 @@
   "webNoCameraTitle": "Veb-da kamera mavjud emas",
   "enterQrManually": "Qr code-ni qo'lda kiritib chiqing:",
   "cameraNotAvailable": "Kamera bu platform-da mavjud emas",
-  "enterQrManuallyShort": "QR code ma'lumotini qo'lda kiritib chiqing:"
+  "enterQrManuallyShort": "QR code ma'lumotini qo'lda kiritib chiqing:",
+  "adminPanelSubtitle": "Restoran boshqaruvi",
+  "dashboard": "Boshqaruv paneli",
+  "dashboardSubtitle": "Bugungi statistika va real vaqt ma'lumotlari",
+  "todayRevenue": "Bugungi daromad",
+  "orderCount": "Buyurtmalar soni",
+  "averageOrder": "O'rtacha buyurtma",
+  "menuItemsCount": "Menyu mahsulotlari",
+  "categoriesLabel": "Kategoriyalar",
+  "topOrdered": "Eng ko'p buyurtma qilingan",
+  "statusCompleted": "Tugallandi",
+  "staffCalls": "Xodim chaqiruvlari",
+  "staffCallAtTable": "Stol {table} - xodim chaqirdi",
+  "@staffCallAtTable": {
+    "placeholders": {
+      "table": {
+        "type": "String"
+      }
+    }
+  },
+  "markDone": "Tayyorlandi",
+  "staffCallResolved": "Xodim chaqiruvi bajarildi",
+  "noStaffCalls": "Hozircha chaqiruvlar yo'q",
+  "staffRequested": "Xodim chaqirilmoqda",
+  "searchOrdersHint": "Stol yoki buyurtma ID bo'yicha qidiring...",
+  "noOrdersFound": "Buyurtmalar topilmadi",
+  "tableNumberLabel": "Stol #{table}",
+  "@tableNumberLabel": {
+    "placeholders": {
+      "table": {
+        "type": "String"
+      }
+    }
+  },
+  "orderNumberLabel": "Buyurtma #{number}",
+  "@orderNumberLabel": {
+    "placeholders": {
+      "number": {
+        "type": "String"
+      }
+    }
+  },
+  "kitchenView": "Oshxona ko'rinishi",
+  "qrGenerator": "QR kod generatori",
+  "menuManagement": "Menyu boshqaruvi",
+  "confirmCancelTableOrder": "Stol #{table} buyurtmasini bekor qilmoqchimisiz?",
+  "@confirmCancelTableOrder": {
+    "placeholders": {
+      "table": {
+        "type": "String"
+      }
+    }
+  },
+  "sidebarKitchen": "Oshxona",
+  "ingredients": "Masalliqlar",
+  "qrCodes": "QR kodlar",
+  "kitchenOrdersTitle": "Oshxona buyurtmalari",
+  "noOrdersAtMoment": "Hozircha buyurtmalar yo'q",
+  "tableWithNumber": "Stol {table}",
+  "@tableWithNumber": {
+    "placeholders": {
+      "table": {
+        "type": "String"
+      }
+    }
+  },
+  "generateTableQrCodes": "Stollar uchun QR kodlar yaratish",
+  "qrSelectHint": "QR kod yaratiladigan stollarni tanlang. Mijozlar stolida telefon orqali QR kodni skanerlashi mumkin.",
+  "selectedTablesCount": "Tanlangan stollar: {count}",
+  "@selectedTablesCount": {
+    "placeholders": {
+      "count": {
+        "type": "String"
+      }
+    }
+  },
+  "clearAll": "Hammasini tozalash",
+  "downloadQrCodes": "QR kodlarni yuklab olish",
+  "selectTables": "Stollarni tanlang",
+  "qrCodesReady": "QR kodlar tayyor",
+  "qrGeneratedMessage": "{count} ta stol uchun QR kodlar yaratildi.\\n\\nEndi siz:\\n- Chop etishingiz\\n- Ekranlarda ko'rsatishingiz\\n- Mijozlarga ulashishingiz mumkin",
+  "@qrGeneratedMessage": {
+    "placeholders": {
+      "count": {
+        "type": "String"
+      }
+    }
+  },
+  "ok": "OK"
 }

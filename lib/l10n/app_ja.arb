@@ -119,5 +119,93 @@
   "webNoCameraTitle": "ウェブではカメラは利用できません",
   "enterQrManually": "QRコードを手動で入力してください:",
   "cameraNotAvailable": "このプラットフォームではカメラが利用できません",
-  "enterQrManuallyShort": "QRコードのデータを手動で入力してください:"
+  "enterQrManuallyShort": "QRコードのデータを手動で入力してください:",
+  "adminPanelSubtitle": "レストラン管理",
+  "dashboard": "ダッシュボード",
+  "dashboardSubtitle": "本日の統計とリアルタイムデータ",
+  "todayRevenue": "本日の売上",
+  "orderCount": "注文数",
+  "averageOrder": "平均注文額",
+  "menuItemsCount": "メニュー品目",
+  "categoriesLabel": "カテゴリ",
+  "topOrdered": "人気ランキング",
+  "statusCompleted": "完了",
+  "staffCalls": "スタッフ呼び出し",
+  "staffCallAtTable": "テーブル{table} - スタッフ呼び出し",
+  "@staffCallAtTable": {
+    "placeholders": {
+      "table": {
+        "type": "String"
+      }
+    }
+  },
+  "markDone": "対応済み",
+  "staffCallResolved": "呼び出しに対応しました",
+  "noStaffCalls": "呼び出しはありません",
+  "staffRequested": "スタッフを呼んでいます",
+  "searchOrdersHint": "テーブルまたは注文IDで検索...",
+  "noOrdersFound": "注文が見つかりません",
+  "tableNumberLabel": "テーブル #{table}",
+  "@tableNumberLabel": {
+    "placeholders": {
+      "table": {
+        "type": "String"
+      }
+    }
+  },
+  "orderNumberLabel": "注文 #{number}",
+  "@orderNumberLabel": {
+    "placeholders": {
+      "number": {
+        "type": "String"
+      }
+    }
+  },
+  "kitchenView": "キッチンビュー",
+  "qrGenerator": "QRコード生成",
+  "menuManagement": "メニュー管理",
+  "confirmCancelTableOrder": "テーブル #{table} の注文をキャンセルしますか？",
+  "@confirmCancelTableOrder": {
+    "placeholders": {
+      "table": {
+        "type": "String"
+      }
+    }
+  },
+  "sidebarKitchen": "キッチン",
+  "ingredients": "食材",
+  "qrCodes": "QRコード",
+  "kitchenOrdersTitle": "キッチン注文",
+  "noOrdersAtMoment": "現在注文はありません",
+  "tableWithNumber": "テーブル {table}",
+  "@tableWithNumber": {
+    "placeholders": {
+      "table": {
+        "type": "String"
+      }
+    }
+  },
+  "generateTableQrCodes": "テーブルQRコードの作成",
+  "qrSelectHint": "QRコードを作成するテーブルを選択してください。お客様はテーブルでスマートフォンからQRコードを読み取れます。",
+  "selectedTablesCount": "選択したテーブル: {count}",
+  "@selectedTablesCount": {
+    "placeholders": {
+      "count": {
+        "type": "String"
+      }
+    }
+  },
+  "clearAll": "すべてクリア",
+  "downloadQrCodes": "QRコードをダウンロード",
+  "selectTables": "テーブルを選択",
+  "qrCodesReady": "QRコードの準備完了",
+  "qrGeneratedMessage": "{count}件のテーブルのQRコードを作成しました。\\n\\n次のことができます:\\n- 印刷する\\n- 画面に表示する\\n- お客様に共有する",
+  "@qrGeneratedMessage": {
+    "placeholders": {
+      "count": {
+        "type": "String"
+      }
+    }
+  },
+  "ok": "OK"
 }

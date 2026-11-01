@@ -310,4 +310,136 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get enterQrManuallyShort => 'QRコードのデータを手動で入力してください:';
+
+  @override
+  String get adminPanelSubtitle => 'レストラン管理';
+
+  @override
+  String get dashboard => 'ダッシュボード';
+
+  @override
+  String get dashboardSubtitle => '本日の統計とリアルタイムデータ';
+
+  @override
+  String get todayRevenue => '本日の売上';
+
+  @override
+  String get orderCount => '注文数';
+
+  @override
+  String get averageOrder => '平均注文額';
+
+  @override
+  String get menuItemsCount => 'メニュー品目';
+
+  @override
+  String get categoriesLabel => 'カテゴリ';
+
+  @override
+  String get topOrdered => '人気ランキング';
+
+  @override
+  String get statusCompleted => '完了';
+
+  @override
+  String get staffCalls => 'スタッフ呼び出し';
+
+  @override
+  String staffCallAtTable(String table) {
+    return 'テーブル$table - スタッフ呼び出し';
+  }
+
+  @override
+  String get markDone => '対応済み';
+
+  @override
+  String get staffCallResolved => '呼び出しに対応しました';
+
+  @override
+  String get noStaffCalls => '呼び出しはありません';
+
+  @override
+  String get staffRequested => 'スタッフを呼んでいます';
+
+  @override
+  String get searchOrdersHint => 'テーブルまたは注文IDで検索...';
+
+  @override
+  String get noOrdersFound => '注文が見つかりません';
+
+  @override
+  String tableNumberLabel(String table) {
+    return 'テーブル #$table';
+  }
+
+  @override
+  String orderNumberLabel(String number) {
+    return '注文 #$number';
+  }
+
+  @override
+  String get kitchenView => 'キッチンビュー';
+
+  @override
+  String get qrGenerator => 'QRコード生成';
+
+  @override
+  String get menuManagement => 'メニュー管理';
+
+  @override
+  String confirmCancelTableOrder(String table) {
+    return 'テーブル #$table の注文をキャンセルしますか？';
+  }
+
+  @override
+  String get sidebarKitchen => 'キッチン';
+
+  @override
+  String get ingredients => '食材';
+
+  @override
+  String get qrCodes => 'QRコード';
+
+  @override
+  String get kitchenOrdersTitle => 'キッチン注文';
+
+  @override
+  String get noOrdersAtMoment => '現在注文はありません';
+
+  @override
+  String tableWithNumber(String table) {
+    return 'テーブル $table';
+  }
+
+  @override
+  String get generateTableQrCodes => 'テーブルQRコードの作成';
+
+  @override
+  String get qrSelectHint =>
+      'QRコードを作成するテーブルを選択してください。お客様はテーブルでスマートフォンからQRコードを読み取れます。';
+
+  @override
+  String selectedTablesCount(String count) {
+    return '選択したテーブル: $count';
+  }
+
+  @override
+  String get clearAll => 'すべてクリア';
+
+  @override
+  String get downloadQrCodes => 'QRコードをダウンロード';
+
+  @override
+  String get selectTables => 'テーブルを選択';
+
+  @override
+  String get qrCodesReady => 'QRコードの準備完了';
+
+  @override
+  String qrGeneratedMessage(String count) {
+    return '$count件のテーブルのQRコードを作成しました。\\n\\n次のことができます:\\n- 印刷する\\n- 画面に表示する\\n- お客様に共有する';
+  }
+
+  @override
+  String get ok => 'OK';
 }

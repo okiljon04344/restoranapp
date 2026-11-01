@@ -693,6 +693,240 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Enter QR code data manually:'**
   String get enterQrManuallyShort;
+
+  /// No description provided for @adminPanelSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Restaurant management'**
+  String get adminPanelSubtitle;
+
+  /// No description provided for @dashboard.
+  ///
+  /// In en, this message translates to:
+  /// **'Dashboard'**
+  String get dashboard;
+
+  /// No description provided for @dashboardSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Today\'s statistics and real-time data'**
+  String get dashboardSubtitle;
+
+  /// No description provided for @todayRevenue.
+  ///
+  /// In en, this message translates to:
+  /// **'Today\'s Revenue'**
+  String get todayRevenue;
+
+  /// No description provided for @orderCount.
+  ///
+  /// In en, this message translates to:
+  /// **'Orders'**
+  String get orderCount;
+
+  /// No description provided for @averageOrder.
+  ///
+  /// In en, this message translates to:
+  /// **'Average Order'**
+  String get averageOrder;
+
+  /// No description provided for @menuItemsCount.
+  ///
+  /// In en, this message translates to:
+  /// **'Menu Items'**
+  String get menuItemsCount;
+
+  /// No description provided for @categoriesLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Categories'**
+  String get categoriesLabel;
+
+  /// No description provided for @topOrdered.
+  ///
+  /// In en, this message translates to:
+  /// **'Most Ordered'**
+  String get topOrdered;
+
+  /// No description provided for @statusCompleted.
+  ///
+  /// In en, this message translates to:
+  /// **'Completed'**
+  String get statusCompleted;
+
+  /// No description provided for @staffCalls.
+  ///
+  /// In en, this message translates to:
+  /// **'Staff Calls'**
+  String get staffCalls;
+
+  /// No description provided for @staffCallAtTable.
+  ///
+  /// In en, this message translates to:
+  /// **'Table {table} - staff requested'**
+  String staffCallAtTable(String table);
+
+  /// No description provided for @markDone.
+  ///
+  /// In en, this message translates to:
+  /// **'Done'**
+  String get markDone;
+
+  /// No description provided for @staffCallResolved.
+  ///
+  /// In en, this message translates to:
+  /// **'Staff call resolved'**
+  String get staffCallResolved;
+
+  /// No description provided for @noStaffCalls.
+  ///
+  /// In en, this message translates to:
+  /// **'No staff calls'**
+  String get noStaffCalls;
+
+  /// No description provided for @staffRequested.
+  ///
+  /// In en, this message translates to:
+  /// **'Staff requested'**
+  String get staffRequested;
+
+  /// No description provided for @searchOrdersHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Search by table or order ID...'**
+  String get searchOrdersHint;
+
+  /// No description provided for @noOrdersFound.
+  ///
+  /// In en, this message translates to:
+  /// **'No orders found'**
+  String get noOrdersFound;
+
+  /// No description provided for @tableNumberLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Table #{table}'**
+  String tableNumberLabel(String table);
+
+  /// No description provided for @orderNumberLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Order #{number}'**
+  String orderNumberLabel(String number);
+
+  /// No description provided for @kitchenView.
+  ///
+  /// In en, this message translates to:
+  /// **'Kitchen View'**
+  String get kitchenView;
+
+  /// No description provided for @qrGenerator.
+  ///
+  /// In en, this message translates to:
+  /// **'QR Code Generator'**
+  String get qrGenerator;
+
+  /// No description provided for @menuManagement.
+  ///
+  /// In en, this message translates to:
+  /// **'Menu Management'**
+  String get menuManagement;
+
+  /// No description provided for @confirmCancelTableOrder.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel the order for table #{table}?'**
+  String confirmCancelTableOrder(String table);
+
+  /// No description provided for @sidebarKitchen.
+  ///
+  /// In en, this message translates to:
+  /// **'Kitchen'**
+  String get sidebarKitchen;
+
+  /// No description provided for @ingredients.
+  ///
+  /// In en, this message translates to:
+  /// **'Ingredients'**
+  String get ingredients;
+
+  /// No description provided for @qrCodes.
+  ///
+  /// In en, this message translates to:
+  /// **'QR Codes'**
+  String get qrCodes;
+
+  /// No description provided for @kitchenOrdersTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Kitchen Orders'**
+  String get kitchenOrdersTitle;
+
+  /// No description provided for @noOrdersAtMoment.
+  ///
+  /// In en, this message translates to:
+  /// **'No orders at the moment'**
+  String get noOrdersAtMoment;
+
+  /// No description provided for @tableWithNumber.
+  ///
+  /// In en, this message translates to:
+  /// **'Table {table}'**
+  String tableWithNumber(String table);
+
+  /// No description provided for @generateTableQrCodes.
+  ///
+  /// In en, this message translates to:
+  /// **'Generate Table QR Codes'**
+  String get generateTableQrCodes;
+
+  /// No description provided for @qrSelectHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Select tables to generate QR codes for. Customers can scan these QR codes at their table with their phone.'**
+  String get qrSelectHint;
+
+  /// No description provided for @selectedTablesCount.
+  ///
+  /// In en, this message translates to:
+  /// **'Selected Tables: {count}'**
+  String selectedTablesCount(String count);
+
+  /// No description provided for @clearAll.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear All'**
+  String get clearAll;
+
+  /// No description provided for @downloadQrCodes.
+  ///
+  /// In en, this message translates to:
+  /// **'Download QR Codes'**
+  String get downloadQrCodes;
+
+  /// No description provided for @selectTables.
+  ///
+  /// In en, this message translates to:
+  /// **'Select Tables'**
+  String get selectTables;
+
+  /// No description provided for @qrCodesReady.
+  ///
+  /// In en, this message translates to:
+  /// **'QR Codes Ready'**
+  String get qrCodesReady;
+
+  /// No description provided for @qrGeneratedMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Generated QR codes for {count} tables.\\n\\nYou can now:\\n- Print them\\n- Display on screens\\n- Share with customers'**
+  String qrGeneratedMessage(String count);
+
+  /// No description provided for @ok.
+  ///
+  /// In en, this message translates to:
+  /// **'OK'**
+  String get ok;
 }
 
 class _AppLocalizationsDelegate

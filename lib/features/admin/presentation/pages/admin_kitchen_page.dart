@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/widgets/app_scaffold.dart';
+import '../../../../l10n/app_localizations.dart';
 import '../../../orders/application/order_providers.dart';
 
 class AdminKitchenPage extends ConsumerWidget {
@@ -8,6 +9,7 @@ class AdminKitchenPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l = AppLocalizations.of(context)!;
     final orders = ref.watch(ordersProvider);
     final currentStatus = ref.watch(_statusFilterProvider);
 
@@ -20,7 +22,7 @@ class AdminKitchenPage extends ConsumerWidget {
     filteredOrders.sort((a, b) => a.tableNumber.compareTo(b.tableNumber));
 
     return AppScaffold(
-      title: 'Kitchen Orders',
+      title: l.kitchenOrdersTitle,
       actions: [
         Container(
           margin: const EdgeInsets.all(8),
@@ -51,7 +53,7 @@ class AdminKitchenPage extends ConsumerWidget {
                 childAspectRatio: 1.2,
                 children: [
                   _KitchenStat(
-                    label: 'Pending',
+                    label: l.statusPending,
                     value: orders
                         .where((o) => o.status == 'pending')
                         .length
@@ -60,7 +62,7 @@ class AdminKitchenPage extends ConsumerWidget {
                     icon: Icons.schedule,
                   ),
                   _KitchenStat(
-                    label: 'Preparing',
+                    label: l.statusPreparing,
                     value: orders
                         .where((o) => o.status == 'preparing')
                         .length
@@ -69,7 +71,7 @@ class AdminKitchenPage extends ConsumerWidget {
                     icon: Icons.restaurant,
                   ),
                   _KitchenStat(
-                    label: 'Ready',
+                    label: l.statusReady,
                     value: orders
                         .where((o) => o.status == 'ready')
                         .length
@@ -82,12 +84,12 @@ class AdminKitchenPage extends ConsumerWidget {
               const SizedBox(height: 24),
               // Orders grid for kitchen display
               if (filteredOrders.isEmpty)
-                const Card(
+                Card(
                   child: Padding(
-                    padding: EdgeInsets.all(32),
+                    padding: const EdgeInsets.all(32),
                     child: Text(
-                      'No orders at the moment',
-                      style: TextStyle(fontSize: 16, color: Colors.grey),
+                      l.noOrdersAtMoment,
+                      style: const TextStyle(fontSize: 16, color: Colors.grey),
                     ),
                   ),
                 )
@@ -129,6 +131,7 @@ class _StatusFilter extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context)!;
     return Row(
       children: ['all', 'pending', 'preparing', 'ready'].map((status) {
         final isSelected = currentStatus == status;
@@ -142,11 +145,24 @@ class _StatusFilter extends StatelessWidget {
                   : Colors.grey.withValues(alpha: 0.2),
               foregroundColor: isSelected ? Colors.white : Colors.grey.shade700,
             ),
-            child: Text(status.toUpperCase()),
+            child: Text(_label(l, status).toUpperCase()),
           ),
         );
       }).toList(),
     );
+  }
+
+  String _label(AppLocalizations l, String status) {
+    switch (status) {
+      case 'pending':
+        return l.statusPending;
+      case 'preparing':
+        return l.statusPreparing;
+      case 'ready':
+        return l.statusReady;
+      default:
+        return l.all;
+    }
   }
 
   Color _getStatusColor(String status) {
@@ -169,6 +185,7 @@ class _KitchenOrderCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context)!;
     final statusColor = _getStatusColor(order.status);
 
     return Card(
@@ -196,7 +213,7 @@ class _KitchenOrderCard extends StatelessWidget {
                       borderRadius: BorderRadius.circular(4),
                     ),
                     child: Text(
-                      'Order #${order.orderNumber}',
+                      l.orderNumberLabel('${order.orderNumber}'),
                       style: const TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.bold,
@@ -206,7 +223,7 @@ class _KitchenOrderCard extends StatelessWidget {
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    'Table ${order.tableNumber}',
+                    l.tableWithNumber('${order.tableNumber}'),
                     style: const TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,

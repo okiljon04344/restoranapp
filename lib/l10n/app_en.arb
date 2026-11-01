@@ -119,5 +119,93 @@
   "webNoCameraTitle": "No Camera on Web",
   "enterQrManually": "Enter QR code manually:",
   "cameraNotAvailable": "Camera not available on this platform",
-  "enterQrManuallyShort": "Enter QR code data manually:"
+  "enterQrManuallyShort": "Enter QR code data manually:",
+  "adminPanelSubtitle": "Restaurant management",
+  "dashboard": "Dashboard",
+  "dashboardSubtitle": "Today's statistics and real-time data",
+  "todayRevenue": "Today's Revenue",
+  "orderCount": "Orders",
+  "averageOrder": "Average Order",
+  "menuItemsCount": "Menu Items",
+  "categoriesLabel": "Categories",
+  "topOrdered": "Most Ordered",
+  "statusCompleted": "Completed",
+  "staffCalls": "Staff Calls",
+  "staffCallAtTable": "Table {table} - staff requested",
+  "@staffCallAtTable": {
+    "placeholders": {
+      "table": {
+        "type": "String"
+      }
+    }
+  },
+  "markDone": "Done",
+  "staffCallResolved": "Staff call resolved",
+  "noStaffCalls": "No staff calls",
+  "staffRequested": "Staff requested",
+  "searchOrdersHint": "Search by table or order ID...",
+  "noOrdersFound": "No orders found",
+  "tableNumberLabel": "Table #{table}",
+  "@tableNumberLabel": {
+    "placeholders": {
+      "table": {
+        "type": "String"
+      }
+    }
+  },
+  "orderNumberLabel": "Order #{number}",
+  "@orderNumberLabel": {
+    "placeholders": {
+      "number": {
+        "type": "String"
+      }
+    }
+  },
+  "kitchenView": "Kitchen View",
+  "qrGenerator": "QR Code Generator",
+  "menuManagement": "Menu Management",
+  "confirmCancelTableOrder": "Cancel the order for table #{table}?",
+  "@confirmCancelTableOrder": {
+    "placeholders": {
+      "table": {
+        "type": "String"
+      }
+    }
+  },
+  "sidebarKitchen": "Kitchen",
+  "ingredients": "Ingredients",
+  "qrCodes": "QR Codes",
+  "kitchenOrdersTitle": "Kitchen Orders",
+  "noOrdersAtMoment": "No orders at the moment",
+  "tableWithNumber": "Table {table}",
+  "@tableWithNumber": {
+    "placeholders": {
+      "table": {
+        "type": "String"
+      }
+    }
+  },
+  "generateTableQrCodes": "Generate Table QR Codes",
+  "qrSelectHint": "Select tables to generate QR codes for. Customers can scan these QR codes at their table with their phone.",
+  "selectedTablesCount": "Selected Tables: {count}",
+  "@selectedTablesCount": {
+    "placeholders": {
+      "count": {
+        "type": "String"
+      }
+    }
+  },
+  "clearAll": "Clear All",
+  "downloadQrCodes": "Download QR Codes",
+  "selectTables": "Select Tables",
+  "qrCodesReady": "QR Codes Ready",
+  "qrGeneratedMessage": "Generated QR codes for {count} tables.\\n\\nYou can now:\\n- Print them\\n- Display on screens\\n- Share with customers",
+  "@qrGeneratedMessage": {
+    "placeholders": {
+      "count": {
+        "type": "String"
+      }
+    }
+  },
+  "ok": "OK"
 }

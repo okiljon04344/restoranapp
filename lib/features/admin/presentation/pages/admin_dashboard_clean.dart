@@ -1,3 +1,4 @@
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -6,10 +7,16 @@ import '../../data/admin_repository.dart';
 import '../../application/staff_calls_provider.dart';
 import '../../application/analytics_provider.dart';
 import '../../../auth/application/auth_provider.dart';
+import '../../../../l10n/app_localizations.dart';
 import 'admin_ingredients_page.dart';
 
 final _orderSearchProvider = StateProvider<String>((ref) => '');
 final _orderStatusFilterProvider = StateProvider<String>((ref) => 'all');
+final _audioPlayerProvider = Provider<AudioPlayer>((ref) {
+  final player = AudioPlayer();
+  ref.onDispose(player.dispose);
+  return player;
+});
 final _selectedSectionProvider = StateProvider<String>((ref) => 'dashboard');
 
 class AdminDashboardClean extends ConsumerWidget {
@@ -17,17 +24,29 @@ class AdminDashboardClean extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l = AppLocalizations.of(context)!;
     final isMobile = MediaQuery.of(context).size.width < 900;
     final selectedSection = ref.watch(_selectedSectionProvider);
 
+    // Play an alert sound when a new pending staff call arrives.
+    ref.listen<AsyncValue<List<StaffCall>>>(staffCallsProvider, (prev, next) {
+      final prevLen = prev?.value?.length ?? 0;
+      final nextLen = next.value?.length ?? 0;
+      if (nextLen > prevLen) {
+        ref
+            .read(_audioPlayerProvider)
+            .play(AssetSource('sounds/notification.wav'));
+      }
+    });
+
     return Scaffold(
       appBar: AppBar(
-        title: const Text('🍽️ Admin Panel'),
+        title: Text(l.adminPanel),
         elevation: 0,
         actions: [
           IconButton(
             icon: const Icon(Icons.logout),
-            tooltip: 'Logout',
+            tooltip: l.logout,
             onPressed: () => _showLogoutDialog(context, ref),
           ),
         ],
@@ -59,31 +78,32 @@ class AdminDashboardClean extends ConsumerWidget {
 
   Widget _buildSidebar(
       BuildContext context, WidgetRef ref, String selectedSection) {
+    final l = AppLocalizations.of(context)!;
     final sidebarItems = [
-      ('dashboard', Icons.dashboard, '📊 Dashboard'),
-      ('orders', Icons.receipt, '📋 Sifarishlar'),
-      ('staff_calls', Icons.phone_in_talk, '🔔 Staff Calls'),
-      ('kitchen', Icons.restaurant, '👨‍🍳 Oshxona'),
-      ('ingredients', Icons.inventory_2, '🥘 Massaliqlar'),
-      ('qr', Icons.qr_code_2, '🔲 QR Kodlar'),
-      ('menu', Icons.restaurant_menu, '📖 Menyu'),
+      ('dashboard', Icons.dashboard, l.dashboard),
+      ('orders', Icons.receipt, l.orders),
+      ('staff_calls', Icons.phone_in_talk, l.staffCalls),
+      ('kitchen', Icons.restaurant, l.sidebarKitchen),
+      ('ingredients', Icons.inventory_2, l.ingredients),
+      ('qr', Icons.qr_code_2, l.qrCodes),
+      ('menu', Icons.restaurant_menu, l.menu),
     ];
 
     return Column(
       children: [
-        const Padding(
-          padding: EdgeInsets.all(16),
+        Padding(
+          padding: const EdgeInsets.all(16),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Admin Panel',
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                l.adminPanel,
+                style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
-              SizedBox(height: 4),
+              const SizedBox(height: 4),
               Text(
-                'Restoran Boshqaruvi',
-                style: TextStyle(fontSize: 12, color: Colors.grey),
+                l.adminPanelSubtitle,
+                style: const TextStyle(fontSize: 12, color: Colors.grey),
               ),
             ],
           ),
@@ -148,6 +168,7 @@ class AdminDashboardClean extends ConsumerWidget {
   }
 
   Widget _buildDashboardSection(BuildContext context, WidgetRef ref) {
+    final l = AppLocalizations.of(context)!;
     final orders = ref.watch(ordersProvider);
     final analytics = ref.watch(analyticsProvider);
     final staffCallsAsync = ref.watch(staffCallsProvider);
@@ -160,13 +181,13 @@ class AdminDashboardClean extends ConsumerWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
-          'Dashboard',
-          style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
+        Text(
+          l.dashboard,
+          style: const TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
         ),
         const SizedBox(height: 8),
         Text(
-          'Bugungi statistika va real-time ma\'lumotlar',
+          l.dashboardSubtitle,
           style: TextStyle(fontSize: 14, color: Colors.grey.shade600),
         ),
         const SizedBox(height: 24),
@@ -185,9 +206,9 @@ class AdminDashboardClean extends ConsumerWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
-                'Bugungi Daromad',
-                style: TextStyle(
+              Text(
+                l.todayRevenue,
+                style: const TextStyle(
                   color: Colors.white70,
                   fontSize: 14,
                   fontWeight: FontWeight.w500,
@@ -195,7 +216,7 @@ class AdminDashboardClean extends ConsumerWidget {
               ),
               const SizedBox(height: 8),
               Text(
-                '${todayStats['totalRevenue'] ?? 0} so\'m',
+                '${todayStats['totalRevenue'] ?? 0} ${l.som}',
                 style: const TextStyle(
                   color: Colors.white,
                   fontSize: 32,
@@ -210,7 +231,7 @@ class AdminDashboardClean extends ConsumerWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'Sifarish soni',
+                        l.orderCount,
                         style: TextStyle(
                           color: Colors.white.withValues(alpha: 0.8),
                           fontSize: 12,
@@ -230,14 +251,14 @@ class AdminDashboardClean extends ConsumerWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'O\'rtacha Sifarish',
+                        l.averageOrder,
                         style: TextStyle(
                           color: Colors.white.withValues(alpha: 0.8),
                           fontSize: 12,
                         ),
                       ),
                       Text(
-                        '${todayStats['avgOrderValue'] ?? 0} so\'m',
+                        '${todayStats['avgOrderValue'] ?? 0} ${l.som}',
                         style: const TextStyle(
                           color: Colors.white,
                           fontSize: 18,
@@ -262,25 +283,25 @@ class AdminDashboardClean extends ConsumerWidget {
           crossAxisSpacing: 16,
           children: [
             _buildStatisticCard(
-              title: 'Kutilmoqdagi',
+              title: l.statusPending,
               value: '${todayStats['pendingOrders'] ?? 0}',
               icon: Icons.schedule,
               color: Colors.orange,
             ),
             _buildStatisticCard(
-              title: 'Tayyor',
+              title: l.statusReady,
               value: '${todayStats['completedOrders'] ?? 0}',
               icon: Icons.check_circle,
               color: Colors.green,
             ),
             _buildStatisticCard(
-              title: 'Menyu Mahsulotlari',
+              title: l.menuItemsCount,
               value: '${itemsAsync.value?.length ?? 0}',
               icon: Icons.fastfood,
               color: Colors.blue,
             ),
             _buildStatisticCard(
-              title: 'Kategoriyalar',
+              title: l.categoriesLabel,
               value: '${categoriesAsync.value?.length ?? 0}',
               icon: Icons.category,
               color: Colors.purple,
@@ -304,9 +325,9 @@ class AdminDashboardClean extends ConsumerWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const SizedBox(height: 24),
-              const Text(
-                'Eng ko\'p buyurtilgan',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              Text(
+                l.topOrdered,
+                style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 12),
               Card(
@@ -402,6 +423,7 @@ class AdminDashboardClean extends ConsumerWidget {
 
   Widget _buildStaffCallsAlert(
       List<StaffCall> calls, BuildContext context, WidgetRef ref) {
+    final l = AppLocalizations.of(context)!;
     return Container(
       decoration: BoxDecoration(
         border: Border.all(color: Colors.red.shade300, width: 2),
@@ -416,10 +438,10 @@ class AdminDashboardClean extends ConsumerWidget {
             children: [
               const Icon(Icons.phone_in_talk, color: Colors.red, size: 28),
               const SizedBox(width: 12),
-              const Expanded(
+              Expanded(
                 child: Text(
-                  '🔔 Staff Calls (Xodimlar chaqirilmoqda)',
-                  style: TextStyle(
+                  l.staffCalls,
+                  style: const TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
                     color: Colors.red,
@@ -453,12 +475,12 @@ class AdminDashboardClean extends ConsumerWidget {
                       const SizedBox(width: 12),
                       Expanded(
                         child:
-                            Text('Stol ${call.tableNumber} - Xodim chaqirdi'),
+                            Text(l.staffCallAtTable('${call.tableNumber}')),
                       ),
                       FilledButton.tonal(
                         onPressed: () =>
                             _resolveStaffCall(ref, call.id, context),
-                        child: const Text('Tayyorlandi'),
+                        child: Text(l.markDone),
                       ),
                     ],
                   ),
@@ -470,6 +492,7 @@ class AdminDashboardClean extends ConsumerWidget {
   }
 
   Widget _buildOrdersSection(BuildContext context, WidgetRef ref) {
+    final l = AppLocalizations.of(context)!;
     final orders = ref.watch(ordersProvider);
     final searchQuery = ref.watch(_orderSearchProvider);
     final statusFilter = ref.watch(_orderStatusFilterProvider);
@@ -490,9 +513,9 @@ class AdminDashboardClean extends ConsumerWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
-          'Sifarishlar',
-          style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
+        Text(
+          l.orders,
+          style: const TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
         ),
         const SizedBox(height: 24),
 
@@ -505,7 +528,7 @@ class AdminDashboardClean extends ConsumerWidget {
                   ref.read(_orderSearchProvider.notifier).state = value;
                 },
                 decoration: InputDecoration(
-                  hintText: 'Stol yoki order ID buldan qidiring...',
+                  hintText: l.searchOrdersHint,
                   prefixIcon: const Icon(Icons.search),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(8),
@@ -516,13 +539,13 @@ class AdminDashboardClean extends ConsumerWidget {
             const SizedBox(width: 12),
             DropdownButton<String>(
               value: statusFilter,
-              items: const [
-                DropdownMenuItem(value: 'all', child: Text('Hammasini')),
-                DropdownMenuItem(value: 'pending', child: Text('Kutilmoqda')),
+              items: [
+                DropdownMenuItem(value: 'all', child: Text(l.all)),
+                DropdownMenuItem(value: 'pending', child: Text(l.statusPending)),
                 DropdownMenuItem(
-                    value: 'preparing', child: Text('Tayyorlanmoqda')),
-                DropdownMenuItem(value: 'ready', child: Text('Tayyor')),
-                DropdownMenuItem(value: 'completed', child: Text('Tugallandi')),
+                    value: 'preparing', child: Text(l.statusPreparing)),
+                DropdownMenuItem(value: 'ready', child: Text(l.statusReady)),
+                DropdownMenuItem(value: 'completed', child: Text(l.statusCompleted)),
               ],
               onChanged: (value) {
                 if (value != null) {
@@ -541,7 +564,7 @@ class AdminDashboardClean extends ConsumerWidget {
               padding: const EdgeInsets.all(24),
               child: Center(
                 child: Text(
-                  'Sifarish topilmadi',
+                  l.noOrdersFound,
                   style: TextStyle(color: Colors.grey.shade600),
                 ),
               ),
@@ -553,6 +576,7 @@ class AdminDashboardClean extends ConsumerWidget {
             physics: const NeverScrollableScrollPhysics(),
             itemCount: filteredOrders.length > 20 ? 20 : filteredOrders.length,
             itemBuilder: (_, idx) => _buildOrderCard(
+              context,
               filteredOrders[idx],
               () => _confirmCancelOrder(context, ref, filteredOrders[idx]),
             ),
@@ -561,7 +585,9 @@ class AdminDashboardClean extends ConsumerWidget {
     );
   }
 
-  Widget _buildOrderCard(dynamic order, VoidCallback onCancel) {
+  Widget _buildOrderCard(
+      BuildContext context, dynamic order, VoidCallback onCancel) {
+    final l = AppLocalizations.of(context)!;
     return Card(
       margin: const EdgeInsets.only(bottom: 12),
       child: Padding(
@@ -581,7 +607,7 @@ class AdminDashboardClean extends ConsumerWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Stol #${order.tableNumber}',
+                    l.tableNumberLabel('${order.tableNumber}'),
                     style: const TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
@@ -589,7 +615,7 @@ class AdminDashboardClean extends ConsumerWidget {
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    'Order #${order.orderNumber}',
+                    l.orderNumberLabel('${order.orderNumber}'),
                     style: TextStyle(fontSize: 12, color: Colors.grey.shade600),
                   ),
                 ],
@@ -602,7 +628,7 @@ class AdminDashboardClean extends ConsumerWidget {
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Text(
-                _getStatusText(order.status),
+                _getStatusText(l, order.status),
                 style: TextStyle(
                   fontWeight: FontWeight.w500,
                   color: _getStatusColor(order.status),
@@ -613,7 +639,7 @@ class AdminDashboardClean extends ConsumerWidget {
             IconButton(
               icon: const Icon(Icons.close, color: Colors.red),
               onPressed: onCancel,
-              tooltip: 'Bekor qilish',
+              tooltip: l.cancelOrder,
             ),
           ],
         ),
@@ -622,15 +648,16 @@ class AdminDashboardClean extends ConsumerWidget {
   }
 
   Widget _buildStaffCallsSection(BuildContext context, WidgetRef ref) {
+    final l = AppLocalizations.of(context)!;
     final staffCallsAsync = ref.watch(staffCallsProvider);
 
     return staffCallsAsync.when(
       data: (calls) => Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
-            'Staff Calls',
-            style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
+          Text(
+            l.staffCalls,
+            style: const TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 24),
           if (calls.isEmpty)
@@ -644,7 +671,7 @@ class AdminDashboardClean extends ConsumerWidget {
                           size: 48, color: Colors.green.shade200),
                       const SizedBox(height: 12),
                       Text(
-                        'Hech qanday chaqiruv yo\'q',
+                        l.noStaffCalls,
                         style: TextStyle(color: Colors.grey.shade600),
                       ),
                     ],
@@ -690,16 +717,16 @@ class AdminDashboardClean extends ConsumerWidget {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                'Stol #${call.tableNumber}',
+                                l.tableNumberLabel('${call.tableNumber}'),
                                 style: const TextStyle(
                                   fontSize: 16,
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
                               const SizedBox(height: 4),
-                              const Text(
-                                'Xodim chaqirilmoqda',
-                                style: TextStyle(fontSize: 14),
+                              Text(
+                                l.staffRequested,
+                                style: const TextStyle(fontSize: 14),
                               ),
                             ],
                           ),
@@ -707,7 +734,7 @@ class AdminDashboardClean extends ConsumerWidget {
                         FilledButton.tonal(
                           onPressed: () =>
                               _resolveStaffCall(ref, call.id, context),
-                          child: const Text('Tayyorlandi'),
+                          child: Text(l.markDone),
                         ),
                       ],
                     ),
@@ -718,25 +745,26 @@ class AdminDashboardClean extends ConsumerWidget {
         ],
       ),
       loading: () => const Center(child: CircularProgressIndicator()),
-      error: (err, stack) => Text('Xato: $err'),
+      error: (err, stack) => Text(l.error('$err')),
     );
   }
 
   Widget _buildKitchenSection(BuildContext context, WidgetRef ref) {
+    final l = AppLocalizations.of(context)!;
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           const Icon(Icons.restaurant, size: 64, color: Colors.orange),
           const SizedBox(height: 16),
-          const Text(
-            'Oshxona ko\'rinishi',
-            style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+          Text(
+            l.kitchenView,
+            style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 8),
           FilledButton(
             onPressed: () => context.go('/admin/kitchen'),
-            child: const Text('Oshxonaga o\'tish'),
+            child: Text(l.goToKitchen),
           ),
         ],
       ),
@@ -744,20 +772,21 @@ class AdminDashboardClean extends ConsumerWidget {
   }
 
   Widget _buildQRSection(BuildContext context, WidgetRef ref) {
+    final l = AppLocalizations.of(context)!;
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           const Icon(Icons.qr_code_2, size: 64, color: Colors.blue),
           const SizedBox(height: 16),
-          const Text(
-            'QR Kod Generator',
-            style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+          Text(
+            l.qrGenerator,
+            style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 8),
           FilledButton(
             onPressed: () => context.go('/admin/qr'),
-            child: const Text('QR Kodlarni Boshqarish'),
+            child: Text(l.manageQrCodes),
           ),
         ],
       ),
@@ -765,20 +794,21 @@ class AdminDashboardClean extends ConsumerWidget {
   }
 
   Widget _buildMenuSection(BuildContext context, WidgetRef ref) {
+    final l = AppLocalizations.of(context)!;
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           const Icon(Icons.restaurant_menu, size: 64, color: Colors.green),
           const SizedBox(height: 16),
-          const Text(
-            'Menyu Boshqaruvi',
-            style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+          Text(
+            l.menuManagement,
+            style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 8),
           FilledButton(
             onPressed: () => context.go('/admin/menu'),
-            child: const Text('Menyunu Tahrirlash'),
+            child: Text(l.editMenu),
           ),
         ],
       ),
@@ -815,31 +845,32 @@ class AdminDashboardClean extends ConsumerWidget {
     }
   }
 
-  String _getStatusText(String status) {
+  String _getStatusText(AppLocalizations l, String status) {
     switch (status) {
       case 'pending':
-        return 'Kutilmoqda';
+        return l.statusPending;
       case 'preparing':
-        return 'Tayyorlanmoqda';
+        return l.statusPreparing;
       case 'ready':
-        return 'Tayyor';
+        return l.statusReady;
       case 'completed':
-        return 'Tugallandi';
+        return l.statusCompleted;
       default:
         return status;
     }
   }
 
   void _confirmCancelOrder(BuildContext context, WidgetRef ref, dynamic order) {
+    final l = AppLocalizations.of(context)!;
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Sifarishni Bekor Qilish'),
-        content: Text('Stol #${order.tableNumber} ni bekor qilmoqchisiz?'),
+        title: Text(l.cancelOrder),
+        content: Text(l.confirmCancelTableOrder('${order.tableNumber}')),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('Yo\'q'),
+            child: Text(l.no),
           ),
           FilledButton(
             onPressed: () async {
@@ -848,7 +879,7 @@ class AdminDashboardClean extends ConsumerWidget {
                   .cancelOrder(order.id as String);
               if (context.mounted) Navigator.pop(context);
             },
-            child: const Text('Ha, Bekor Qilish'),
+            child: Text(l.yes),
           ),
         ],
       ),
@@ -856,29 +887,31 @@ class AdminDashboardClean extends ConsumerWidget {
   }
 
   void _resolveStaffCall(WidgetRef ref, String callId, BuildContext context) {
+    final l = AppLocalizations.of(context)!;
     ref.read(adminRepositoryProvider).deleteStaffCall(callId);
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Staff call tayyorlandi')),
+      SnackBar(content: Text(l.staffCallResolved)),
     );
   }
 
   void _showLogoutDialog(BuildContext context, WidgetRef ref) {
+    final l = AppLocalizations.of(context)!;
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Chiqish'),
-        content: const Text('Sistemadan chiqmoqchisiz?'),
+        title: Text(l.logout),
+        content: Text(l.logoutConfirm),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('Yo\'q'),
+            child: Text(l.no),
           ),
           FilledButton(
             onPressed: () async {
               await ref.read(authRepositoryProvider).signOut();
               if (context.mounted) context.go('/login');
             },
-            child: const Text('Ha, Chiqish'),
+            child: Text(l.yesLogout),
           ),
         ],
       ),
