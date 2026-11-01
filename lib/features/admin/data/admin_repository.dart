@@ -42,17 +42,16 @@ class AdminRepository {
     await _calls.doc(callId).update({'status': 'resolved'});
   }
 
-  /// Marks an order in the top-level `orders` collection as cancelled.
-  ///
-  /// Kept as the dashboard has always done it; note that the order streams
-  /// elsewhere read from `cafes/main_cafe/orders`.
+  CollectionReference<Map<String, dynamic>> get _orders =>
+      _db.collection('cafes').doc(_cafeId).collection('orders');
+
+  /// Marks an order as cancelled. Uses the same `cafes/{cafe}/orders` path
+  /// the customer and kitchen screens read from.
   Future<void> cancelOrder(String orderId) async {
-    await _db.collection('orders').doc(orderId).update({'status': 'cancelled'});
+    await _orders.doc(orderId).update({'status': 'cancelled'});
   }
 
-  /// Deletes a document from the top-level `staff_calls` collection (the
-  /// dashboard's "resolve" action).
-  Future<void> deleteStaffCall(String callId) async {
-    await _db.collection('staff_calls').doc(callId).delete();
-  }
+  /// The dashboard's "resolved" action for a staff call. Marks the call as
+  /// resolved in `cafes/{cafe}/calls` so it leaves the pending stream.
+  Future<void> deleteStaffCall(String callId) => resolveCall(callId);
 }

@@ -40,22 +40,22 @@ void main() {
     expect(doc.data()!['status'], 'resolved');
   });
 
-  test('cancelOrder sets status to cancelled in the orders collection',
+  test('cancelOrder sets status to cancelled under cafes/main_cafe/orders',
       () async {
-    await db.collection('orders').doc('o1').set({'status': 'pending'});
+    await db.collection('cafes').doc('main_cafe').collection('orders').doc('o1').set({'status': 'pending'});
 
     await repo.cancelOrder('o1');
 
-    final doc = await db.collection('orders').doc('o1').get();
+    final doc = await db.collection('cafes').doc('main_cafe').collection('orders').doc('o1').get();
     expect(doc.data()!['status'], 'cancelled');
   });
 
-  test('deleteStaffCall removes the document', () async {
-    await db.collection('staff_calls').doc('c1').set({'tableNumber': 1});
+  test('deleteStaffCall marks the call resolved under cafes/main_cafe/calls', () async {
+    await db.collection('cafes').doc('main_cafe').collection('calls').doc('c1').set({'tableNumber': 1, 'status': 'pending'});
 
     await repo.deleteStaffCall('c1');
 
-    final doc = await db.collection('staff_calls').doc('c1').get();
-    expect(doc.exists, isFalse);
+    final doc = await db.collection('cafes').doc('main_cafe').collection('calls').doc('c1').get();
+    expect(doc.data()!['status'], 'resolved');
   });
 }
