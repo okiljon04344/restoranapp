@@ -20,12 +20,13 @@ class _AdminSignupPageState extends ConsumerState<AdminSignupPage> {
   bool _showPassword = false;
 
   Future<void> _onSignup() async {
+    final l = AppLocalizations.of(context)!;
     if (_emailController.text.isEmpty ||
         _passwordController.text.isEmpty ||
         _confirmPasswordController.text.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Barcha maydonlarni to\'ldiring'),
+        SnackBar(
+          content: Text(l.fillAllFields),
           backgroundColor: Colors.red,
         ),
       );
@@ -34,8 +35,8 @@ class _AdminSignupPageState extends ConsumerState<AdminSignupPage> {
 
     if (_passwordController.text != _confirmPasswordController.text) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Parollar mos kelmadi'),
+        SnackBar(
+          content: Text(l.passwordsMismatch),
           backgroundColor: Colors.red,
         ),
       );
@@ -44,8 +45,8 @@ class _AdminSignupPageState extends ConsumerState<AdminSignupPage> {
 
     if (_passwordController.text.length < 6) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Parol kamida 6 ta belgi bo\'lishi kerak'),
+        SnackBar(
+          content: Text(l.passwordTooShort),
           backgroundColor: Colors.red,
         ),
       );
@@ -66,9 +67,8 @@ class _AdminSignupPageState extends ConsumerState<AdminSignupPage> {
       // Show success message
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text(
-                'Foydalanuvchi muvaffaqiyatli yaratildi. Endi login qiling.'),
+          SnackBar(
+            content: Text(l.signupSuccess),
             backgroundColor: Colors.green,
           ),
         );
@@ -79,16 +79,16 @@ class _AdminSignupPageState extends ConsumerState<AdminSignupPage> {
         Navigator.of(context).pop();
       }
     } on FirebaseAuthException catch (e) {
-      String errorMessage = 'Xato: ${e.message}';
+      String errorMessage = l.error('${e.message}');
 
       if (e.code == 'email-already-in-use') {
-        errorMessage = 'Bu email allaqachon ro\'yxatdan o\'tgan';
+        errorMessage = l.authEmailInUse;
       } else if (e.code == 'weak-password') {
-        errorMessage = 'Parol juda oddiy (kamida 6 ta belgi kerak)';
+        errorMessage = l.authWeakPassword;
       } else if (e.code == 'invalid-email') {
-        errorMessage = 'Email noto\'g\'ri formatda';
+        errorMessage = l.authInvalidEmail;
       } else if (e.code == 'network-request-failed') {
-        errorMessage = 'Internetga ulanishda xato';
+        errorMessage = l.authNetworkError;
       }
 
       if (mounted) {
@@ -100,7 +100,7 @@ class _AdminSignupPageState extends ConsumerState<AdminSignupPage> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Xato: ${e.toString()}'),
+            content: Text(l.error(e.toString())),
             backgroundColor: Colors.red,
           ),
         );
@@ -112,6 +112,7 @@ class _AdminSignupPageState extends ConsumerState<AdminSignupPage> {
 
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context)!;
     return Scaffold(
       appBar: AppBar(
         title: Text(AppLocalizations.of(context)?.adminSignup ??
@@ -133,11 +134,11 @@ class _AdminSignupPageState extends ConsumerState<AdminSignupPage> {
               const SizedBox(height: 32),
               TextField(
                 controller: _emailController,
-                decoration: const InputDecoration(
-                  labelText: 'Email',
+                decoration: InputDecoration(
+                  labelText: l.emailLabel,
                   hintText: 'admin@example.com',
-                  border: OutlineInputBorder(),
-                  prefixIcon: Icon(Icons.email),
+                  border: const OutlineInputBorder(),
+                  prefixIcon: const Icon(Icons.email),
                 ),
                 keyboardType: TextInputType.emailAddress,
               ),
@@ -145,7 +146,7 @@ class _AdminSignupPageState extends ConsumerState<AdminSignupPage> {
               TextField(
                 controller: _passwordController,
                 decoration: InputDecoration(
-                  labelText: 'Parol',
+                  labelText: l.passwordLabel,
                   border: const OutlineInputBorder(),
                   prefixIcon: const Icon(Icons.lock),
                   suffixIcon: IconButton(
@@ -161,10 +162,10 @@ class _AdminSignupPageState extends ConsumerState<AdminSignupPage> {
               const SizedBox(height: 16),
               TextField(
                 controller: _confirmPasswordController,
-                decoration: const InputDecoration(
-                  labelText: 'Parolni tasdiqlang',
-                  border: OutlineInputBorder(),
-                  prefixIcon: Icon(Icons.lock_outline),
+                decoration: InputDecoration(
+                  labelText: l.confirmPasswordLabel,
+                  border: const OutlineInputBorder(),
+                  prefixIcon: const Icon(Icons.lock_outline),
                 ),
                 obscureText: true,
               ),
@@ -183,7 +184,7 @@ class _AdminSignupPageState extends ConsumerState<AdminSignupPage> {
               const SizedBox(height: 16),
               Center(
                 child: Text(
-                  'Kamida 6 ta belgi va kuchli parol tanlang',
+                  l.passwordHint,
                   style: Theme.of(context).textTheme.bodySmall,
                 ),
               ),

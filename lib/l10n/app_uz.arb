@@ -303,5 +303,22 @@
         "type": "String"
       }
     }
-  }
+  },
+  "enterEmailPassword": "Email va parolni kiriting",
+  "authNoAdminRights": "Sizda admin huquqlari yo'q.",
+  "authUserNotFound": "Bu email bilan foydalanuvchi topilmadi",
+  "authWrongPassword": "Parol noto'g'ri",
+  "authInvalidCredential": "Email yoki parol noto'g'ri",
+  "authNetworkError": "Internetga ulanishda xato",
+  "authTooManyRequests": "Juda ko'p urinish. Birozdan so'ng qayta urinib ko'ring",
+  "authEmailInUse": "Bu email allaqachon ro'yxatdan o'tgan",
+  "authWeakPassword": "Parol juda oddiy (kamida 6 ta belgi kerak)",
+  "authInvalidEmail": "Email noto'g'ri formatda",
+  "passwordsMismatch": "Parollar mos kelmadi",
+  "passwordTooShort": "Parol kamida 6 ta belgi bo'lishi kerak",
+  "signupSuccess": "Foydalanuvchi muvaffaqiyatli yaratildi. Endi tizimga kiring.",
+  "emailLabel": "Email",
+  "passwordLabel": "Parol",
+  "confirmPasswordLabel": "Parolni tasdiqlang",
+  "passwordHint": "Kamida 6 ta belgidan iborat kuchli parol tanlang"
 }

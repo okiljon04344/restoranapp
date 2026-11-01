@@ -626,4 +626,55 @@ class AppLocalizationsJa extends AppLocalizations {
   String orderItemsSummary(String count, String total) {
     return '$count品 • $total';
   }
+
+  @override
+  String get enterEmailPassword => 'メールアドレスとパスワードを入力してください';
+
+  @override
+  String get authNoAdminRights => '管理者権限がありません。';
+
+  @override
+  String get authUserNotFound => 'このメールアドレスのユーザーが見つかりません';
+
+  @override
+  String get authWrongPassword => 'パスワードが正しくありません';
+
+  @override
+  String get authInvalidCredential => 'メールアドレスまたはパスワードが正しくありません';
+
+  @override
+  String get authNetworkError => 'ネットワーク接続エラー';
+
+  @override
+  String get authTooManyRequests => '試行回数が多すぎます。しばらくしてからもう一度お試しください';
+
+  @override
+  String get authEmailInUse => 'このメールアドレスは既に登録されています';
+
+  @override
+  String get authWeakPassword => 'パスワードが簡単すぎます（6文字以上必要です）';
+
+  @override
+  String get authInvalidEmail => 'メールアドレスの形式が正しくありません';
+
+  @override
+  String get passwordsMismatch => 'パスワードが一致しません';
+
+  @override
+  String get passwordTooShort => 'パスワードは6文字以上にしてください';
+
+  @override
+  String get signupSuccess => 'ユーザーを作成しました。ログインしてください。';
+
+  @override
+  String get emailLabel => 'メールアドレス';
+
+  @override
+  String get passwordLabel => 'パスワード';
+
+  @override
+  String get confirmPasswordLabel => 'パスワード（確認）';
+
+  @override
+  String get passwordHint => '6文字以上の強力なパスワードを設定してください';
 }

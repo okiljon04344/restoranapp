@@ -303,5 +303,22 @@
         "type": "String"
       }
     }
-  }
+  },
+  "enterEmailPassword": "メールアドレスとパスワードを入力してください",
+  "authNoAdminRights": "管理者権限がありません。",
+  "authUserNotFound": "このメールアドレスのユーザーが見つかりません",
+  "authWrongPassword": "パスワードが正しくありません",
+  "authInvalidCredential": "メールアドレスまたはパスワードが正しくありません",
+  "authNetworkError": "ネットワーク接続エラー",
+  "authTooManyRequests": "試行回数が多すぎます。しばらくしてからもう一度お試しください",
+  "authEmailInUse": "このメールアドレスは既に登録されています",
+  "authWeakPassword": "パスワードが簡単すぎます（6文字以上必要です）",
+  "authInvalidEmail": "メールアドレスの形式が正しくありません",
+  "passwordsMismatch": "パスワードが一致しません",
+  "passwordTooShort": "パスワードは6文字以上にしてください",
+  "signupSuccess": "ユーザーを作成しました。ログインしてください。",
+  "emailLabel": "メールアドレス",
+  "passwordLabel": "パスワード",
+  "confirmPasswordLabel": "パスワード（確認）",
+  "passwordHint": "6文字以上の強力なパスワードを設定してください"
 }

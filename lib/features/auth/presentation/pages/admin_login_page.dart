@@ -20,10 +20,11 @@ class _AdminLoginPageState extends ConsumerState<AdminLoginPage> {
   bool _isLoading = false;
 
   Future<void> _onLogin() async {
+    final l = AppLocalizations.of(context)!;
     if (_emailController.text.isEmpty || _passwordController.text.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Email va parol-ni kiritib chiqing'),
+        SnackBar(
+          content: Text(l.enterEmailPassword),
           backgroundColor: Colors.red,
         ),
       );
@@ -44,26 +45,25 @@ class _AdminLoginPageState extends ConsumerState<AdminLoginPage> {
           context.go('/dashboard');
         } else {
           await repo.signOut();
-          throw 'Sizning admin huquqlaringiz yo\'q.';
+          throw l.authNoAdminRights;
         }
       } else {
         if (!mounted) return;
         context.go('/kitchen');
       }
     } on FirebaseAuthException catch (e) {
-      String errorMessage = 'Xato: ${e.message}';
+      String errorMessage = l.error('${e.message}');
 
       if (e.code == 'user-not-found') {
-        errorMessage = 'Bu email-da foydalanuvchi topilmadi';
+        errorMessage = l.authUserNotFound;
       } else if (e.code == 'wrong-password') {
-        errorMessage = 'Parol noto\'g\'ri';
+        errorMessage = l.authWrongPassword;
       } else if (e.code == 'invalid-credential') {
-        errorMessage = 'Email yoki parol noto\'g\'ri';
+        errorMessage = l.authInvalidCredential;
       } else if (e.code == 'network-request-failed') {
-        errorMessage = 'Internetga ulanishda xato';
+        errorMessage = l.authNetworkError;
       } else if (e.code == 'too-many-requests') {
-        errorMessage =
-            'Juda ko\'p urinish. Birozdan so\'ng qayta urinib ko\'ring';
+        errorMessage = l.authTooManyRequests;
       }
 
       if (mounted) {
@@ -75,7 +75,7 @@ class _AdminLoginPageState extends ConsumerState<AdminLoginPage> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Xato: ${e.toString()}'),
+            content: Text(l.error(e.toString())),
             backgroundColor: Colors.red,
           ),
         );
@@ -87,6 +87,7 @@ class _AdminLoginPageState extends ConsumerState<AdminLoginPage> {
 
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context)!;
     return Scaffold(
       appBar: AppBar(
           title:
@@ -100,19 +101,19 @@ class _AdminLoginPageState extends ConsumerState<AdminLoginPage> {
             const SizedBox(height: 32),
             TextField(
               controller: _emailController,
-              decoration: const InputDecoration(
-                  labelText: 'Email',
+              decoration: InputDecoration(
+                  labelText: l.emailLabel,
                   hintText: 'name@example.com',
-                  border: OutlineInputBorder(),
-                  prefixIcon: Icon(Icons.email)),
+                  border: const OutlineInputBorder(),
+                  prefixIcon: const Icon(Icons.email)),
             ),
             const SizedBox(height: 16),
             TextField(
               controller: _passwordController,
-              decoration: const InputDecoration(
-                  labelText: 'Parol',
-                  border: OutlineInputBorder(),
-                  prefixIcon: Icon(Icons.lock)),
+              decoration: InputDecoration(
+                  labelText: l.passwordLabel,
+                  border: const OutlineInputBorder(),
+                  prefixIcon: const Icon(Icons.lock)),
               obscureText: true,
             ),
             const SizedBox(height: 32),

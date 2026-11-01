@@ -303,5 +303,22 @@
         "type": "String"
       }
     }
-  }
+  },
+  "enterEmailPassword": "Please enter your email and password",
+  "authNoAdminRights": "You do not have admin rights.",
+  "authUserNotFound": "No user found with this email",
+  "authWrongPassword": "Incorrect password",
+  "authInvalidCredential": "Incorrect email or password",
+  "authNetworkError": "Network connection error",
+  "authTooManyRequests": "Too many attempts. Please try again later",
+  "authEmailInUse": "This email is already registered",
+  "authWeakPassword": "Password is too weak (at least 6 characters required)",
+  "authInvalidEmail": "Invalid email format",
+  "passwordsMismatch": "Passwords do not match",
+  "passwordTooShort": "Password must be at least 6 characters",
+  "signupSuccess": "User created successfully. Please log in now.",
+  "emailLabel": "Email",
+  "passwordLabel": "Password",
+  "confirmPasswordLabel": "Confirm password",
+  "passwordHint": "Choose a strong password of at least 6 characters"
 }

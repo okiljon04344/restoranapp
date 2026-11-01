@@ -438,7 +438,11 @@ class _AdminIngredientsPageState extends ConsumerState<AdminIngredientsPage> {
                     labelText: l.unitLabel,
                     border: const OutlineInputBorder(),
                   ),
-                  items: units
+                  items: [
+                    ...units,
+                    // Keep a stored unit that is not in the fixed list selectable.
+                    if (!units.contains(ingredient.unit)) ingredient.unit,
+                  ]
                       .map((u) => DropdownMenuItem(
                           value: u, child: Text(_unitLabel(l, u))))
                       .toList(),

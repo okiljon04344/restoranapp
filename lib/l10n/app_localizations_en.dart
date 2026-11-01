@@ -630,4 +630,57 @@ class AppLocalizationsEn extends AppLocalizations {
   String orderItemsSummary(String count, String total) {
     return '$count items • $total';
   }
+
+  @override
+  String get enterEmailPassword => 'Please enter your email and password';
+
+  @override
+  String get authNoAdminRights => 'You do not have admin rights.';
+
+  @override
+  String get authUserNotFound => 'No user found with this email';
+
+  @override
+  String get authWrongPassword => 'Incorrect password';
+
+  @override
+  String get authInvalidCredential => 'Incorrect email or password';
+
+  @override
+  String get authNetworkError => 'Network connection error';
+
+  @override
+  String get authTooManyRequests => 'Too many attempts. Please try again later';
+
+  @override
+  String get authEmailInUse => 'This email is already registered';
+
+  @override
+  String get authWeakPassword =>
+      'Password is too weak (at least 6 characters required)';
+
+  @override
+  String get authInvalidEmail => 'Invalid email format';
+
+  @override
+  String get passwordsMismatch => 'Passwords do not match';
+
+  @override
+  String get passwordTooShort => 'Password must be at least 6 characters';
+
+  @override
+  String get signupSuccess => 'User created successfully. Please log in now.';
+
+  @override
+  String get emailLabel => 'Email';
+
+  @override
+  String get passwordLabel => 'Password';
+
+  @override
+  String get confirmPasswordLabel => 'Confirm password';
+
+  @override
+  String get passwordHint =>
+      'Choose a strong password of at least 6 characters';
 }

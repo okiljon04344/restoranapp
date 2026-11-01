@@ -632,4 +632,57 @@ class AppLocalizationsUz extends AppLocalizations {
   String orderItemsSummary(String count, String total) {
     return '$count ta mahsulot • $total';
   }
+
+  @override
+  String get enterEmailPassword => 'Email va parolni kiriting';
+
+  @override
+  String get authNoAdminRights => 'Sizda admin huquqlari yo\'q.';
+
+  @override
+  String get authUserNotFound => 'Bu email bilan foydalanuvchi topilmadi';
+
+  @override
+  String get authWrongPassword => 'Parol noto\'g\'ri';
+
+  @override
+  String get authInvalidCredential => 'Email yoki parol noto\'g\'ri';
+
+  @override
+  String get authNetworkError => 'Internetga ulanishda xato';
+
+  @override
+  String get authTooManyRequests =>
+      'Juda ko\'p urinish. Birozdan so\'ng qayta urinib ko\'ring';
+
+  @override
+  String get authEmailInUse => 'Bu email allaqachon ro\'yxatdan o\'tgan';
+
+  @override
+  String get authWeakPassword => 'Parol juda oddiy (kamida 6 ta belgi kerak)';
+
+  @override
+  String get authInvalidEmail => 'Email noto\'g\'ri formatda';
+
+  @override
+  String get passwordsMismatch => 'Parollar mos kelmadi';
+
+  @override
+  String get passwordTooShort => 'Parol kamida 6 ta belgi bo\'lishi kerak';
+
+  @override
+  String get signupSuccess =>
+      'Foydalanuvchi muvaffaqiyatli yaratildi. Endi tizimga kiring.';
+
+  @override
+  String get emailLabel => 'Email';
+
+  @override
+  String get passwordLabel => 'Parol';
+
+  @override
+  String get confirmPasswordLabel => 'Parolni tasdiqlang';
+
+  @override
+  String get passwordHint => 'Kamida 6 ta belgidan iborat kuchli parol tanlang';
 }
