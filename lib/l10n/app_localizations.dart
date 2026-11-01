@@ -927,6 +927,354 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'OK'**
   String get ok;
+
+  /// No description provided for @ingredientsManagement.
+  ///
+  /// In en, this message translates to:
+  /// **'Ingredients Management'**
+  String get ingredientsManagement;
+
+  /// No description provided for @newIngredient.
+  ///
+  /// In en, this message translates to:
+  /// **'New Ingredient'**
+  String get newIngredient;
+
+  /// No description provided for @ingredientsSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'List of ingredients needed to prepare dishes'**
+  String get ingredientsSubtitle;
+
+  /// No description provided for @lowStockAlert.
+  ///
+  /// In en, this message translates to:
+  /// **'Low Stock ({count} ingredients)'**
+  String lowStockAlert(String count);
+
+  /// No description provided for @lowStock.
+  ///
+  /// In en, this message translates to:
+  /// **'Low Stock'**
+  String get lowStock;
+
+  /// No description provided for @updateAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Update'**
+  String get updateAction;
+
+  /// No description provided for @noIngredientsFound.
+  ///
+  /// In en, this message translates to:
+  /// **'No ingredients found'**
+  String get noIngredientsFound;
+
+  /// No description provided for @editAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit'**
+  String get editAction;
+
+  /// No description provided for @deleteAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete'**
+  String get deleteAction;
+
+  /// No description provided for @minQuantityShort.
+  ///
+  /// In en, this message translates to:
+  /// **'Min: {value}'**
+  String minQuantityShort(String value);
+
+  /// No description provided for @addIngredientTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Add New Ingredient'**
+  String get addIngredientTitle;
+
+  /// No description provided for @editIngredientTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit Ingredient'**
+  String get editIngredientTitle;
+
+  /// No description provided for @ingredientName.
+  ///
+  /// In en, this message translates to:
+  /// **'Ingredient Name'**
+  String get ingredientName;
+
+  /// No description provided for @unitLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Unit'**
+  String get unitLabel;
+
+  /// No description provided for @quantityLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Quantity'**
+  String get quantityLabel;
+
+  /// No description provided for @minimumQuantityLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Minimum Quantity'**
+  String get minimumQuantityLabel;
+
+  /// No description provided for @fillAllFields.
+  ///
+  /// In en, this message translates to:
+  /// **'Please fill in all fields'**
+  String get fillAllFields;
+
+  /// No description provided for @ingredientAdded.
+  ///
+  /// In en, this message translates to:
+  /// **'Ingredient added'**
+  String get ingredientAdded;
+
+  /// No description provided for @ingredientUpdated.
+  ///
+  /// In en, this message translates to:
+  /// **'Ingredient updated'**
+  String get ingredientUpdated;
+
+  /// No description provided for @ingredientDeleted.
+  ///
+  /// In en, this message translates to:
+  /// **'Ingredient deleted'**
+  String get ingredientDeleted;
+
+  /// No description provided for @addAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Add'**
+  String get addAction;
+
+  /// No description provided for @saveAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Save'**
+  String get saveAction;
+
+  /// No description provided for @deleteIngredientConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Do you want to delete this ingredient?'**
+  String get deleteIngredientConfirm;
+
+  /// No description provided for @yesDelete.
+  ///
+  /// In en, this message translates to:
+  /// **'Yes, Delete'**
+  String get yesDelete;
+
+  /// No description provided for @unitPiece.
+  ///
+  /// In en, this message translates to:
+  /// **'pcs'**
+  String get unitPiece;
+
+  /// No description provided for @unitKg.
+  ///
+  /// In en, this message translates to:
+  /// **'kg'**
+  String get unitKg;
+
+  /// No description provided for @unitGram.
+  ///
+  /// In en, this message translates to:
+  /// **'g'**
+  String get unitGram;
+
+  /// No description provided for @unitLiter.
+  ///
+  /// In en, this message translates to:
+  /// **'l'**
+  String get unitLiter;
+
+  /// No description provided for @unitMl.
+  ///
+  /// In en, this message translates to:
+  /// **'ml'**
+  String get unitMl;
+
+  /// No description provided for @unitBox.
+  ///
+  /// In en, this message translates to:
+  /// **'box'**
+  String get unitBox;
+
+  /// No description provided for @unitPack.
+  ///
+  /// In en, this message translates to:
+  /// **'pack'**
+  String get unitPack;
+
+  /// No description provided for @fillRequiredFields.
+  ///
+  /// In en, this message translates to:
+  /// **'Please fill all required fields'**
+  String get fillRequiredFields;
+
+  /// No description provided for @menuItemAdded.
+  ///
+  /// In en, this message translates to:
+  /// **'Menu item added successfully'**
+  String get menuItemAdded;
+
+  /// No description provided for @addNewMenuItem.
+  ///
+  /// In en, this message translates to:
+  /// **'Add New Menu Item'**
+  String get addNewMenuItem;
+
+  /// No description provided for @itemNameRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Item Name *'**
+  String get itemNameRequired;
+
+  /// No description provided for @itemNameHint.
+  ///
+  /// In en, this message translates to:
+  /// **'e.g., Chicken Biryani'**
+  String get itemNameHint;
+
+  /// No description provided for @descriptionLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Description'**
+  String get descriptionLabel;
+
+  /// No description provided for @itemDescriptionHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Item description...'**
+  String get itemDescriptionHint;
+
+  /// No description provided for @priceRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Price *'**
+  String get priceRequired;
+
+  /// No description provided for @categoryRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Category *'**
+  String get categoryRequired;
+
+  /// No description provided for @newLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'New'**
+  String get newLabel;
+
+  /// No description provided for @imageUrl.
+  ///
+  /// In en, this message translates to:
+  /// **'Image URL'**
+  String get imageUrl;
+
+  /// No description provided for @addingInProgress.
+  ///
+  /// In en, this message translates to:
+  /// **'Adding...'**
+  String get addingInProgress;
+
+  /// No description provided for @addMenuItem.
+  ///
+  /// In en, this message translates to:
+  /// **'Add Menu Item'**
+  String get addMenuItem;
+
+  /// No description provided for @menuItems.
+  ///
+  /// In en, this message translates to:
+  /// **'Menu Items'**
+  String get menuItems;
+
+  /// No description provided for @noMenuItemsYet.
+  ///
+  /// In en, this message translates to:
+  /// **'No menu items yet'**
+  String get noMenuItemsYet;
+
+  /// No description provided for @deleteItem.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Item'**
+  String get deleteItem;
+
+  /// No description provided for @confirmDeleteItem.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to delete this item?'**
+  String get confirmDeleteItem;
+
+  /// No description provided for @itemDeleted.
+  ///
+  /// In en, this message translates to:
+  /// **'Item deleted'**
+  String get itemDeleted;
+
+  /// No description provided for @createNewCategory.
+  ///
+  /// In en, this message translates to:
+  /// **'Create New Category'**
+  String get createNewCategory;
+
+  /// No description provided for @categoryNameHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Category name'**
+  String get categoryNameHint;
+
+  /// No description provided for @createAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Create'**
+  String get createAction;
+
+  /// No description provided for @categoryCreated.
+  ///
+  /// In en, this message translates to:
+  /// **'Category created'**
+  String get categoryCreated;
+
+  /// No description provided for @enterCategoryName.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter category name'**
+  String get enterCategoryName;
+
+  /// No description provided for @torchError.
+  ///
+  /// In en, this message translates to:
+  /// **'Torch error: {error}'**
+  String torchError(String error);
+
+  /// No description provided for @cameraError.
+  ///
+  /// In en, this message translates to:
+  /// **'Camera error: {error}'**
+  String cameraError(String error);
+
+  /// No description provided for @placeQrInFrame.
+  ///
+  /// In en, this message translates to:
+  /// **'Place the QR code inside the frame'**
+  String get placeQrInFrame;
+
+  /// No description provided for @orderItemsSummary.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} items • {total}'**
+  String orderItemsSummary(String count, String total);
 }
 
 class _AppLocalizationsDelegate

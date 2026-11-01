@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/widgets/app_scaffold.dart';
+import '../../../../l10n/app_localizations.dart';
 import '../../../../services/firestore_service.dart';
 import '../../../orders/application/order_providers.dart';
 
@@ -32,11 +33,12 @@ class _AdminMenuManagementPageEnhancedState
   }
 
   Future<void> _submitForm() async {
+    final l = AppLocalizations.of(context)!;
     if (_nameController.text.isEmpty ||
         _priceController.text.isEmpty ||
         _selectedCategoryId == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please fill all required fields')),
+        SnackBar(content: Text(l.fillRequiredFields)),
       );
       return;
     }
@@ -63,12 +65,12 @@ class _AdminMenuManagementPageEnhancedState
 
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Menu item added successfully')),
+        SnackBar(content: Text(l.menuItemAdded)),
       );
     } catch (e) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error: $e')),
+        SnackBar(content: Text(l.error('$e'))),
       );
     } finally {
       if (mounted) setState(() => _isLoading = false);
@@ -77,15 +79,16 @@ class _AdminMenuManagementPageEnhancedState
 
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context)!;
     final categoriesAsync = ref.watch(categoriesProvider);
     final itemsAsync = ref.watch(menuItemsProvider);
 
     return AppScaffold(
-      title: 'Menu Management',
+      title: l.menuManagement,
       actions: [
         IconButton(
           icon: const Icon(Icons.arrow_back),
-          tooltip: 'Go back',
+          tooltip: l.goBack,
           onPressed: () => context.go('/dashboard'),
         ),
       ],
@@ -106,9 +109,9 @@ class _AdminMenuManagementPageEnhancedState
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        const Text(
-                          'Add New Menu Item',
-                          style: TextStyle(
+                        Text(
+                          l.addNewMenuItem,
+                          style: const TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
                           ),
@@ -117,8 +120,8 @@ class _AdminMenuManagementPageEnhancedState
                         TextField(
                           controller: _nameController,
                           decoration: InputDecoration(
-                            labelText: 'Item Name *',
-                            hintText: 'e.g., Chicken Biryani',
+                            labelText: l.itemNameRequired,
+                            hintText: l.itemNameHint,
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(8),
                             ),
@@ -130,8 +133,8 @@ class _AdminMenuManagementPageEnhancedState
                           controller: _descriptionController,
                           maxLines: 3,
                           decoration: InputDecoration(
-                            labelText: 'Description',
-                            hintText: 'Item description...',
+                            labelText: l.descriptionLabel,
+                            hintText: l.itemDescriptionHint,
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(8),
                             ),
@@ -144,7 +147,7 @@ class _AdminMenuManagementPageEnhancedState
                           controller: _priceController,
                           keyboardType: TextInputType.number,
                           decoration: InputDecoration(
-                            labelText: 'Price *',
+                            labelText: l.priceRequired,
                             hintText: '50000',
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(8),
@@ -162,7 +165,7 @@ class _AdminMenuManagementPageEnhancedState
                                     child: DropdownButtonFormField<String>(
                                       initialValue: _selectedCategoryId,
                                       decoration: InputDecoration(
-                                        labelText: 'Category *',
+                                        labelText: l.categoryRequired,
                                         border: OutlineInputBorder(
                                           borderRadius:
                                               BorderRadius.circular(8),
@@ -185,20 +188,20 @@ class _AdminMenuManagementPageEnhancedState
                                   FilledButton.icon(
                                     onPressed: _showCreateCategoryDialog,
                                     icon: const Icon(Icons.add),
-                                    label: const Text('New'),
+                                    label: Text(l.newLabel),
                                   ),
                                 ],
                               ),
                             ],
                           ),
                           loading: () => const CircularProgressIndicator(),
-                          error: (err, stack) => Text('Error: $err'),
+                          error: (err, stack) => Text(l.error('$err')),
                         ),
                         const SizedBox(height: 16),
                         TextField(
                           controller: _imageUrlController,
                           decoration: InputDecoration(
-                            labelText: 'Image URL',
+                            labelText: l.imageUrl,
                             hintText: 'https://example.com/image.jpg',
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(8),
@@ -224,7 +227,7 @@ class _AdminMenuManagementPageEnhancedState
                                   )
                                 : const Icon(Icons.add),
                             label: Text(
-                                _isLoading ? 'Adding...' : 'Add Menu Item'),
+                                _isLoading ? l.addingInProgress : l.addMenuItem),
                           ),
                         ),
                       ],
@@ -239,9 +242,9 @@ class _AdminMenuManagementPageEnhancedState
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text(
-                      'Menu Items',
-                      style: TextStyle(
+                    Text(
+                      l.menuItems,
+                      style: const TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
                       ),
@@ -249,10 +252,10 @@ class _AdminMenuManagementPageEnhancedState
                     const SizedBox(height: 12),
                     itemsAsync.when(
                       data: (items) => items.isEmpty
-                          ? const Card(
+                          ? Card(
                               child: Padding(
-                                padding: EdgeInsets.all(16),
-                                child: Text('No menu items yet'),
+                                padding: const EdgeInsets.all(16),
+                                child: Text(l.noMenuItemsYet),
                               ),
                             )
                           : ListView.builder(
@@ -298,7 +301,7 @@ class _AdminMenuManagementPageEnhancedState
                                     trailing: PopupMenuButton(
                                       itemBuilder: (context) => [
                                         PopupMenuItem(
-                                          child: const Text('Delete'),
+                                          child: Text(l.deleteAction),
                                           onTap: () => _showDeleteConfirmation(
                                             context,
                                             item.id,
@@ -311,7 +314,7 @@ class _AdminMenuManagementPageEnhancedState
                               },
                             ),
                       loading: () => const CircularProgressIndicator(),
-                      error: (err, stack) => Text('Error: $err'),
+                      error: (err, stack) => Text(l.error('$err')),
                     ),
                   ],
                 ),
@@ -324,15 +327,16 @@ class _AdminMenuManagementPageEnhancedState
   }
 
   void _showDeleteConfirmation(BuildContext context, String itemId) {
+    final l = AppLocalizations.of(context)!;
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Delete Item'),
-        content: const Text('Are you sure you want to delete this item?'),
+        title: Text(l.deleteItem),
+        content: Text(l.confirmDeleteItem),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel'),
+            child: Text(l.cancel),
           ),
           FilledButton(
             style: FilledButton.styleFrom(backgroundColor: Colors.red),
@@ -342,16 +346,16 @@ class _AdminMenuManagementPageEnhancedState
                 if (!context.mounted) return;
                 Navigator.pop(context);
                 ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Item deleted')),
+                  SnackBar(content: Text(l.itemDeleted)),
                 );
               } catch (e) {
                 if (!context.mounted) return;
                 ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text('Error: $e')),
+                  SnackBar(content: Text(l.error('$e'))),
                 );
               }
             },
-            child: const Text('Delete'),
+            child: Text(l.deleteAction),
           ),
         ],
       ),
@@ -359,16 +363,17 @@ class _AdminMenuManagementPageEnhancedState
   }
 
   void _showCreateCategoryDialog() {
+    final l = AppLocalizations.of(context)!;
     final categoryNameController = TextEditingController();
 
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Create New Category'),
+        title: Text(l.createNewCategory),
         content: TextField(
           controller: categoryNameController,
           decoration: InputDecoration(
-            hintText: 'Category name',
+            hintText: l.categoryNameHint,
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(8),
             ),
@@ -377,13 +382,13 @@ class _AdminMenuManagementPageEnhancedState
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel'),
+            child: Text(l.cancel),
           ),
           FilledButton(
             onPressed: () async {
               if (categoryNameController.text.isEmpty) {
                 ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Enter category name')),
+                  SnackBar(content: Text(l.enterCategoryName)),
                 );
                 return;
               }
@@ -399,16 +404,16 @@ class _AdminMenuManagementPageEnhancedState
                 Navigator.pop(context);
 
                 ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Category created')),
+                  SnackBar(content: Text(l.categoryCreated)),
                 );
               } catch (e) {
                 if (!context.mounted) return;
                 ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text('Error: $e')),
+                  SnackBar(content: Text(l.error('$e'))),
                 );
               }
             },
-            child: const Text('Create'),
+            child: Text(l.createAction),
           ),
         ],
       ),

@@ -442,4 +442,188 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get ok => 'OK';
+
+  @override
+  String get ingredientsManagement => '食材管理';
+
+  @override
+  String get newIngredient => '食材を追加';
+
+  @override
+  String get ingredientsSubtitle => '料理の調理に必要な食材の一覧';
+
+  @override
+  String lowStockAlert(String count) {
+    return '在庫不足（$count件）';
+  }
+
+  @override
+  String get lowStock => '在庫不足';
+
+  @override
+  String get updateAction => '更新';
+
+  @override
+  String get noIngredientsFound => '食材が見つかりません';
+
+  @override
+  String get editAction => '編集';
+
+  @override
+  String get deleteAction => '削除';
+
+  @override
+  String minQuantityShort(String value) {
+    return '最小: $value';
+  }
+
+  @override
+  String get addIngredientTitle => '食材の新規追加';
+
+  @override
+  String get editIngredientTitle => '食材の編集';
+
+  @override
+  String get ingredientName => '食材名';
+
+  @override
+  String get unitLabel => '単位';
+
+  @override
+  String get quantityLabel => '在庫数';
+
+  @override
+  String get minimumQuantityLabel => '最小在庫';
+
+  @override
+  String get fillAllFields => 'すべての項目を入力してください';
+
+  @override
+  String get ingredientAdded => '食材を追加しました';
+
+  @override
+  String get ingredientUpdated => '食材を更新しました';
+
+  @override
+  String get ingredientDeleted => '食材を削除しました';
+
+  @override
+  String get addAction => '追加';
+
+  @override
+  String get saveAction => '保存';
+
+  @override
+  String get deleteIngredientConfirm => 'この食材を削除しますか？';
+
+  @override
+  String get yesDelete => 'はい、削除';
+
+  @override
+  String get unitPiece => '個';
+
+  @override
+  String get unitKg => 'kg';
+
+  @override
+  String get unitGram => 'g';
+
+  @override
+  String get unitLiter => 'L';
+
+  @override
+  String get unitMl => 'mL';
+
+  @override
+  String get unitBox => '箱';
+
+  @override
+  String get unitPack => 'パック';
+
+  @override
+  String get fillRequiredFields => '必須項目をすべて入力してください';
+
+  @override
+  String get menuItemAdded => 'メニュー品目を追加しました';
+
+  @override
+  String get addNewMenuItem => 'メニュー品目の新規追加';
+
+  @override
+  String get itemNameRequired => '品目名 *';
+
+  @override
+  String get itemNameHint => '例: チキンビリヤニ';
+
+  @override
+  String get descriptionLabel => '説明';
+
+  @override
+  String get itemDescriptionHint => '品目の説明...';
+
+  @override
+  String get priceRequired => '価格 *';
+
+  @override
+  String get categoryRequired => 'カテゴリ *';
+
+  @override
+  String get newLabel => '新規';
+
+  @override
+  String get imageUrl => '画像URL';
+
+  @override
+  String get addingInProgress => '追加中...';
+
+  @override
+  String get addMenuItem => 'メニュー品目を追加';
+
+  @override
+  String get menuItems => 'メニュー品目';
+
+  @override
+  String get noMenuItemsYet => 'メニュー品目はまだありません';
+
+  @override
+  String get deleteItem => '品目の削除';
+
+  @override
+  String get confirmDeleteItem => 'この品目を削除しますか？';
+
+  @override
+  String get itemDeleted => '品目を削除しました';
+
+  @override
+  String get createNewCategory => 'カテゴリの新規作成';
+
+  @override
+  String get categoryNameHint => 'カテゴリ名';
+
+  @override
+  String get createAction => '作成';
+
+  @override
+  String get categoryCreated => 'カテゴリを作成しました';
+
+  @override
+  String get enterCategoryName => 'カテゴリ名を入力してください';
+
+  @override
+  String torchError(String error) {
+    return 'ライトのエラー: $error';
+  }
+
+  @override
+  String cameraError(String error) {
+    return 'カメラのエラー: $error';
+  }
+
+  @override
+  String get placeQrInFrame => 'QRコードを枠内に合わせてください';
+
+  @override
+  String orderItemsSummary(String count, String total) {
+    return '$count品 • $total';
+  }
 }

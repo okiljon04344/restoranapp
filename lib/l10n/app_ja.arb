@@ -207,5 +207,101 @@
       }
     }
   },
-  "ok": "OK"
+  "ok": "OK",
+  "ingredientsManagement": "食材管理",
+  "newIngredient": "食材を追加",
+  "ingredientsSubtitle": "料理の調理に必要な食材の一覧",
+  "lowStockAlert": "在庫不足（{count}件）",
+  "@lowStockAlert": {
+    "placeholders": {
+      "count": {
+        "type": "String"
+      }
+    }
+  },
+  "lowStock": "在庫不足",
+  "updateAction": "更新",
+  "noIngredientsFound": "食材が見つかりません",
+  "editAction": "編集",
+  "deleteAction": "削除",
+  "minQuantityShort": "最小: {value}",
+  "@minQuantityShort": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "addIngredientTitle": "食材の新規追加",
+  "editIngredientTitle": "食材の編集",
+  "ingredientName": "食材名",
+  "unitLabel": "単位",
+  "quantityLabel": "在庫数",
+  "minimumQuantityLabel": "最小在庫",
+  "fillAllFields": "すべての項目を入力してください",
+  "ingredientAdded": "食材を追加しました",
+  "ingredientUpdated": "食材を更新しました",
+  "ingredientDeleted": "食材を削除しました",
+  "addAction": "追加",
+  "saveAction": "保存",
+  "deleteIngredientConfirm": "この食材を削除しますか？",
+  "yesDelete": "はい、削除",
+  "unitPiece": "個",
+  "unitKg": "kg",
+  "unitGram": "g",
+  "unitLiter": "L",
+  "unitMl": "mL",
+  "unitBox": "箱",
+  "unitPack": "パック",
+  "fillRequiredFields": "必須項目をすべて入力してください",
+  "menuItemAdded": "メニュー品目を追加しました",
+  "addNewMenuItem": "メニュー品目の新規追加",
+  "itemNameRequired": "品目名 *",
+  "itemNameHint": "例: チキンビリヤニ",
+  "descriptionLabel": "説明",
+  "itemDescriptionHint": "品目の説明...",
+  "priceRequired": "価格 *",
+  "categoryRequired": "カテゴリ *",
+  "newLabel": "新規",
+  "imageUrl": "画像URL",
+  "addingInProgress": "追加中...",
+  "addMenuItem": "メニュー品目を追加",
+  "menuItems": "メニュー品目",
+  "noMenuItemsYet": "メニュー品目はまだありません",
+  "deleteItem": "品目の削除",
+  "confirmDeleteItem": "この品目を削除しますか？",
+  "itemDeleted": "品目を削除しました",
+  "createNewCategory": "カテゴリの新規作成",
+  "categoryNameHint": "カテゴリ名",
+  "createAction": "作成",
+  "categoryCreated": "カテゴリを作成しました",
+  "enterCategoryName": "カテゴリ名を入力してください",
+  "torchError": "ライトのエラー: {error}",
+  "@torchError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "cameraError": "カメラのエラー: {error}",
+  "@cameraError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "placeQrInFrame": "QRコードを枠内に合わせてください",
+  "orderItemsSummary": "{count}品 • {total}",
+  "@orderItemsSummary": {
+    "placeholders": {
+      "count": {
+        "type": "String"
+      },
+      "total": {
+        "type": "String"
+      }
+    }
+  }
 }

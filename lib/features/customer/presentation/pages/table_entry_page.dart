@@ -134,7 +134,7 @@ class _TableEntryPageState extends ConsumerState<TableEntryPage> {
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error: $e')),
+          SnackBar(content: Text(AppLocalizations.of(context)!.error('$e'))),
         );
       }
     } finally {

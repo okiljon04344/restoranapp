@@ -97,7 +97,7 @@ class _QRScannerPageState extends State<QRScannerPage>
       debugPrint('Error toggling torch: $e');
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Torch error: $e')),
+          SnackBar(content: Text(AppLocalizations.of(context)!.torchError('$e'))),
         );
       }
     }
@@ -129,7 +129,7 @@ class _QRScannerPageState extends State<QRScannerPage>
                     children: [
                       const Icon(Icons.error, color: Colors.red, size: 64),
                       const SizedBox(height: 16),
-                      Text('Camera Error: $error'),
+                      Text(AppLocalizations.of(context)!.cameraError('$error')),
                       const SizedBox(height: 16),
                       FilledButton(
                         onPressed: () => Navigator.pop(context),
@@ -162,19 +162,19 @@ class _QRScannerPageState extends State<QRScannerPage>
                           ),
                           borderRadius: BorderRadius.circular(12),
                         ),
-                        child: const Center(
+                        child: Center(
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Icon(
+                              const Icon(
                                 Icons.qr_code_2,
                                 size: 80,
                                 color: Colors.white,
                               ),
-                              SizedBox(height: 16),
+                              const SizedBox(height: 16),
                               Text(
-                                'QR codeni to\'g\'ri joyda qo\'ying',
-                                style: TextStyle(
+                                AppLocalizations.of(context)!.placeQrInFrame,
+                                style: const TextStyle(
                                   color: Colors.white,
                                   fontSize: 14,
                                 ),
@@ -212,9 +212,9 @@ class _QRScannerPageState extends State<QRScannerPage>
               child: Center(
                 child: FilledButton.tonal(
                   onPressed: () => Navigator.of(context).pop(),
-                  child: const Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-                    child: Text('Bekor qilish'),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                    child: Text(AppLocalizations.of(context)!.cancel),
                   ),
                 ),
               ),

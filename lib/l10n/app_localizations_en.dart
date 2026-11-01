@@ -444,4 +444,190 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get ok => 'OK';
+
+  @override
+  String get ingredientsManagement => 'Ingredients Management';
+
+  @override
+  String get newIngredient => 'New Ingredient';
+
+  @override
+  String get ingredientsSubtitle =>
+      'List of ingredients needed to prepare dishes';
+
+  @override
+  String lowStockAlert(String count) {
+    return 'Low Stock ($count ingredients)';
+  }
+
+  @override
+  String get lowStock => 'Low Stock';
+
+  @override
+  String get updateAction => 'Update';
+
+  @override
+  String get noIngredientsFound => 'No ingredients found';
+
+  @override
+  String get editAction => 'Edit';
+
+  @override
+  String get deleteAction => 'Delete';
+
+  @override
+  String minQuantityShort(String value) {
+    return 'Min: $value';
+  }
+
+  @override
+  String get addIngredientTitle => 'Add New Ingredient';
+
+  @override
+  String get editIngredientTitle => 'Edit Ingredient';
+
+  @override
+  String get ingredientName => 'Ingredient Name';
+
+  @override
+  String get unitLabel => 'Unit';
+
+  @override
+  String get quantityLabel => 'Quantity';
+
+  @override
+  String get minimumQuantityLabel => 'Minimum Quantity';
+
+  @override
+  String get fillAllFields => 'Please fill in all fields';
+
+  @override
+  String get ingredientAdded => 'Ingredient added';
+
+  @override
+  String get ingredientUpdated => 'Ingredient updated';
+
+  @override
+  String get ingredientDeleted => 'Ingredient deleted';
+
+  @override
+  String get addAction => 'Add';
+
+  @override
+  String get saveAction => 'Save';
+
+  @override
+  String get deleteIngredientConfirm =>
+      'Do you want to delete this ingredient?';
+
+  @override
+  String get yesDelete => 'Yes, Delete';
+
+  @override
+  String get unitPiece => 'pcs';
+
+  @override
+  String get unitKg => 'kg';
+
+  @override
+  String get unitGram => 'g';
+
+  @override
+  String get unitLiter => 'l';
+
+  @override
+  String get unitMl => 'ml';
+
+  @override
+  String get unitBox => 'box';
+
+  @override
+  String get unitPack => 'pack';
+
+  @override
+  String get fillRequiredFields => 'Please fill all required fields';
+
+  @override
+  String get menuItemAdded => 'Menu item added successfully';
+
+  @override
+  String get addNewMenuItem => 'Add New Menu Item';
+
+  @override
+  String get itemNameRequired => 'Item Name *';
+
+  @override
+  String get itemNameHint => 'e.g., Chicken Biryani';
+
+  @override
+  String get descriptionLabel => 'Description';
+
+  @override
+  String get itemDescriptionHint => 'Item description...';
+
+  @override
+  String get priceRequired => 'Price *';
+
+  @override
+  String get categoryRequired => 'Category *';
+
+  @override
+  String get newLabel => 'New';
+
+  @override
+  String get imageUrl => 'Image URL';
+
+  @override
+  String get addingInProgress => 'Adding...';
+
+  @override
+  String get addMenuItem => 'Add Menu Item';
+
+  @override
+  String get menuItems => 'Menu Items';
+
+  @override
+  String get noMenuItemsYet => 'No menu items yet';
+
+  @override
+  String get deleteItem => 'Delete Item';
+
+  @override
+  String get confirmDeleteItem => 'Are you sure you want to delete this item?';
+
+  @override
+  String get itemDeleted => 'Item deleted';
+
+  @override
+  String get createNewCategory => 'Create New Category';
+
+  @override
+  String get categoryNameHint => 'Category name';
+
+  @override
+  String get createAction => 'Create';
+
+  @override
+  String get categoryCreated => 'Category created';
+
+  @override
+  String get enterCategoryName => 'Enter category name';
+
+  @override
+  String torchError(String error) {
+    return 'Torch error: $error';
+  }
+
+  @override
+  String cameraError(String error) {
+    return 'Camera error: $error';
+  }
+
+  @override
+  String get placeQrInFrame => 'Place the QR code inside the frame';
+
+  @override
+  String orderItemsSummary(String count, String total) {
+    return '$count items • $total';
+  }
 }

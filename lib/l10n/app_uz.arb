@@ -207,5 +207,101 @@
       }
     }
   },
-  "ok": "OK"
+  "ok": "OK",
+  "ingredientsManagement": "Masalliqlar boshqaruvi",
+  "newIngredient": "Yangi masalliq",
+  "ingredientsSubtitle": "Taom tayyorlash uchun kerakli masalliqlar ro'yxati",
+  "lowStockAlert": "Kam qolgan ({count} ta masalliq)",
+  "@lowStockAlert": {
+    "placeholders": {
+      "count": {
+        "type": "String"
+      }
+    }
+  },
+  "lowStock": "Kam qolgan",
+  "updateAction": "Yangilash",
+  "noIngredientsFound": "Masalliq topilmadi",
+  "editAction": "Tahrirlash",
+  "deleteAction": "O'chirish",
+  "minQuantityShort": "Min: {value}",
+  "@minQuantityShort": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "addIngredientTitle": "Yangi masalliq qo'shish",
+  "editIngredientTitle": "Masalliqni tahrirlash",
+  "ingredientName": "Masalliq nomi",
+  "unitLabel": "Birlik",
+  "quantityLabel": "Miqdori",
+  "minimumQuantityLabel": "Minimal miqdor",
+  "fillAllFields": "Barcha maydonlarni to'ldiring",
+  "ingredientAdded": "Masalliq qo'shildi",
+  "ingredientUpdated": "Masalliq yangilandi",
+  "ingredientDeleted": "Masalliq o'chirildi",
+  "addAction": "Qo'shish",
+  "saveAction": "Saqlash",
+  "deleteIngredientConfirm": "Ushbu masalliqni o'chirib tashlamoqchimisiz?",
+  "yesDelete": "Ha, o'chirish",
+  "unitPiece": "dona",
+  "unitKg": "kg",
+  "unitGram": "g",
+  "unitLiter": "l",
+  "unitMl": "ml",
+  "unitBox": "quti",
+  "unitPack": "qadoq",
+  "fillRequiredFields": "Barcha majburiy maydonlarni to'ldiring",
+  "menuItemAdded": "Menyu mahsuloti qo'shildi",
+  "addNewMenuItem": "Yangi menyu mahsulotini qo'shish",
+  "itemNameRequired": "Mahsulot nomi *",
+  "itemNameHint": "masalan, Tovuqli palov",
+  "descriptionLabel": "Tavsif",
+  "itemDescriptionHint": "Mahsulot tavsifi...",
+  "priceRequired": "Narxi *",
+  "categoryRequired": "Kategoriya *",
+  "newLabel": "Yangi",
+  "imageUrl": "Rasm URL manzili",
+  "addingInProgress": "Qo'shilmoqda...",
+  "addMenuItem": "Menyu mahsulotini qo'shish",
+  "menuItems": "Menyu mahsulotlari",
+  "noMenuItemsYet": "Hozircha menyu mahsulotlari yo'q",
+  "deleteItem": "Mahsulotni o'chirish",
+  "confirmDeleteItem": "Bu mahsulotni o'chirishni xohlaysizmi?",
+  "itemDeleted": "Mahsulot o'chirildi",
+  "createNewCategory": "Yangi kategoriya yaratish",
+  "categoryNameHint": "Kategoriya nomi",
+  "createAction": "Yaratish",
+  "categoryCreated": "Kategoriya yaratildi",
+  "enterCategoryName": "Kategoriya nomini kiriting",
+  "torchError": "Chiroq xatosi: {error}",
+  "@torchError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "cameraError": "Kamera xatosi: {error}",
+  "@cameraError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "placeQrInFrame": "QR kodni ramka ichiga joylashtiring",
+  "orderItemsSummary": "{count} ta mahsulot • {total}",
+  "@orderItemsSummary": {
+    "placeholders": {
+      "count": {
+        "type": "String"
+      },
+      "total": {
+        "type": "String"
+      }
+    }
+  }
 }

@@ -446,4 +446,190 @@ class AppLocalizationsUz extends AppLocalizations {
 
   @override
   String get ok => 'OK';
+
+  @override
+  String get ingredientsManagement => 'Masalliqlar boshqaruvi';
+
+  @override
+  String get newIngredient => 'Yangi masalliq';
+
+  @override
+  String get ingredientsSubtitle =>
+      'Taom tayyorlash uchun kerakli masalliqlar ro\'yxati';
+
+  @override
+  String lowStockAlert(String count) {
+    return 'Kam qolgan ($count ta masalliq)';
+  }
+
+  @override
+  String get lowStock => 'Kam qolgan';
+
+  @override
+  String get updateAction => 'Yangilash';
+
+  @override
+  String get noIngredientsFound => 'Masalliq topilmadi';
+
+  @override
+  String get editAction => 'Tahrirlash';
+
+  @override
+  String get deleteAction => 'O\'chirish';
+
+  @override
+  String minQuantityShort(String value) {
+    return 'Min: $value';
+  }
+
+  @override
+  String get addIngredientTitle => 'Yangi masalliq qo\'shish';
+
+  @override
+  String get editIngredientTitle => 'Masalliqni tahrirlash';
+
+  @override
+  String get ingredientName => 'Masalliq nomi';
+
+  @override
+  String get unitLabel => 'Birlik';
+
+  @override
+  String get quantityLabel => 'Miqdori';
+
+  @override
+  String get minimumQuantityLabel => 'Minimal miqdor';
+
+  @override
+  String get fillAllFields => 'Barcha maydonlarni to\'ldiring';
+
+  @override
+  String get ingredientAdded => 'Masalliq qo\'shildi';
+
+  @override
+  String get ingredientUpdated => 'Masalliq yangilandi';
+
+  @override
+  String get ingredientDeleted => 'Masalliq o\'chirildi';
+
+  @override
+  String get addAction => 'Qo\'shish';
+
+  @override
+  String get saveAction => 'Saqlash';
+
+  @override
+  String get deleteIngredientConfirm =>
+      'Ushbu masalliqni o\'chirib tashlamoqchimisiz?';
+
+  @override
+  String get yesDelete => 'Ha, o\'chirish';
+
+  @override
+  String get unitPiece => 'dona';
+
+  @override
+  String get unitKg => 'kg';
+
+  @override
+  String get unitGram => 'g';
+
+  @override
+  String get unitLiter => 'l';
+
+  @override
+  String get unitMl => 'ml';
+
+  @override
+  String get unitBox => 'quti';
+
+  @override
+  String get unitPack => 'qadoq';
+
+  @override
+  String get fillRequiredFields => 'Barcha majburiy maydonlarni to\'ldiring';
+
+  @override
+  String get menuItemAdded => 'Menyu mahsuloti qo\'shildi';
+
+  @override
+  String get addNewMenuItem => 'Yangi menyu mahsulotini qo\'shish';
+
+  @override
+  String get itemNameRequired => 'Mahsulot nomi *';
+
+  @override
+  String get itemNameHint => 'masalan, Tovuqli palov';
+
+  @override
+  String get descriptionLabel => 'Tavsif';
+
+  @override
+  String get itemDescriptionHint => 'Mahsulot tavsifi...';
+
+  @override
+  String get priceRequired => 'Narxi *';
+
+  @override
+  String get categoryRequired => 'Kategoriya *';
+
+  @override
+  String get newLabel => 'Yangi';
+
+  @override
+  String get imageUrl => 'Rasm URL manzili';
+
+  @override
+  String get addingInProgress => 'Qo\'shilmoqda...';
+
+  @override
+  String get addMenuItem => 'Menyu mahsulotini qo\'shish';
+
+  @override
+  String get menuItems => 'Menyu mahsulotlari';
+
+  @override
+  String get noMenuItemsYet => 'Hozircha menyu mahsulotlari yo\'q';
+
+  @override
+  String get deleteItem => 'Mahsulotni o\'chirish';
+
+  @override
+  String get confirmDeleteItem => 'Bu mahsulotni o\'chirishni xohlaysizmi?';
+
+  @override
+  String get itemDeleted => 'Mahsulot o\'chirildi';
+
+  @override
+  String get createNewCategory => 'Yangi kategoriya yaratish';
+
+  @override
+  String get categoryNameHint => 'Kategoriya nomi';
+
+  @override
+  String get createAction => 'Yaratish';
+
+  @override
+  String get categoryCreated => 'Kategoriya yaratildi';
+
+  @override
+  String get enterCategoryName => 'Kategoriya nomini kiriting';
+
+  @override
+  String torchError(String error) {
+    return 'Chiroq xatosi: $error';
+  }
+
+  @override
+  String cameraError(String error) {
+    return 'Kamera xatosi: $error';
+  }
+
+  @override
+  String get placeQrInFrame => 'QR kodni ramka ichiga joylashtiring';
+
+  @override
+  String orderItemsSummary(String count, String total) {
+    return '$count ta mahsulot • $total';
+  }
 }

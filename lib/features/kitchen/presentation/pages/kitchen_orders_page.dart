@@ -53,7 +53,7 @@ class KitchenOrdersPage extends ConsumerWidget {
           );
         },
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (err, stack) => Center(child: Text('Error: $err')),
+        error: (err, stack) => Center(child: Text(AppLocalizations.of(context)!.error('$err'))),
       ),
     );
   }
@@ -113,10 +113,11 @@ class _KitchenSection extends ConsumerWidget {
                       style:
                           TextStyle(color: color, fontWeight: FontWeight.bold)),
                 ),
-                title: Text(
-                    'Order #${order.orderNumber.substring(order.orderNumber.length - 4)}'),
-                subtitle: Text(
-                    '${order.items.length} items • ${order.total.toStringAsFixed(0)} so\'m'),
+                title: Text(AppLocalizations.of(context)!.orderNumberLabel(
+                    order.orderNumber.substring(order.orderNumber.length - 4))),
+                subtitle: Text(AppLocalizations.of(context)!.orderItemsSummary(
+                    '${order.items.length}',
+                    '${order.total.toStringAsFixed(0)} ${AppLocalizations.of(context)!.som}')),
                 children: [
                   Padding(
                     padding: const EdgeInsets.all(16.0),

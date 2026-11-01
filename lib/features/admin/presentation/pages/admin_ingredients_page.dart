@@ -1,7 +1,31 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../../../l10n/app_localizations.dart';
 import '../../data/ingredients_repository.dart';
 import '../../application/ingredients_provider.dart';
+
+/// Maps a stored unit code (the value kept in Firestore) to a localized label.
+/// Unknown codes fall back to the raw value.
+String _unitLabel(AppLocalizations l, String code) {
+  switch (code) {
+    case 'dona':
+      return l.unitPiece;
+    case 'kg':
+      return l.unitKg;
+    case 'g':
+      return l.unitGram;
+    case 'l':
+      return l.unitLiter;
+    case 'ml':
+      return l.unitMl;
+    case 'box':
+      return l.unitBox;
+    case 'pack':
+      return l.unitPack;
+    default:
+      return code;
+  }
+}
 
 class AdminIngredientsPage extends ConsumerStatefulWidget {
   const AdminIngredientsPage({super.key});
@@ -37,6 +61,7 @@ class _AdminIngredientsPageState extends ConsumerState<AdminIngredientsPage> {
 
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context)!;
     final ingredientsAsync = ref.watch(ingredientsProvider);
     final outOfStockAsync = ref.watch(outOfStockIngredientsProvider);
 
@@ -46,20 +71,20 @@ class _AdminIngredientsPageState extends ConsumerState<AdminIngredientsPage> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            const Text(
-              'Massaliqlar Boshqaruvi',
-              style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
+            Text(
+              l.ingredientsManagement,
+              style: const TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
             ),
             FilledButton.icon(
               icon: const Icon(Icons.add),
-              label: const Text('Yangi Massaliq'),
+              label: Text(l.newIngredient),
               onPressed: () => _showAddIngredientDialog(),
             ),
           ],
         ),
         const SizedBox(height: 8),
         Text(
-          'Taom tayyorlash uchun kerak bo\'lgan massaliqlar ro\'yxati',
+          l.ingredientsSubtitle,
           style: TextStyle(fontSize: 14, color: Colors.grey.shade600),
         ),
         const SizedBox(height: 24),
@@ -84,7 +109,7 @@ class _AdminIngredientsPageState extends ConsumerState<AdminIngredientsPage> {
                           const SizedBox(width: 12),
                           Expanded(
                             child: Text(
-                              '⚠️ Sotib Bo\'lindi (${outOfStock.length} massaliq)',
+                              l.lowStockAlert('${outOfStock.length}'),
                               style: const TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.bold,
@@ -114,7 +139,7 @@ class _AdminIngredientsPageState extends ConsumerState<AdminIngredientsPage> {
                                       ),
                                     ),
                                     Text(
-                                      '${ing.quantity} / ${ing.minimumQuantity} ${ing.unit}',
+                                      '${ing.quantity} / ${ing.minimumQuantity} ${_unitLabel(l, ing.unit)}',
                                       style: TextStyle(
                                         fontSize: 12,
                                         color: Colors.grey.shade600,
@@ -125,7 +150,7 @@ class _AdminIngredientsPageState extends ConsumerState<AdminIngredientsPage> {
                               ),
                               FilledButton.tonal(
                                 onPressed: () => _showEditIngredientDialog(ing),
-                                child: const Text('Yangilash'),
+                                child: Text(l.updateAction),
                               ),
                             ],
                           ),
@@ -158,7 +183,7 @@ class _AdminIngredientsPageState extends ConsumerState<AdminIngredientsPage> {
                               size: 48, color: Colors.grey.shade300),
                           const SizedBox(height: 12),
                           Text(
-                            'Massaliq topilmadi',
+                            l.noIngredientsFound,
                             style: TextStyle(color: Colors.grey.shade600),
                           ),
                         ],
@@ -216,9 +241,9 @@ class _AdminIngredientsPageState extends ConsumerState<AdminIngredientsPage> {
                                       color: Colors.red.shade200,
                                       borderRadius: BorderRadius.circular(12),
                                     ),
-                                    child: const Text(
-                                      'Sotib Bo\'lindi',
-                                      style: TextStyle(
+                                    child: Text(
+                                      l.lowStock,
+                                      style: const TextStyle(
                                         fontSize: 11,
                                         fontWeight: FontWeight.bold,
                                         color: Colors.red,
@@ -229,7 +254,7 @@ class _AdminIngredientsPageState extends ConsumerState<AdminIngredientsPage> {
                             ),
                             const SizedBox(height: 12),
                             Text(
-                              '${ing.quantity} ${ing.unit}',
+                              '${ing.quantity} ${_unitLabel(l, ing.unit)}',
                               style: const TextStyle(
                                 fontSize: 20,
                                 fontWeight: FontWeight.bold,
@@ -237,7 +262,7 @@ class _AdminIngredientsPageState extends ConsumerState<AdminIngredientsPage> {
                             ),
                             const SizedBox(height: 4),
                             Text(
-                              'Min: ${ing.minimumQuantity} ${ing.unit}',
+                              l.minQuantityShort('${ing.minimumQuantity} ${_unitLabel(l, ing.unit)}'),
                               style: TextStyle(
                                 fontSize: 12,
                                 color: Colors.grey.shade600,
@@ -262,7 +287,7 @@ class _AdminIngredientsPageState extends ConsumerState<AdminIngredientsPage> {
                                   child: FilledButton.tonal(
                                     onPressed: () =>
                                         _showEditIngredientDialog(ing),
-                                    child: const Text('Tahrirlash'),
+                                    child: Text(l.editAction),
                                   ),
                                 ),
                                 const SizedBox(width: 8),
@@ -270,7 +295,7 @@ class _AdminIngredientsPageState extends ConsumerState<AdminIngredientsPage> {
                                   icon: const Icon(Icons.delete_outline,
                                       color: Colors.red),
                                   onPressed: () => _deleteIngredient(ing.id),
-                                  tooltip: 'O\'chirish',
+                                  tooltip: l.deleteAction,
                                 ),
                               ],
                             ),
@@ -281,13 +306,14 @@ class _AdminIngredientsPageState extends ConsumerState<AdminIngredientsPage> {
                   },
                 ),
           loading: () => const Center(child: CircularProgressIndicator()),
-          error: (err, stack) => Text('Xato: $err'),
+          error: (err, stack) => Text(l.error('$err')),
         ),
       ],
     );
   }
 
   void _showAddIngredientDialog() {
+    final l = AppLocalizations.of(context)!;
     _nameController.clear();
     _quantityController.clear();
     _minimumController.clear();
@@ -297,27 +323,28 @@ class _AdminIngredientsPageState extends ConsumerState<AdminIngredientsPage> {
       context: context,
       builder: (context) => StatefulBuilder(
         builder: (context, setState) => AlertDialog(
-          title: const Text('Yangi Massaliq Qo\'shish'),
+          title: Text(l.addIngredientTitle),
           content: SingleChildScrollView(
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
                 TextField(
                   controller: _nameController,
-                  decoration: const InputDecoration(
-                    labelText: 'Massaliq Nomi',
-                    border: OutlineInputBorder(),
+                  decoration: InputDecoration(
+                    labelText: l.ingredientName,
+                    border: const OutlineInputBorder(),
                   ),
                 ),
                 const SizedBox(height: 12),
                 DropdownButtonFormField<String>(
                   initialValue: _selectedUnit,
-                  decoration: const InputDecoration(
-                    labelText: 'Birlik',
-                    border: OutlineInputBorder(),
+                  decoration: InputDecoration(
+                    labelText: l.unitLabel,
+                    border: const OutlineInputBorder(),
                   ),
                   items: units
-                      .map((u) => DropdownMenuItem(value: u, child: Text(u)))
+                      .map((u) => DropdownMenuItem(
+                          value: u, child: Text(_unitLabel(l, u))))
                       .toList(),
                   onChanged: (value) {
                     setState(() => _selectedUnit = value ?? 'dona');
@@ -327,18 +354,18 @@ class _AdminIngredientsPageState extends ConsumerState<AdminIngredientsPage> {
                 TextField(
                   controller: _quantityController,
                   keyboardType: TextInputType.number,
-                  decoration: const InputDecoration(
-                    labelText: 'Miqdori',
-                    border: OutlineInputBorder(),
+                  decoration: InputDecoration(
+                    labelText: l.quantityLabel,
+                    border: const OutlineInputBorder(),
                   ),
                 ),
                 const SizedBox(height: 12),
                 TextField(
                   controller: _minimumController,
                   keyboardType: TextInputType.number,
-                  decoration: const InputDecoration(
-                    labelText: 'Minimal Miqdori',
-                    border: OutlineInputBorder(),
+                  decoration: InputDecoration(
+                    labelText: l.minimumQuantityLabel,
+                    border: const OutlineInputBorder(),
                   ),
                 ),
               ],
@@ -347,7 +374,7 @@ class _AdminIngredientsPageState extends ConsumerState<AdminIngredientsPage> {
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('Bekor qilish'),
+              child: Text(l.cancel),
             ),
             FilledButton(
               onPressed: () async {
@@ -355,8 +382,7 @@ class _AdminIngredientsPageState extends ConsumerState<AdminIngredientsPage> {
                     _quantityController.text.isEmpty ||
                     _minimumController.text.isEmpty) {
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                        content: Text('Barcha maydonlarni to\'ldiring')),
+                    SnackBar(content: Text(l.fillAllFields)),
                   );
                   return;
                 }
@@ -371,10 +397,10 @@ class _AdminIngredientsPageState extends ConsumerState<AdminIngredientsPage> {
                 if (!context.mounted) return;
                 Navigator.pop(context);
                 ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Massaliq qo\'shildi')),
+                  SnackBar(content: Text(l.ingredientAdded)),
                 );
               },
-              child: const Text('Qo\'shish'),
+              child: Text(l.addAction),
             ),
           ],
         ),
@@ -383,6 +409,7 @@ class _AdminIngredientsPageState extends ConsumerState<AdminIngredientsPage> {
   }
 
   void _showEditIngredientDialog(Ingredient ingredient) {
+    final l = AppLocalizations.of(context)!;
     _nameController.text = ingredient.name;
     _quantityController.text = ingredient.quantity.toString();
     _minimumController.text = ingredient.minimumQuantity.toString();
@@ -392,27 +419,28 @@ class _AdminIngredientsPageState extends ConsumerState<AdminIngredientsPage> {
       context: context,
       builder: (context) => StatefulBuilder(
         builder: (context, setState) => AlertDialog(
-          title: const Text('Massaliq Tahrirlash'),
+          title: Text(l.editIngredientTitle),
           content: SingleChildScrollView(
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
                 TextField(
                   controller: _nameController,
-                  decoration: const InputDecoration(
-                    labelText: 'Massaliq Nomi',
-                    border: OutlineInputBorder(),
+                  decoration: InputDecoration(
+                    labelText: l.ingredientName,
+                    border: const OutlineInputBorder(),
                   ),
                 ),
                 const SizedBox(height: 12),
                 DropdownButtonFormField<String>(
                   initialValue: _selectedUnit,
-                  decoration: const InputDecoration(
-                    labelText: 'Birlik',
-                    border: OutlineInputBorder(),
+                  decoration: InputDecoration(
+                    labelText: l.unitLabel,
+                    border: const OutlineInputBorder(),
                   ),
                   items: units
-                      .map((u) => DropdownMenuItem(value: u, child: Text(u)))
+                      .map((u) => DropdownMenuItem(
+                          value: u, child: Text(_unitLabel(l, u))))
                       .toList(),
                   onChanged: (value) {
                     setState(() => _selectedUnit = value ?? 'dona');
@@ -422,18 +450,18 @@ class _AdminIngredientsPageState extends ConsumerState<AdminIngredientsPage> {
                 TextField(
                   controller: _quantityController,
                   keyboardType: TextInputType.number,
-                  decoration: const InputDecoration(
-                    labelText: 'Miqdori',
-                    border: OutlineInputBorder(),
+                  decoration: InputDecoration(
+                    labelText: l.quantityLabel,
+                    border: const OutlineInputBorder(),
                   ),
                 ),
                 const SizedBox(height: 12),
                 TextField(
                   controller: _minimumController,
                   keyboardType: TextInputType.number,
-                  decoration: const InputDecoration(
-                    labelText: 'Minimal Miqdori',
-                    border: OutlineInputBorder(),
+                  decoration: InputDecoration(
+                    labelText: l.minimumQuantityLabel,
+                    border: const OutlineInputBorder(),
                   ),
                 ),
               ],
@@ -442,7 +470,7 @@ class _AdminIngredientsPageState extends ConsumerState<AdminIngredientsPage> {
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('Bekor qilish'),
+              child: Text(l.cancel),
             ),
             FilledButton(
               onPressed: () async {
@@ -450,8 +478,7 @@ class _AdminIngredientsPageState extends ConsumerState<AdminIngredientsPage> {
                     _quantityController.text.isEmpty ||
                     _minimumController.text.isEmpty) {
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                        content: Text('Barcha maydonlarni to\'ldiring')),
+                    SnackBar(content: Text(l.fillAllFields)),
                   );
                   return;
                 }
@@ -470,10 +497,10 @@ class _AdminIngredientsPageState extends ConsumerState<AdminIngredientsPage> {
                 if (!context.mounted) return;
                 Navigator.pop(context);
                 ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Massaliq yangilandi')),
+                  SnackBar(content: Text(l.ingredientUpdated)),
                 );
               },
-              child: const Text('Saqlash'),
+              child: Text(l.saveAction),
             ),
           ],
         ),
@@ -482,15 +509,16 @@ class _AdminIngredientsPageState extends ConsumerState<AdminIngredientsPage> {
   }
 
   void _deleteIngredient(String ingredientId) {
+    final l = AppLocalizations.of(context)!;
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('O\'chirish'),
-        content: const Text('Ushbu massaliqni o\'chirib tashlamoqchisiz?'),
+        title: Text(l.deleteAction),
+        content: Text(l.deleteIngredientConfirm),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('Yo\'q'),
+            child: Text(l.no),
           ),
           FilledButton(
             onPressed: () async {
@@ -501,10 +529,10 @@ class _AdminIngredientsPageState extends ConsumerState<AdminIngredientsPage> {
               if (!context.mounted) return;
               Navigator.pop(context);
               ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Massaliq o\'chirildi')),
+                SnackBar(content: Text(l.ingredientDeleted)),
               );
             },
-            child: const Text('Ha, O\'chirish'),
+            child: Text(l.yesDelete),
           ),
         ],
       ),

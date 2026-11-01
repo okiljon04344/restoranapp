@@ -46,7 +46,7 @@ class OrderTrackingPage extends ConsumerWidget {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
-                              'Order #${order.id.substring(0, 5)}',
+                              l.orderNumberLabel(order.id.substring(0, 5)),
                               style:
                                   const TextStyle(fontWeight: FontWeight.bold),
                             ),
