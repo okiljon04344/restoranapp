@@ -3,28 +3,66 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
 
+    // ── Roles ───────────────────────────────────────────────────────────
+    // customer : any signed-in session (the app signs customers in
+    //            anonymously), limited to its own orders and calls.
+    // kitchen  : a document exists at staff/{uid} (created when an admin
+    //            approves a staff request).
+    // admin    : a document exists at admins/{uid} (created from the Firebase
+    //            console or the Admin SDK only).
+
     function isSignedIn() {
       return request.auth != null;
     }
 
-    // Admin role: a signed-in user is an admin if a document exists at
-    // admins/{uid}. Admin documents are created from the Firebase console
-    // or the Admin SDK; clients cannot write them.
     function isAdmin() {
       return isSignedIn() &&
         exists(/databases/$(database)/documents/admins/$(request.auth.uid));
     }
 
+    function isStaff() {
+      return isSignedIn() && (
+        exists(/databases/$(database)/documents/admins/$(request.auth.uid)) ||
+        exists(/databases/$(database)/documents/staff/$(request.auth.uid)));
+    }
+
+    // Only the listed fields differ between the stored and the new document.
+    function changesOnly(fields) {
+      return request.resource.data.diff(resource.data).affectedKeys()
+        .hasOnly(fields);
+    }
+
     match /admins/{uid} {
-      // A user may only read their own admin document (used for the role check).
+      // A user may only read their own admin document (role check).
       allow read: if isSignedIn() && request.auth.uid == uid;
       allow write: if false;
     }
 
+    match /staff/{uid} {
+      allow get: if isSignedIn() && request.auth.uid == uid;
+      allow read, write: if isAdmin();
+    }
+
+    match /staffRequests/{uid} {
+      // A newly registered (non-anonymous) account asks for kitchen access.
+      allow create: if isSignedIn()
+        && request.auth.uid == uid
+        && request.auth.token.email != null
+        && request.resource.data.keys().hasOnly(['email', 'createdAt'])
+        && request.resource.data.email == request.auth.token.email;
+      allow get: if isSignedIn() && request.auth.uid == uid;
+      allow read, delete: if isAdmin();
+    }
+
     match /cafes/{cafeId} {
 
-      // Anyone can read the menu, tables and orders.
-      allow read: if true;
+      // The table of the request exists, is enabled and matches the number.
+      function isOpenTable(data) {
+        let table = get(/databases/$(database)/documents/cafes/$(cafeId)/tables/$(data.tableId));
+        return table != null
+          && table.data.isActive == true
+          && table.data.number == data.tableNumber;
+      }
 
       match /categories/{doc} {
         allow read: if true;
@@ -34,27 +72,72 @@ service cloud.firestore {
       match /menuItems/{doc} {
         allow read: if true;
         allow write: if isAdmin();
+        // Accepting or cancelling an order refreshes the stock flag.
+        allow update: if isStaff() && changesOnly(['outOfStock', 'updatedAt']);
       }
 
       match /tables/{doc} {
+        // Read by customers to validate the scanned table code.
         allow read: if true;
         allow write: if isAdmin();
       }
 
+      match /ingredients/{doc} {
+        allow read: if isStaff();
+        allow write: if isAdmin();
+        // The kitchen moves stock when it accepts or cancels an order.
+        allow update: if isStaff()
+          && changesOnly(['quantity', 'lastUpdated'])
+          && request.resource.data.quantity is number
+          && request.resource.data.quantity >= 0;
+      }
+
       match /orders/{doc} {
-        // Customers can place and read orders.
-        allow create, read: if true;
-        // Only admins can change the status or delete an order.
-        allow update, delete: if isAdmin();
+        allow read: if isStaff()
+          || (isSignedIn() && resource.data.customerUid == request.auth.uid);
+
+        // A customer creates a pending order for an open table, under its
+        // own uid. Prices are re-read from the menu when staff accept it.
+        allow create: if isSignedIn()
+          && request.resource.data.keys().hasOnly([
+               'orderNumber', 'orderType', 'tableId', 'tableNumber',
+               'customerUid', 'items', 'total', 'status', 'createdAt'])
+          && request.resource.data.customerUid == request.auth.uid
+          && request.resource.data.status == 'pending'
+          && request.resource.data.createdAt == request.time
+          && request.resource.data.items is list
+          && request.resource.data.items.size() > 0
+          && request.resource.data.items.size() <= 100
+          && request.resource.data.total is number
+          && request.resource.data.total >= 0
+          && request.resource.data.tableNumber is int
+          && isOpenTable(request.resource.data);
+
+        // Staff drive the lifecycle; the customer may only cancel an order
+        // the kitchen has not accepted yet.
+        allow update: if isStaff()
+          || (isSignedIn()
+              && resource.data.customerUid == request.auth.uid
+              && resource.data.status == 'pending'
+              && request.resource.data.status == 'cancelled'
+              && changesOnly(['status', 'updatedAt']));
+
+        allow delete: if isAdmin();
       }
 
       match /calls/{doc} {
-        // Customers create a call when they press "call staff".
-        allow create, read: if true;
-        // Only admins can mark a call as handled or delete it.
-        allow update, delete: if isAdmin();
+        allow create: if isSignedIn()
+          && request.resource.data.keys().hasOnly([
+               'tableId', 'tableNumber', 'customerUid', 'type', 'status',
+               'createdAt'])
+          && request.resource.data.customerUid == request.auth.uid
+          && request.resource.data.type in ['staff', 'bill']
+          && request.resource.data.status == 'pending'
+          && request.resource.data.createdAt == request.time
+          && isOpenTable(request.resource.data);
+        allow read, update: if isStaff();
+        allow delete: if isAdmin();
       }
-
     }
   }
 }
