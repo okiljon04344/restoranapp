@@ -11,3 +11,8 @@ build/
 
 # Firebase hosting cache
 .firebase/
+
+# Firestore rules test (npm)
+node_modules/
+firestore_rules_test/package-lock.json
+*-debug.log
