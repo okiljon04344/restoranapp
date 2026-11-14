@@ -28,8 +28,38 @@ jobs:
       - name: Install dependencies
         run: flutter pub get
 
+      # Errors and warnings fail the build. Info-level hints do not: the
+      # stable channel deprecates `package:flutter/material.dart` in favour of
+      # a separate package, which is reported as `deprecated_member_use` infos.
       - name: Verify static analysis
-        run: flutter analyze
+        run: flutter analyze --no-fatal-infos
 
       - name: Run widget & unit tests
         run: flutter test
+
+  firestore-rules:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: firestore_rules_test
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      # The Firestore emulator needs a JDK.
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: '21'
+
+      - name: Install dependencies
+        run: npm install --no-audit --no-fund
+
+      - name: Run security rules tests against the emulator
+        run: npm test
