@@ -51,17 +51,7 @@ class AppLocalizationsUz extends AppLocalizations {
   String get tableInvalid => 'Stol raqami son bo\'lishi kerak';
 
   @override
-  String get tableOccupied => '⚠️ Stol Band';
-
-  @override
-  String get tableOccupiedMsg =>
-      'Bu stol hozir ishlatilyapti. Davom ettirishni xohlaysizmi?';
-
-  @override
   String get cancel => 'Bekor';
-
-  @override
-  String get continueAnyway => 'Davom etish';
 
   @override
   String get goToMenu => 'Menyuga o\'tish';
@@ -70,28 +60,10 @@ class AppLocalizationsUz extends AppLocalizations {
   String get checking => 'Tekshirilmoqda...';
 
   @override
-  String qrScanned(String table) {
-    return 'QR Skanerlandi: Stol $table';
-  }
-
-  @override
   String get invalidQr => 'Noto\'g\'ri QR kod. Qaytadan urinib ko\'ring.';
 
   @override
-  String get scanQrDialog => 'Stol QR-ini Skanerlang';
-
-  @override
-  String get scanQrDialogContent =>
-      'Stol QR-ini skanerlash uchun kamera ishlatamiz';
-
-  @override
-  String get openCamera => 'Kamera Oching';
-
-  @override
   String get searchFood => 'Taomlarni qidirish...';
-
-  @override
-  String get addToCart => 'Savatchaga qo\'shish';
 
   @override
   String addedToCart(String item) {
@@ -115,9 +87,6 @@ class AppLocalizationsUz extends AppLocalizations {
 
   @override
   String get orderPlaced => 'Buyurtma muvaffaqiyatli berildi!';
-
-  @override
-  String get orderError => 'Buyurtma berishda xato';
 
   @override
   String get som => 'so\'m';
@@ -147,9 +116,6 @@ class AppLocalizationsUz extends AppLocalizations {
   String get statusPending => 'Kutilmoqda';
 
   @override
-  String get statusCooking => 'Tayyorlanmoqda';
-
-  @override
   String get statusReady => 'Tayyor';
 
   @override
@@ -174,22 +140,7 @@ class AppLocalizationsUz extends AppLocalizations {
   String get adminPanel => 'Admin Panel';
 
   @override
-  String get adminSubtitle => 'Kategoriya, menyu va buyurtmalarni boshqarish';
-
-  @override
-  String get kitchenDisplay => 'Oshxona ekrani';
-
-  @override
-  String get kitchenSubtitle => 'Yangi buyurtmalarni kuzatish va tayyorlash';
-
-  @override
   String get tableInfo => 'Stol raqami';
-
-  @override
-  String get tableOccupiedBadge => 'Bu stol band';
-
-  @override
-  String get orderTracking => 'Buyurtma kuzatuvi';
 
   @override
   String get all => 'Barchasi';
@@ -233,9 +184,6 @@ class AppLocalizationsUz extends AppLocalizations {
   String get statusPreparing => 'Tayyorlanmoqda';
 
   @override
-  String get statusDelivered => 'Yetkazildi';
-
-  @override
   String get noOrdersInStage => 'Bu bosqichda buyurtmalar yo\'q.';
 
   @override
@@ -251,19 +199,10 @@ class AppLocalizationsUz extends AppLocalizations {
   String get goBack => 'Orqaga qaytish';
 
   @override
-  String get adminLogin => 'Admin Kirish';
-
-  @override
-  String get adminSignup => 'Admin Ro\'yxatdan o\'tish';
-
-  @override
   String get login => 'Kirish';
 
   @override
   String get register => 'Ro\'yxatdan o\'tish';
-
-  @override
-  String get createAdminAccount => 'Yangi admin akkaunt yaratish';
 
   @override
   String get cancelOrder => 'Sifarishni Bekor Qilish';
@@ -272,10 +211,7 @@ class AppLocalizationsUz extends AppLocalizations {
   String get confirmCancelOrder => 'Bu sifarishni bekor qilishni xohlaysizmi?';
 
   @override
-  String get enterTableNumber => 'Stol raqamini kiriting:';
-
-  @override
-  String get yes => 'Ha, Bekor Qilish';
+  String get yes => 'Ha';
 
   @override
   String get no => 'Yo\'q';
@@ -287,25 +223,7 @@ class AppLocalizationsUz extends AppLocalizations {
   String get logoutConfirm => 'Sistemadan chiqmoqchisiz?';
 
   @override
-  String get yesLogout => 'Ha, Chiqish';
-
-  @override
-  String get ready2 => 'Tayyorlandi';
-
-  @override
-  String get goToKitchen => 'Oshxonaga o\'tish';
-
-  @override
-  String get manageQrCodes => 'QR Kodlarni Boshqarish';
-
-  @override
   String get editMenu => 'Menyunu Tahrirlash';
-
-  @override
-  String get webNoCameraTitle => 'Veb-da kamera mavjud emas';
-
-  @override
-  String get enterQrManually => 'Qr code-ni qo\'lda kiritib chiqing:';
 
   @override
   String get cameraNotAvailable => 'Kamera bu platform-da mavjud emas';
@@ -322,19 +240,13 @@ class AppLocalizationsUz extends AppLocalizations {
 
   @override
   String get dashboardSubtitle =>
-      'Bugungi statistika va real vaqt ma\'lumotlari';
+      'Oxirgi 7 kunlik buyurtmalar bo\'yicha ko\'rsatkichlar';
 
   @override
-  String get todayRevenue => 'Bugungi daromad';
+  String get todayRevenue => 'Bugungi tushum (to\'langan)';
 
   @override
-  String get orderCount => 'Buyurtmalar soni';
-
-  @override
-  String get averageOrder => 'O\'rtacha buyurtma';
-
-  @override
-  String get menuItemsCount => 'Menyu mahsulotlari';
+  String get averageOrder => 'O\'rtacha to\'langan buyurtma (bugun)';
 
   @override
   String get categoriesLabel => 'Kategoriyalar';
@@ -343,15 +255,7 @@ class AppLocalizationsUz extends AppLocalizations {
   String get topOrdered => 'Eng ko\'p buyurtma qilingan';
 
   @override
-  String get statusCompleted => 'Tugallandi';
-
-  @override
   String get staffCalls => 'Xodim chaqiruvlari';
-
-  @override
-  String staffCallAtTable(String table) {
-    return 'Stol $table - xodim chaqirdi';
-  }
 
   @override
   String get markDone => 'Tayyorlandi';
@@ -372,23 +276,9 @@ class AppLocalizationsUz extends AppLocalizations {
   String get noOrdersFound => 'Buyurtmalar topilmadi';
 
   @override
-  String tableNumberLabel(String table) {
-    return 'Stol #$table';
-  }
-
-  @override
   String orderNumberLabel(String number) {
     return 'Buyurtma #$number';
   }
-
-  @override
-  String get kitchenView => 'Oshxona ko\'rinishi';
-
-  @override
-  String get qrGenerator => 'QR kod generatori';
-
-  @override
-  String get menuManagement => 'Menyu boshqaruvi';
 
   @override
   String confirmCancelTableOrder(String table) {
@@ -402,53 +292,16 @@ class AppLocalizationsUz extends AppLocalizations {
   String get ingredients => 'Masalliqlar';
 
   @override
-  String get qrCodes => 'QR kodlar';
-
-  @override
-  String get kitchenOrdersTitle => 'Oshxona buyurtmalari';
-
-  @override
-  String get noOrdersAtMoment => 'Hozircha buyurtmalar yo\'q';
-
-  @override
   String tableWithNumber(String table) {
     return 'Stol $table';
   }
 
   @override
-  String get generateTableQrCodes => 'Stollar uchun QR kodlar yaratish';
-
-  @override
   String get qrSelectHint =>
-      'QR kod yaratiladigan stollarni tanlang. Mijozlar stolida telefon orqali QR kodni skanerlashi mumkin.';
-
-  @override
-  String selectedTablesCount(String count) {
-    return 'Tanlangan stollar: $count';
-  }
-
-  @override
-  String get clearAll => 'Hammasini tozalash';
-
-  @override
-  String get downloadQrCodes => 'QR kodlarni yuklab olish';
-
-  @override
-  String get selectTables => 'Stollarni tanlang';
-
-  @override
-  String get qrCodesReady => 'QR kodlar tayyor';
-
-  @override
-  String qrGeneratedMessage(String count) {
-    return '$count ta stol uchun QR kodlar yaratildi.\\n\\nEndi siz:\\n- Chop etishingiz\\n- Ekranlarda ko\'rsatishingiz\\n- Mijozlarga ulashishingiz mumkin';
-  }
+      'Mijozlar faqat shu yerda ro\'yxatga olingan stollarda buyurtma bera oladi. QR kodni chop etib, stolga qo\'ying.';
 
   @override
   String get ok => 'OK';
-
-  @override
-  String get ingredientsManagement => 'Masalliqlar boshqaruvi';
 
   @override
   String get newIngredient => 'Yangi masalliq';
@@ -464,9 +317,6 @@ class AppLocalizationsUz extends AppLocalizations {
 
   @override
   String get lowStock => 'Kam qolgan';
-
-  @override
-  String get updateAction => 'Yangilash';
 
   @override
   String get noIngredientsFound => 'Masalliq topilmadi';
@@ -523,9 +373,6 @@ class AppLocalizationsUz extends AppLocalizations {
       'Ushbu masalliqni o\'chirib tashlamoqchimisiz?';
 
   @override
-  String get yesDelete => 'Ha, o\'chirish';
-
-  @override
   String get unitPiece => 'dona';
 
   @override
@@ -559,13 +406,7 @@ class AppLocalizationsUz extends AppLocalizations {
   String get itemNameRequired => 'Mahsulot nomi *';
 
   @override
-  String get itemNameHint => 'masalan, Tovuqli palov';
-
-  @override
   String get descriptionLabel => 'Tavsif';
-
-  @override
-  String get itemDescriptionHint => 'Mahsulot tavsifi...';
 
   @override
   String get priceRequired => 'Narxi *';
@@ -574,13 +415,7 @@ class AppLocalizationsUz extends AppLocalizations {
   String get categoryRequired => 'Kategoriya *';
 
   @override
-  String get newLabel => 'Yangi';
-
-  @override
   String get imageUrl => 'Rasm URL manzili';
-
-  @override
-  String get addingInProgress => 'Qo\'shilmoqda...';
 
   @override
   String get addMenuItem => 'Menyu mahsulotini qo\'shish';
@@ -629,15 +464,7 @@ class AppLocalizationsUz extends AppLocalizations {
   String get placeQrInFrame => 'QR kodni ramka ichiga joylashtiring';
 
   @override
-  String orderItemsSummary(String count, String total) {
-    return '$count ta mahsulot • $total';
-  }
-
-  @override
   String get enterEmailPassword => 'Email va parolni kiriting';
-
-  @override
-  String get authNoAdminRights => 'Sizda admin huquqlari yo\'q.';
 
   @override
   String get authUserNotFound => 'Bu email bilan foydalanuvchi topilmadi';
@@ -671,10 +498,6 @@ class AppLocalizationsUz extends AppLocalizations {
   String get passwordTooShort => 'Parol kamida 6 ta belgi bo\'lishi kerak';
 
   @override
-  String get signupSuccess =>
-      'Foydalanuvchi muvaffaqiyatli yaratildi. Endi tizimga kiring.';
-
-  @override
   String get emailLabel => 'Email';
 
   @override
@@ -685,4 +508,232 @@ class AppLocalizationsUz extends AppLocalizations {
 
   @override
   String get passwordHint => 'Kamida 6 ta belgidan iborat kuchli parol tanlang';
+
+  @override
+  String get statusPaid => 'To\'langan';
+
+  @override
+  String get statusCancelled => 'Bekor qilingan';
+
+  @override
+  String get retry => 'Qayta urinish';
+
+  @override
+  String get errOrderNotFound => 'Bu buyurtma topilmadi.';
+
+  @override
+  String get errInvalidTransition =>
+      'Buyurtma holati allaqachon o\'zgargan. Oxirgi holatni tekshiring.';
+
+  @override
+  String errItemUnavailable(String name) {
+    return '\"$name\" hozircha mavjud emas.';
+  }
+
+  @override
+  String errInsufficientStock(String name) {
+    return 'Omborda yetarli emas: $name.';
+  }
+
+  @override
+  String get errBillNotReady =>
+      'Stolning barcha buyurtmalari berilgandan keyin hisobni yopish mumkin.';
+
+  @override
+  String get errNothingToPay => 'Bu stolda ochiq buyurtma yo\'q.';
+
+  @override
+  String get errTableExists => 'Bu raqamli stol allaqachon mavjud.';
+
+  @override
+  String get errCategoryInUse => 'Bu kategoriyada hali taomlar bor.';
+
+  @override
+  String get errPermissionDenied => 'Bu amal uchun ruxsatingiz yo\'q.';
+
+  @override
+  String get invalidNumber => 'To\'g\'ri son kiriting';
+
+  @override
+  String get pageNotFound => 'Sahifa topilmadi';
+
+  @override
+  String get accessDenied =>
+      'Bu sahifaga ruxsati bor xodim akkaunti bilan kiring.';
+
+  @override
+  String get staffLogin => 'Xodimlar uchun kirish';
+
+  @override
+  String get staffLoginSubtitle => 'Oshxona ekrani va admin panel';
+
+  @override
+  String get authNoStaffAccess =>
+      'Bu akkauntda hali xodim huquqi yo\'q. Ruxsat so\'rovi yuborildi; admindan tasdiqlashni so\'rang.';
+
+  @override
+  String get requestStaffAccount => 'Xodim akkauntini so\'rash';
+
+  @override
+  String get staffRequestSent =>
+      'Akkaunt yaratildi. Kirish uchun admin tasdiqlashi kerak.';
+
+  @override
+  String get staffSignupHint =>
+      'Oshxona xodimi uchun akkaunt yarating. Admin so\'rovni tasdiqlagach ruxsat beriladi.';
+
+  @override
+  String tableNotFound(String table) {
+    return '$table-stol ro\'yxatda yo\'q. Raqamni tekshiring yoki xodimga murojaat qiling.';
+  }
+
+  @override
+  String tableDisabled(String table) {
+    return '$table-stolda hozircha buyurtma qabul qilinmaydi.';
+  }
+
+  @override
+  String get billTotal => 'Hisob jami';
+
+  @override
+  String get orderCancelled => 'Buyurtma bekor qilindi';
+
+  @override
+  String get soldOut => 'Tugagan';
+
+  @override
+  String get bills => 'Hisoblar';
+
+  @override
+  String get noOpenBills => 'Ochiq hisoblar yo\'q';
+
+  @override
+  String get closeBill => 'Hisobni yopish (to\'landi)';
+
+  @override
+  String confirmCloseBill(String table, String total) {
+    return '$table-stol hisobi ($total) to\'langan deb belgilansinmi?';
+  }
+
+  @override
+  String billClosed(String table) {
+    return '$table-stol: hisob yopildi';
+  }
+
+  @override
+  String get billRequestedByTable => 'Hisob so\'raldi';
+
+  @override
+  String get tablesAndQr => 'Stollar va QR kodlar';
+
+  @override
+  String get addTable => 'Stol qo\'shish';
+
+  @override
+  String tableAdded(String table) {
+    return '$table-stol qo\'shildi';
+  }
+
+  @override
+  String get printQrCodes => 'QR kodlarni chop etish';
+
+  @override
+  String get noTablesYet =>
+      'Hali stollar yo\'q. QR kod yaratish uchun stol qo\'shing.';
+
+  @override
+  String confirmDeleteTable(String table) {
+    return '$table-stol o\'chirilsinmi? Uning QR kodi ishlamay qoladi.';
+  }
+
+  @override
+  String get tableStatusDisabled => 'O\'chirilgan';
+
+  @override
+  String get tableStatusFree => 'Bo\'sh';
+
+  @override
+  String get staffSection => 'Xodimlar';
+
+  @override
+  String get staffAdminHint =>
+      'Oshxona xodimlari kirish sahifasidan akkaunt yaratadi; buyurtmalar va omborga ruxsat berish uchun so\'rovni shu yerda tasdiqlang.';
+
+  @override
+  String get staffRequestsTitle => 'Ruxsat so\'rovlari';
+
+  @override
+  String get noStaffRequests => 'Kutilayotgan so\'rovlar yo\'q';
+
+  @override
+  String get approveAction => 'Tasdiqlash';
+
+  @override
+  String get rejectAction => 'Rad etish';
+
+  @override
+  String staffApproved(String email) {
+    return '$email ga oshxona ruxsati berildi';
+  }
+
+  @override
+  String get kitchenStaffTitle => 'Oshxona xodimlari';
+
+  @override
+  String get noKitchenStaff => 'Hali oshxona xodimlari yo\'q';
+
+  @override
+  String get revokeAction => 'Ruxsatni bekor qilish';
+
+  @override
+  String confirmRevokeStaff(String email) {
+    return '$email ning oshxona ruxsati bekor qilinsinmi?';
+  }
+
+  @override
+  String confirmDeleteCategory(String name) {
+    return '\"$name\" kategoriyasi o\'chirilsinmi?';
+  }
+
+  @override
+  String get createCategoryFirst => 'Avval kategoriya yarating.';
+
+  @override
+  String get menuItemUpdated => 'Taom yangilandi';
+
+  @override
+  String recipeLinesCount(String count) {
+    return 'Retsept: $count ta masalliq';
+  }
+
+  @override
+  String get availableOnMenu => 'Menyuda ko\'rsatiladi';
+
+  @override
+  String get recipeTitle => 'Retsept (bir porsiya uchun)';
+
+  @override
+  String get recipeHint =>
+      'Oshxona buyurtmani qabul qilganda bu miqdorlar ombordan ayriladi.';
+
+  @override
+  String get addRecipeLine => 'Masalliq qo\'shish';
+
+  @override
+  String get weekRevenue => 'Shu haftalik tushum';
+
+  @override
+  String get todayOrdersCount => 'Bugungi buyurtmalar';
+
+  @override
+  String get weekOrdersCount => 'Shu haftalik buyurtmalar';
+
+  @override
+  String get openOrdersCount => 'Ochiq buyurtmalar';
+
+  @override
+  String get cancelledToday => 'Bugun bekor qilingan';
+
+  @override
+  String get tableStatusOccupied => 'Band';
 }

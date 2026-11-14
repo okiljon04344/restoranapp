@@ -3,6 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:restaurant_universal_app/models/menu_item_model.dart';
 import 'package:restaurant_universal_app/models/order_item_model.dart';
 import 'package:restaurant_universal_app/models/order_model.dart';
+import 'package:restaurant_universal_app/models/order_status.dart';
 import 'package:restaurant_universal_app/models/table_model.dart';
 
 void main() {
@@ -45,7 +46,6 @@ void main() {
       id: 'o1',
       orderNumber: '001',
       orderType: 'dine_in',
-      tableName: 'Table 4',
       tableNumber: 4,
       items: const [
         OrderItemModel(menuItemId: 'm1', name: 'Plov', quantity: 2, price: 8),
@@ -54,6 +54,7 @@ void main() {
       total: 18,
       status: 'pending',
       createdAt: createdAt,
+      customerUid: 'u1',
     );
 
     test('toFirestore and fromFirestore round-trip', () {
@@ -73,12 +74,50 @@ void main() {
       expect(OrderModel.fromFirestore(data, 'x').status, 'pending');
     });
 
-    test('copyWith changes only the status', () {
-      final ready = order.copyWith(status: 'ready');
-      expect(ready.status, 'ready');
-      expect(ready.id, order.id);
-      expect(ready.total, order.total);
-      expect(order.status, 'pending');
+    test('toFirestore stores the customer and the table document id', () {
+      final data = order.toFirestore();
+      expect(data['customerUid'], 'u1');
+      expect(data['tableId'], 'table_4');
+    });
+
+    test('fromFirestore tolerates a pending server timestamp', () {
+      // A just-written serverTimestamp() is null in the local snapshot.
+      final restored = OrderModel.fromFirestore({'status': 'ready'}, 'x');
+      expect(restored.status, 'ready');
+      expect(restored.items, isEmpty);
+      expect(restored.paidAt, isNull);
+    });
+
+    test('fromFirestore maps legacy status values onto the lifecycle', () {
+      expect(OrderModel.fromFirestore({'status': 'cooking'}, 'x').status,
+          OrderStatus.preparing);
+      expect(OrderModel.fromFirestore({'status': 'completed'}, 'x').status,
+          OrderStatus.paid);
+      expect(OrderModel.fromFirestore({'status': 'bogus'}, 'x').status,
+          OrderStatus.pending);
+    });
+  });
+
+  group('OrderStatus', () {
+    test('allows only the lifecycle transitions', () {
+      expect(OrderStatus.canTransition('pending', 'preparing'), isTrue);
+      expect(OrderStatus.canTransition('preparing', 'ready'), isTrue);
+      expect(OrderStatus.canTransition('ready', 'served'), isTrue);
+      expect(OrderStatus.canTransition('served', 'paid'), isTrue);
+      expect(OrderStatus.canTransition('pending', 'cancelled'), isTrue);
+      expect(OrderStatus.canTransition('preparing', 'cancelled'), isTrue);
+
+      expect(OrderStatus.canTransition('pending', 'ready'), isFalse);
+      expect(OrderStatus.canTransition('ready', 'cancelled'), isFalse);
+      expect(OrderStatus.canTransition('served', 'cancelled'), isFalse);
+      expect(OrderStatus.canTransition('paid', 'pending'), isFalse);
+      expect(OrderStatus.canTransition('cancelled', 'pending'), isFalse);
+    });
+
+    test('a table stays occupied until the order is paid or cancelled', () {
+      expect(OrderStatus.isActive('served'), isTrue);
+      expect(OrderStatus.isActive('paid'), isFalse);
+      expect(OrderStatus.isActive('cancelled'), isFalse);
     });
   });
 
@@ -93,6 +132,29 @@ void main() {
       }, 'm1');
       expect(item.price, 10.0);
       expect(item.toFirestore()['name'], 'Lagman');
+      expect(item.canOrder, isTrue);
+      expect(item.recipe, isEmpty);
+    });
+
+    test('MenuItemModel reads the recipe and the availability flags', () {
+      final item = MenuItemModel.fromFirestore({
+        'name': 'Plov',
+        'price': 30,
+        'isAvailable': true,
+        'outOfStock': true,
+        'recipe': [
+          {'ingredientId': 'rice', 'quantity': 0.2},
+          {'ingredientId': '', 'quantity': 1}, // malformed line is dropped
+        ],
+      }, 'm1');
+      expect(item.canOrder, isFalse);
+      expect(item.recipe.single.ingredientId, 'rice');
+      expect(item.recipe.single.quantity, 0.2);
+    });
+
+    test('TableModel reads the number written by the old QR page', () {
+      final table = TableModel.fromFirestore({'tableNumber': 7}, 'table_7');
+      expect(table.number, 7);
     });
 
     test('TableModel defaults to active', () {

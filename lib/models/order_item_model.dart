@@ -1,3 +1,5 @@
+import '../core/cafe_refs.dart';
+
 class OrderItemModel {
   final String menuItemId;
   final String name;
@@ -13,6 +15,14 @@ class OrderItemModel {
 
   double get total => price * quantity;
 
+  OrderItemModel copyWith({String? name, int? quantity, double? price}) =>
+      OrderItemModel(
+        menuItemId: menuItemId,
+        name: name ?? this.name,
+        quantity: quantity ?? this.quantity,
+        price: price ?? this.price,
+      );
+
   Map<String, dynamic> toMap() {
     return {
       'menuItemId': menuItemId,
@@ -24,10 +34,10 @@ class OrderItemModel {
 
   factory OrderItemModel.fromMap(Map<String, dynamic> map) {
     return OrderItemModel(
-      menuItemId: map['menuItemId'] ?? '',
-      name: map['name'] ?? '',
-      quantity: map['quantity'] ?? 0,
-      price: (map['price'] as num? ?? 0).toDouble(),
+      menuItemId: readString(map['menuItemId']),
+      name: readString(map['name']),
+      quantity: readInt(map['quantity']),
+      price: readDouble(map['price']),
     );
   }
 }

@@ -1,226 +1,132 @@
 import 'package:flutter/material.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
-import '../../../../l10n/app_localizations.dart';
 
+import '../../../../core/ui/feedback.dart';
+
+/// Camera scanner; pops with the raw value of the first QR code it reads.
 class QRScannerPage extends StatefulWidget {
-  final Function(String) onQRScanned;
-
-  const QRScannerPage({super.key, required this.onQRScanned});
+  const QRScannerPage({super.key});
 
   @override
   State<QRScannerPage> createState() => _QRScannerPageState();
 }
 
-class _QRScannerPageState extends State<QRScannerPage>
-    with WidgetsBindingObserver {
-  late MobileScannerController controller;
-  bool _isProcessing = false;
-  bool _isTorchOn = false;
-  bool _isPageActive = true;
-
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addObserver(this);
-    _initializeScanner();
-  }
-
-  void _initializeScanner() {
-    controller = MobileScannerController(
-      facing: CameraFacing.back,
-      torchEnabled: false,
-    );
-  }
-
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    switch (state) {
-      case AppLifecycleState.detached:
-      case AppLifecycleState.hidden:
-      case AppLifecycleState.paused:
-        _isPageActive = false;
-        break;
-      case AppLifecycleState.resumed:
-        _isPageActive = true;
-        break;
-      case AppLifecycleState.inactive:
-        break;
-    }
-  }
+class _QRScannerPageState extends State<QRScannerPage> {
+  final _controller = MobileScannerController(facing: CameraFacing.back);
+  bool _handled = false;
 
   @override
   void dispose() {
-    WidgetsBinding.instance.removeObserver(this);
-    try {
-      controller.dispose();
-    } catch (e) {
-      debugPrint('Error disposing scanner: $e');
-    }
+    _controller.dispose();
     super.dispose();
   }
 
-  void _handleBarcode(BarcodeCapture barcodes) {
-    // Avoid processing multiple barcodes at once
-    if (_isProcessing || !_isPageActive) return;
-    _isProcessing = true;
-
-    try {
-      if (barcodes.barcodes.isNotEmpty) {
-        final String code = barcodes.barcodes.first.rawValue ?? '';
-        if (code.isNotEmpty) {
-          // Call the callback
-          widget.onQRScanned(code);
-
-          // Pop after small delay to ensure callback is processed
-          Future.delayed(const Duration(milliseconds: 500), () {
-            if (mounted && _isPageActive) {
-              Navigator.of(context).pop();
-            }
-          });
-        }
+  void _handleBarcode(BarcodeCapture capture) {
+    // The camera keeps reporting the same code; only the first one counts.
+    if (_handled || !mounted) return;
+    for (final barcode in capture.barcodes) {
+      final code = barcode.rawValue;
+      if (code != null && code.isNotEmpty) {
+        _handled = true;
+        Navigator.of(context).pop(code);
+        return;
       }
-    } catch (e) {
-      debugPrint('Error processing barcode: $e');
-      _isProcessing = false;
     }
   }
 
-  void _toggleTorch() async {
+  Future<void> _toggleTorch() async {
     try {
-      await controller.toggleTorch();
-      if (mounted) {
-        setState(() {
-          _isTorchOn = !_isTorchOn;
-        });
-      }
+      await _controller.toggleTorch();
     } catch (e) {
-      debugPrint('Error toggling torch: $e');
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(AppLocalizations.of(context)!.torchError('$e'))),
-        );
+        showMessage(context, context.l10n.torchError('$e'), isError: true);
       }
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return PopScope(
-      onPopInvokedWithResult: (didPop, _) {
-        if (didPop) _isPageActive = false;
-      },
-      child: Scaffold(
-        appBar: AppBar(
-          title: Text(AppLocalizations.of(context)?.qrScanTitle ??
-              'QR Codeni Skanerlang'),
-          centerTitle: true,
-          elevation: 0,
-        ),
-        body: Stack(
-          children: [
-            // Camera view
-            MobileScanner(
-              controller: controller,
-              onDetect: _handleBarcode,
-              errorBuilder: (context, error) {
-                return Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Icon(Icons.error, color: Colors.red, size: 64),
-                      const SizedBox(height: 16),
-                      Text(AppLocalizations.of(context)!.cameraError('$error')),
-                      const SizedBox(height: 16),
-                      FilledButton(
-                        onPressed: () => Navigator.pop(context),
-                        child: Text(
-                            AppLocalizations.of(context)?.goBack ?? 'Go Back'),
-                      ),
-                    ],
-                  ),
-                );
-              },
+    final l = context.l10n;
+    return Scaffold(
+      appBar: AppBar(title: Text(l.qrScanTitle), centerTitle: true),
+      body: Stack(
+        children: [
+          MobileScanner(
+            controller: _controller,
+            onDetect: _handleBarcode,
+            errorBuilder: (context, error) => Center(
+              child: Padding(
+                padding: const EdgeInsets.all(24),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Icon(Icons.error, color: Colors.red, size: 64),
+                    const SizedBox(height: 16),
+                    Text(
+                      l.cameraError(error.errorCode.name),
+                      textAlign: TextAlign.center,
+                    ),
+                    const SizedBox(height: 16),
+                    FilledButton(
+                      onPressed: () => Navigator.pop(context),
+                      child: Text(l.goBack),
+                    ),
+                  ],
+                ),
+              ),
             ),
-            // Semi-transparent overlay with centered cutout
-            Positioned.fill(
+          ),
+          Center(
+            child: IgnorePointer(
               child: Container(
+                width: 250,
+                height: 250,
                 decoration: BoxDecoration(
-                  color: Colors.black.withValues(alpha: 0.4),
-                ),
-                child: Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      // Cutout box for QR code
-                      Container(
-                        width: 250,
-                        height: 250,
-                        decoration: BoxDecoration(
-                          border: Border.all(
-                            color: Colors.white,
-                            width: 3,
-                          ),
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        child: Center(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              const Icon(
-                                Icons.qr_code_2,
-                                size: 80,
-                                color: Colors.white,
-                              ),
-                              const SizedBox(height: 16),
-                              Text(
-                                AppLocalizations.of(context)!.placeQrInFrame,
-                                style: const TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 14,
-                                ),
-                                textAlign: TextAlign.center,
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 40),
-                      // Torch toggle button
-                      Container(
-                        decoration: BoxDecoration(
-                          color: Colors.white.withValues(alpha: 0.2),
-                          borderRadius: BorderRadius.circular(50),
-                        ),
-                        child: IconButton(
-                          icon: Icon(
-                            _isTorchOn ? Icons.flash_on : Icons.flash_off,
-                            color: Colors.white,
-                          ),
-                          onPressed: _toggleTorch,
-                        ),
-                      ),
-                    ],
-                  ),
+                  border: Border.all(color: Colors.white, width: 3),
+                  borderRadius: BorderRadius.circular(12),
                 ),
               ),
             ),
-            // Cancel button at the bottom
-            Positioned(
-              bottom: 30,
-              left: 0,
-              right: 0,
-              child: Center(
-                child: FilledButton.tonal(
-                  onPressed: () => Navigator.of(context).pop(),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-                    child: Text(AppLocalizations.of(context)!.cancel),
+          ),
+          Positioned(
+            left: 16,
+            right: 16,
+            bottom: 30,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  l.placeQrInFrame,
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    shadows: [Shadow(blurRadius: 4)],
                   ),
                 ),
-              ),
+                const SizedBox(height: 16),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    ValueListenableBuilder<MobileScannerState>(
+                      valueListenable: _controller,
+                      builder: (context, state, _) => IconButton.filledTonal(
+                        onPressed: _toggleTorch,
+                        icon: Icon(state.torchState == TorchState.on
+                            ? Icons.flash_on
+                            : Icons.flash_off),
+                      ),
+                    ),
+                    const SizedBox(width: 16),
+                    FilledButton.tonal(
+                      onPressed: () => Navigator.of(context).pop(),
+                      child: Text(l.cancel),
+                    ),
+                  ],
+                ),
+              ],
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

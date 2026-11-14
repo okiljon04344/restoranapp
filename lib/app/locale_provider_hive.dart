@@ -229,7 +229,7 @@ Locale getDeviceLocale() {
 // ============================================================================
 
 class LocaleNotifier extends StateNotifier<Locale> {
-  // localeInitializerProvider startup da applyLocale() orqali to'g'ri qiymat beradi
+  // localeInitializerProvider applies the stored locale right after startup.
   LocaleNotifier() : super(_defaultLocale);
 
   /// Set locale and save to Hive immediately

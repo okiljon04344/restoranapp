@@ -51,17 +51,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get tableInvalid => 'Table number must be a number';
 
   @override
-  String get tableOccupied => '⚠️ Table Occupied';
-
-  @override
-  String get tableOccupiedMsg =>
-      'This table is currently in use. Do you want to continue?';
-
-  @override
   String get cancel => 'Cancel';
-
-  @override
-  String get continueAnyway => 'Continue';
 
   @override
   String get goToMenu => 'Go to Menu';
@@ -70,27 +60,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get checking => 'Checking...';
 
   @override
-  String qrScanned(String table) {
-    return 'QR Scanned: Table $table';
-  }
-
-  @override
   String get invalidQr => 'Invalid QR code. Please try again.';
 
   @override
-  String get scanQrDialog => 'Scan Table QR';
-
-  @override
-  String get scanQrDialogContent => 'We use camera to scan table QR code';
-
-  @override
-  String get openCamera => 'Open Camera';
-
-  @override
   String get searchFood => 'Search for food...';
-
-  @override
-  String get addToCart => 'Add to Cart';
 
   @override
   String addedToCart(String item) {
@@ -114,9 +87,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get orderPlaced => 'Order placed successfully!';
-
-  @override
-  String get orderError => 'Error placing order';
 
   @override
   String get som => 'sum';
@@ -146,9 +116,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get statusPending => 'Pending';
 
   @override
-  String get statusCooking => 'Cooking';
-
-  @override
   String get statusReady => 'Ready';
 
   @override
@@ -173,22 +140,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get adminPanel => 'Admin Panel';
 
   @override
-  String get adminSubtitle => 'Manage categories, menu, and orders';
-
-  @override
-  String get kitchenDisplay => 'Kitchen Display';
-
-  @override
-  String get kitchenSubtitle => 'Track and prepare incoming orders';
-
-  @override
   String get tableInfo => 'Table number';
-
-  @override
-  String get tableOccupiedBadge => 'This table is busy';
-
-  @override
-  String get orderTracking => 'Order Tracking';
 
   @override
   String get all => 'All';
@@ -232,9 +184,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get statusPreparing => 'Preparing';
 
   @override
-  String get statusDelivered => 'Delivered';
-
-  @override
   String get noOrdersInStage => 'No orders in this stage.';
 
   @override
@@ -250,19 +199,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get goBack => 'Go Back';
 
   @override
-  String get adminLogin => 'Admin Login';
-
-  @override
-  String get adminSignup => 'Admin Registration';
-
-  @override
   String get login => 'Login';
 
   @override
   String get register => 'Register';
-
-  @override
-  String get createAdminAccount => 'Create new admin account';
 
   @override
   String get cancelOrder => 'Cancel Order';
@@ -272,10 +212,7 @@ class AppLocalizationsEn extends AppLocalizations {
       'Are you sure you want to cancel this order?';
 
   @override
-  String get enterTableNumber => 'Enter table number:';
-
-  @override
-  String get yes => 'Yes, Cancel';
+  String get yes => 'Yes';
 
   @override
   String get no => 'No';
@@ -287,25 +224,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get logoutConfirm => 'Are you sure you want to logout?';
 
   @override
-  String get yesLogout => 'Yes, Logout';
-
-  @override
-  String get ready2 => 'Ready';
-
-  @override
-  String get goToKitchen => 'Go to Kitchen';
-
-  @override
-  String get manageQrCodes => 'Manage QR Codes';
-
-  @override
   String get editMenu => 'Edit Menu';
-
-  @override
-  String get webNoCameraTitle => 'No Camera on Web';
-
-  @override
-  String get enterQrManually => 'Enter QR code manually:';
 
   @override
   String get cameraNotAvailable => 'Camera not available on this platform';
@@ -320,19 +239,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get dashboard => 'Dashboard';
 
   @override
-  String get dashboardSubtitle => 'Today\'s statistics and real-time data';
+  String get dashboardSubtitle => 'Figures from the orders of the last 7 days';
 
   @override
-  String get todayRevenue => 'Today\'s Revenue';
+  String get todayRevenue => 'Revenue today (paid)';
 
   @override
-  String get orderCount => 'Orders';
-
-  @override
-  String get averageOrder => 'Average Order';
-
-  @override
-  String get menuItemsCount => 'Menu Items';
+  String get averageOrder => 'Average paid order (today)';
 
   @override
   String get categoriesLabel => 'Categories';
@@ -341,15 +254,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get topOrdered => 'Most Ordered';
 
   @override
-  String get statusCompleted => 'Completed';
-
-  @override
   String get staffCalls => 'Staff Calls';
-
-  @override
-  String staffCallAtTable(String table) {
-    return 'Table $table - staff requested';
-  }
 
   @override
   String get markDone => 'Done';
@@ -370,23 +275,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get noOrdersFound => 'No orders found';
 
   @override
-  String tableNumberLabel(String table) {
-    return 'Table #$table';
-  }
-
-  @override
   String orderNumberLabel(String number) {
     return 'Order #$number';
   }
-
-  @override
-  String get kitchenView => 'Kitchen View';
-
-  @override
-  String get qrGenerator => 'QR Code Generator';
-
-  @override
-  String get menuManagement => 'Menu Management';
 
   @override
   String confirmCancelTableOrder(String table) {
@@ -400,53 +291,16 @@ class AppLocalizationsEn extends AppLocalizations {
   String get ingredients => 'Ingredients';
 
   @override
-  String get qrCodes => 'QR Codes';
-
-  @override
-  String get kitchenOrdersTitle => 'Kitchen Orders';
-
-  @override
-  String get noOrdersAtMoment => 'No orders at the moment';
-
-  @override
   String tableWithNumber(String table) {
     return 'Table $table';
   }
 
   @override
-  String get generateTableQrCodes => 'Generate Table QR Codes';
-
-  @override
   String get qrSelectHint =>
-      'Select tables to generate QR codes for. Customers can scan these QR codes at their table with their phone.';
-
-  @override
-  String selectedTablesCount(String count) {
-    return 'Selected Tables: $count';
-  }
-
-  @override
-  String get clearAll => 'Clear All';
-
-  @override
-  String get downloadQrCodes => 'Download QR Codes';
-
-  @override
-  String get selectTables => 'Select Tables';
-
-  @override
-  String get qrCodesReady => 'QR Codes Ready';
-
-  @override
-  String qrGeneratedMessage(String count) {
-    return 'Generated QR codes for $count tables.\\n\\nYou can now:\\n- Print them\\n- Display on screens\\n- Share with customers';
-  }
+      'Customers can only order at tables registered here. Print the QR code and place it on the table.';
 
   @override
   String get ok => 'OK';
-
-  @override
-  String get ingredientsManagement => 'Ingredients Management';
 
   @override
   String get newIngredient => 'New Ingredient';
@@ -462,9 +316,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get lowStock => 'Low Stock';
-
-  @override
-  String get updateAction => 'Update';
 
   @override
   String get noIngredientsFound => 'No ingredients found';
@@ -521,9 +372,6 @@ class AppLocalizationsEn extends AppLocalizations {
       'Do you want to delete this ingredient?';
 
   @override
-  String get yesDelete => 'Yes, Delete';
-
-  @override
   String get unitPiece => 'pcs';
 
   @override
@@ -557,13 +405,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get itemNameRequired => 'Item Name *';
 
   @override
-  String get itemNameHint => 'e.g., Chicken Biryani';
-
-  @override
   String get descriptionLabel => 'Description';
-
-  @override
-  String get itemDescriptionHint => 'Item description...';
 
   @override
   String get priceRequired => 'Price *';
@@ -572,13 +414,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get categoryRequired => 'Category *';
 
   @override
-  String get newLabel => 'New';
-
-  @override
   String get imageUrl => 'Image URL';
-
-  @override
-  String get addingInProgress => 'Adding...';
 
   @override
   String get addMenuItem => 'Add Menu Item';
@@ -627,15 +463,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get placeQrInFrame => 'Place the QR code inside the frame';
 
   @override
-  String orderItemsSummary(String count, String total) {
-    return '$count items • $total';
-  }
-
-  @override
   String get enterEmailPassword => 'Please enter your email and password';
-
-  @override
-  String get authNoAdminRights => 'You do not have admin rights.';
 
   @override
   String get authUserNotFound => 'No user found with this email';
@@ -669,9 +497,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get passwordTooShort => 'Password must be at least 6 characters';
 
   @override
-  String get signupSuccess => 'User created successfully. Please log in now.';
-
-  @override
   String get emailLabel => 'Email';
 
   @override
@@ -683,4 +508,233 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get passwordHint =>
       'Choose a strong password of at least 6 characters';
+
+  @override
+  String get statusPaid => 'Paid';
+
+  @override
+  String get statusCancelled => 'Cancelled';
+
+  @override
+  String get retry => 'Retry';
+
+  @override
+  String get errOrderNotFound => 'This order no longer exists.';
+
+  @override
+  String get errInvalidTransition =>
+      'The order status has already changed. Please check the latest status.';
+
+  @override
+  String errItemUnavailable(String name) {
+    return '\"$name\" is currently unavailable.';
+  }
+
+  @override
+  String errInsufficientStock(String name) {
+    return 'Not enough stock: $name.';
+  }
+
+  @override
+  String get errBillNotReady =>
+      'The bill can be closed once every order of the table has been served.';
+
+  @override
+  String get errNothingToPay => 'This table has no open orders.';
+
+  @override
+  String get errTableExists => 'A table with this number already exists.';
+
+  @override
+  String get errCategoryInUse => 'This category still contains menu items.';
+
+  @override
+  String get errPermissionDenied =>
+      'You do not have permission for this action.';
+
+  @override
+  String get invalidNumber => 'Enter a valid number';
+
+  @override
+  String get pageNotFound => 'Page not found';
+
+  @override
+  String get accessDenied =>
+      'Sign in with a staff account that has access to this screen.';
+
+  @override
+  String get staffLogin => 'Staff sign-in';
+
+  @override
+  String get staffLoginSubtitle => 'Kitchen display and admin panel';
+
+  @override
+  String get authNoStaffAccess =>
+      'This account has no staff access yet. An access request was sent; ask an admin to approve it.';
+
+  @override
+  String get requestStaffAccount => 'Request a staff account';
+
+  @override
+  String get staffRequestSent =>
+      'Account created. An admin has to approve it before you can sign in.';
+
+  @override
+  String get staffSignupHint =>
+      'Create an account for kitchen staff. It gets access after an admin approves the request.';
+
+  @override
+  String tableNotFound(String table) {
+    return 'Table $table is not registered. Please check the number or ask the staff.';
+  }
+
+  @override
+  String tableDisabled(String table) {
+    return 'Table $table is currently not available for ordering.';
+  }
+
+  @override
+  String get billTotal => 'Bill total';
+
+  @override
+  String get orderCancelled => 'Order cancelled';
+
+  @override
+  String get soldOut => 'Sold out';
+
+  @override
+  String get bills => 'Bills';
+
+  @override
+  String get noOpenBills => 'No open bills';
+
+  @override
+  String get closeBill => 'Close bill (paid)';
+
+  @override
+  String confirmCloseBill(String table, String total) {
+    return 'Mark the bill of table $table ($total) as paid?';
+  }
+
+  @override
+  String billClosed(String table) {
+    return 'Table $table: bill closed';
+  }
+
+  @override
+  String get billRequestedByTable => 'Bill requested';
+
+  @override
+  String get tablesAndQr => 'Tables & QR codes';
+
+  @override
+  String get addTable => 'Add table';
+
+  @override
+  String tableAdded(String table) {
+    return 'Table $table added';
+  }
+
+  @override
+  String get printQrCodes => 'Print QR codes';
+
+  @override
+  String get noTablesYet =>
+      'No tables yet. Add a table to generate its QR code.';
+
+  @override
+  String confirmDeleteTable(String table) {
+    return 'Delete table $table? Its QR code will stop working.';
+  }
+
+  @override
+  String get tableStatusDisabled => 'Disabled';
+
+  @override
+  String get tableStatusFree => 'Free';
+
+  @override
+  String get staffSection => 'Staff';
+
+  @override
+  String get staffAdminHint =>
+      'Kitchen staff create an account from the sign-in page; approve the request here to give it access to orders and stock.';
+
+  @override
+  String get staffRequestsTitle => 'Access requests';
+
+  @override
+  String get noStaffRequests => 'No pending requests';
+
+  @override
+  String get approveAction => 'Approve';
+
+  @override
+  String get rejectAction => 'Reject';
+
+  @override
+  String staffApproved(String email) {
+    return '$email now has kitchen access';
+  }
+
+  @override
+  String get kitchenStaffTitle => 'Kitchen staff';
+
+  @override
+  String get noKitchenStaff => 'No kitchen staff yet';
+
+  @override
+  String get revokeAction => 'Revoke access';
+
+  @override
+  String confirmRevokeStaff(String email) {
+    return 'Remove kitchen access for $email?';
+  }
+
+  @override
+  String confirmDeleteCategory(String name) {
+    return 'Delete the category \"$name\"?';
+  }
+
+  @override
+  String get createCategoryFirst => 'Create a category first.';
+
+  @override
+  String get menuItemUpdated => 'Menu item updated';
+
+  @override
+  String recipeLinesCount(String count) {
+    return 'Recipe: $count ingredients';
+  }
+
+  @override
+  String get availableOnMenu => 'Shown on the menu';
+
+  @override
+  String get recipeTitle => 'Recipe (per portion)';
+
+  @override
+  String get recipeHint =>
+      'These quantities are taken from stock when the kitchen accepts an order.';
+
+  @override
+  String get addRecipeLine => 'Add ingredient';
+
+  @override
+  String get weekRevenue => 'Revenue this week';
+
+  @override
+  String get todayOrdersCount => 'Orders today';
+
+  @override
+  String get weekOrdersCount => 'Orders this week';
+
+  @override
+  String get openOrdersCount => 'Open orders';
+
+  @override
+  String get cancelledToday => 'Cancelled today';
+
+  @override
+  String get tableStatusOccupied => 'Occupied';
 }

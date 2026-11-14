@@ -14,26 +14,11 @@
   "enterTableManually": "Enter table number",
   "tableRequired": "Please enter table number",
   "tableInvalid": "Table number must be a number",
-  "tableOccupied": "⚠️ Table Occupied",
-  "tableOccupiedMsg": "This table is currently in use. Do you want to continue?",
   "cancel": "Cancel",
-  "continueAnyway": "Continue",
   "goToMenu": "Go to Menu",
   "checking": "Checking...",
-  "qrScanned": "QR Scanned: Table {table}",
-  "@qrScanned": {
-    "placeholders": {
-      "table": {
-        "type": "String"
-      }
-    }
-  },
   "invalidQr": "Invalid QR code. Please try again.",
-  "scanQrDialog": "Scan Table QR",
-  "scanQrDialogContent": "We use camera to scan table QR code",
-  "openCamera": "Open Camera",
   "searchFood": "Search for food...",
-  "addToCart": "Add to Cart",
   "addedToCart": "{item} added to cart!",
   "@addedToCart": {
     "placeholders": {
@@ -48,7 +33,6 @@
   "totalAmount": "Total Amount",
   "placeOrder": "Place Order",
   "orderPlaced": "Order placed successfully!",
-  "orderError": "Error placing order",
   "som": "sum",
   "kitchenScreen": "Kitchen Screen",
   "newOrders": "New Orders",
@@ -58,7 +42,6 @@
   "markReady": "Mark as Ready",
   "markServed": "Mark as Served",
   "statusPending": "Pending",
-  "statusCooking": "Cooking",
   "statusReady": "Ready",
   "statusServed": "Served",
   "table": "Table",
@@ -67,12 +50,7 @@
   "customerMode": "Customer Mode",
   "customerSubtitle": "Order delicious food from your table",
   "adminPanel": "Admin Panel",
-  "adminSubtitle": "Manage categories, menu, and orders",
-  "kitchenDisplay": "Kitchen Display",
-  "kitchenSubtitle": "Track and prepare incoming orders",
   "tableInfo": "Table number",
-  "tableOccupiedBadge": "This table is busy",
-  "orderTracking": "Order Tracking",
   "all": "All",
   "error": "Error: {msg}",
   "@error": {
@@ -93,66 +71,36 @@
   "requestBill": "Request Bill",
   "billRequested": "Waitress notified for the bill.",
   "statusPreparing": "Preparing",
-  "statusDelivered": "Delivered",
   "noOrdersInStage": "No orders in this stage.",
   "qrScanTitle": "Scan QR Code",
   "qrScanManualTitle": "Enter QR Code",
   "confirm": "Confirm",
   "goBack": "Go Back",
-  "adminLogin": "Admin Login",
-  "adminSignup": "Admin Registration",
   "login": "Login",
   "register": "Register",
-  "createAdminAccount": "Create new admin account",
   "cancelOrder": "Cancel Order",
   "confirmCancelOrder": "Are you sure you want to cancel this order?",
-  "enterTableNumber": "Enter table number:",
-  "yes": "Yes, Cancel",
+  "yes": "Yes",
   "no": "No",
   "logout": "Logout",
   "logoutConfirm": "Are you sure you want to logout?",
-  "yesLogout": "Yes, Logout",
-  "ready2": "Ready",
-  "goToKitchen": "Go to Kitchen",
-  "manageQrCodes": "Manage QR Codes",
   "editMenu": "Edit Menu",
-  "webNoCameraTitle": "No Camera on Web",
-  "enterQrManually": "Enter QR code manually:",
   "cameraNotAvailable": "Camera not available on this platform",
   "enterQrManuallyShort": "Enter QR code data manually:",
   "adminPanelSubtitle": "Restaurant management",
   "dashboard": "Dashboard",
-  "dashboardSubtitle": "Today's statistics and real-time data",
-  "todayRevenue": "Today's Revenue",
-  "orderCount": "Orders",
-  "averageOrder": "Average Order",
-  "menuItemsCount": "Menu Items",
+  "dashboardSubtitle": "Figures from the orders of the last 7 days",
+  "todayRevenue": "Revenue today (paid)",
+  "averageOrder": "Average paid order (today)",
   "categoriesLabel": "Categories",
   "topOrdered": "Most Ordered",
-  "statusCompleted": "Completed",
   "staffCalls": "Staff Calls",
-  "staffCallAtTable": "Table {table} - staff requested",
-  "@staffCallAtTable": {
-    "placeholders": {
-      "table": {
-        "type": "String"
-      }
-    }
-  },
   "markDone": "Done",
   "staffCallResolved": "Staff call resolved",
   "noStaffCalls": "No staff calls",
   "staffRequested": "Staff requested",
   "searchOrdersHint": "Search by table or order ID...",
   "noOrdersFound": "No orders found",
-  "tableNumberLabel": "Table #{table}",
-  "@tableNumberLabel": {
-    "placeholders": {
-      "table": {
-        "type": "String"
-      }
-    }
-  },
   "orderNumberLabel": "Order #{number}",
   "@orderNumberLabel": {
     "placeholders": {
@@ -161,9 +109,6 @@
       }
     }
   },
-  "kitchenView": "Kitchen View",
-  "qrGenerator": "QR Code Generator",
-  "menuManagement": "Menu Management",
   "confirmCancelTableOrder": "Cancel the order for table #{table}?",
   "@confirmCancelTableOrder": {
     "placeholders": {
@@ -174,9 +119,6 @@
   },
   "sidebarKitchen": "Kitchen",
   "ingredients": "Ingredients",
-  "qrCodes": "QR Codes",
-  "kitchenOrdersTitle": "Kitchen Orders",
-  "noOrdersAtMoment": "No orders at the moment",
   "tableWithNumber": "Table {table}",
   "@tableWithNumber": {
     "placeholders": {
@@ -185,30 +127,8 @@
       }
     }
   },
-  "generateTableQrCodes": "Generate Table QR Codes",
-  "qrSelectHint": "Select tables to generate QR codes for. Customers can scan these QR codes at their table with their phone.",
-  "selectedTablesCount": "Selected Tables: {count}",
-  "@selectedTablesCount": {
-    "placeholders": {
-      "count": {
-        "type": "String"
-      }
-    }
-  },
-  "clearAll": "Clear All",
-  "downloadQrCodes": "Download QR Codes",
-  "selectTables": "Select Tables",
-  "qrCodesReady": "QR Codes Ready",
-  "qrGeneratedMessage": "Generated QR codes for {count} tables.\\n\\nYou can now:\\n- Print them\\n- Display on screens\\n- Share with customers",
-  "@qrGeneratedMessage": {
-    "placeholders": {
-      "count": {
-        "type": "String"
-      }
-    }
-  },
+  "qrSelectHint": "Customers can only order at tables registered here. Print the QR code and place it on the table.",
   "ok": "OK",
-  "ingredientsManagement": "Ingredients Management",
   "newIngredient": "New Ingredient",
   "ingredientsSubtitle": "List of ingredients needed to prepare dishes",
   "lowStockAlert": "Low Stock ({count} ingredients)",
@@ -220,7 +140,6 @@
     }
   },
   "lowStock": "Low Stock",
-  "updateAction": "Update",
   "noIngredientsFound": "No ingredients found",
   "editAction": "Edit",
   "deleteAction": "Delete",
@@ -245,7 +164,6 @@
   "addAction": "Add",
   "saveAction": "Save",
   "deleteIngredientConfirm": "Do you want to delete this ingredient?",
-  "yesDelete": "Yes, Delete",
   "unitPiece": "pcs",
   "unitKg": "kg",
   "unitGram": "g",
@@ -257,14 +175,10 @@
   "menuItemAdded": "Menu item added successfully",
   "addNewMenuItem": "Add New Menu Item",
   "itemNameRequired": "Item Name *",
-  "itemNameHint": "e.g., Chicken Biryani",
   "descriptionLabel": "Description",
-  "itemDescriptionHint": "Item description...",
   "priceRequired": "Price *",
   "categoryRequired": "Category *",
-  "newLabel": "New",
   "imageUrl": "Image URL",
-  "addingInProgress": "Adding...",
   "addMenuItem": "Add Menu Item",
   "menuItems": "Menu Items",
   "noMenuItemsYet": "No menu items yet",
@@ -293,19 +207,7 @@
     }
   },
   "placeQrInFrame": "Place the QR code inside the frame",
-  "orderItemsSummary": "{count} items • {total}",
-  "@orderItemsSummary": {
-    "placeholders": {
-      "count": {
-        "type": "String"
-      },
-      "total": {
-        "type": "String"
-      }
-    }
-  },
   "enterEmailPassword": "Please enter your email and password",
-  "authNoAdminRights": "You do not have admin rights.",
   "authUserNotFound": "No user found with this email",
   "authWrongPassword": "Incorrect password",
   "authInvalidCredential": "Incorrect email or password",
@@ -316,9 +218,160 @@
   "authInvalidEmail": "Invalid email format",
   "passwordsMismatch": "Passwords do not match",
   "passwordTooShort": "Password must be at least 6 characters",
-  "signupSuccess": "User created successfully. Please log in now.",
   "emailLabel": "Email",
   "passwordLabel": "Password",
   "confirmPasswordLabel": "Confirm password",
-  "passwordHint": "Choose a strong password of at least 6 characters"
+  "passwordHint": "Choose a strong password of at least 6 characters",
+  "statusPaid": "Paid",
+  "statusCancelled": "Cancelled",
+  "retry": "Retry",
+  "errOrderNotFound": "This order no longer exists.",
+  "errInvalidTransition": "The order status has already changed. Please check the latest status.",
+  "errItemUnavailable": "\"{name}\" is currently unavailable.",
+  "@errItemUnavailable": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "errInsufficientStock": "Not enough stock: {name}.",
+  "@errInsufficientStock": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "errBillNotReady": "The bill can be closed once every order of the table has been served.",
+  "errNothingToPay": "This table has no open orders.",
+  "errTableExists": "A table with this number already exists.",
+  "errCategoryInUse": "This category still contains menu items.",
+  "errPermissionDenied": "You do not have permission for this action.",
+  "invalidNumber": "Enter a valid number",
+  "pageNotFound": "Page not found",
+  "accessDenied": "Sign in with a staff account that has access to this screen.",
+  "staffLogin": "Staff sign-in",
+  "staffLoginSubtitle": "Kitchen display and admin panel",
+  "authNoStaffAccess": "This account has no staff access yet. An access request was sent; ask an admin to approve it.",
+  "requestStaffAccount": "Request a staff account",
+  "staffRequestSent": "Account created. An admin has to approve it before you can sign in.",
+  "staffSignupHint": "Create an account for kitchen staff. It gets access after an admin approves the request.",
+  "tableNotFound": "Table {table} is not registered. Please check the number or ask the staff.",
+  "@tableNotFound": {
+    "placeholders": {
+      "table": {
+        "type": "String"
+      }
+    }
+  },
+  "tableDisabled": "Table {table} is currently not available for ordering.",
+  "@tableDisabled": {
+    "placeholders": {
+      "table": {
+        "type": "String"
+      }
+    }
+  },
+  "billTotal": "Bill total",
+  "orderCancelled": "Order cancelled",
+  "soldOut": "Sold out",
+  "bills": "Bills",
+  "noOpenBills": "No open bills",
+  "closeBill": "Close bill (paid)",
+  "confirmCloseBill": "Mark the bill of table {table} ({total}) as paid?",
+  "@confirmCloseBill": {
+    "placeholders": {
+      "table": {
+        "type": "String"
+      },
+      "total": {
+        "type": "String"
+      }
+    }
+  },
+  "billClosed": "Table {table}: bill closed",
+  "@billClosed": {
+    "placeholders": {
+      "table": {
+        "type": "String"
+      }
+    }
+  },
+  "billRequestedByTable": "Bill requested",
+  "tablesAndQr": "Tables & QR codes",
+  "addTable": "Add table",
+  "tableAdded": "Table {table} added",
+  "@tableAdded": {
+    "placeholders": {
+      "table": {
+        "type": "String"
+      }
+    }
+  },
+  "printQrCodes": "Print QR codes",
+  "noTablesYet": "No tables yet. Add a table to generate its QR code.",
+  "confirmDeleteTable": "Delete table {table}? Its QR code will stop working.",
+  "@confirmDeleteTable": {
+    "placeholders": {
+      "table": {
+        "type": "String"
+      }
+    }
+  },
+  "tableStatusDisabled": "Disabled",
+  "tableStatusFree": "Free",
+  "staffSection": "Staff",
+  "staffAdminHint": "Kitchen staff create an account from the sign-in page; approve the request here to give it access to orders and stock.",
+  "staffRequestsTitle": "Access requests",
+  "noStaffRequests": "No pending requests",
+  "approveAction": "Approve",
+  "rejectAction": "Reject",
+  "staffApproved": "{email} now has kitchen access",
+  "@staffApproved": {
+    "placeholders": {
+      "email": {
+        "type": "String"
+      }
+    }
+  },
+  "kitchenStaffTitle": "Kitchen staff",
+  "noKitchenStaff": "No kitchen staff yet",
+  "revokeAction": "Revoke access",
+  "confirmRevokeStaff": "Remove kitchen access for {email}?",
+  "@confirmRevokeStaff": {
+    "placeholders": {
+      "email": {
+        "type": "String"
+      }
+    }
+  },
+  "confirmDeleteCategory": "Delete the category \"{name}\"?",
+  "@confirmDeleteCategory": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "createCategoryFirst": "Create a category first.",
+  "menuItemUpdated": "Menu item updated",
+  "recipeLinesCount": "Recipe: {count} ingredients",
+  "@recipeLinesCount": {
+    "placeholders": {
+      "count": {
+        "type": "String"
+      }
+    }
+  },
+  "availableOnMenu": "Shown on the menu",
+  "recipeTitle": "Recipe (per portion)",
+  "recipeHint": "These quantities are taken from stock when the kitchen accepts an order.",
+  "addRecipeLine": "Add ingredient",
+  "weekRevenue": "Revenue this week",
+  "todayOrdersCount": "Orders today",
+  "weekOrdersCount": "Orders this week",
+  "openOrdersCount": "Open orders",
+  "cancelledToday": "Cancelled today",
+  "tableStatusOccupied": "Occupied"
 }

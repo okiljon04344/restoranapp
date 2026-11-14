@@ -14,26 +14,11 @@
   "enterTableManually": "Stol raqamini kiriting",
   "tableRequired": "Stol raqamini kiriting",
   "tableInvalid": "Stol raqami son bo'lishi kerak",
-  "tableOccupied": "⚠️ Stol Band",
-  "tableOccupiedMsg": "Bu stol hozir ishlatilyapti. Davom ettirishni xohlaysizmi?",
   "cancel": "Bekor",
-  "continueAnyway": "Davom etish",
   "goToMenu": "Menyuga o'tish",
   "checking": "Tekshirilmoqda...",
-  "qrScanned": "QR Skanerlandi: Stol {table}",
-  "@qrScanned": {
-    "placeholders": {
-      "table": {
-        "type": "String"
-      }
-    }
-  },
   "invalidQr": "Noto'g'ri QR kod. Qaytadan urinib ko'ring.",
-  "scanQrDialog": "Stol QR-ini Skanerlang",
-  "scanQrDialogContent": "Stol QR-ini skanerlash uchun kamera ishlatamiz",
-  "openCamera": "Kamera Oching",
   "searchFood": "Taomlarni qidirish...",
-  "addToCart": "Savatchaga qo'shish",
   "addedToCart": "{item} savatchaga qo'shildi!",
   "@addedToCart": {
     "placeholders": {
@@ -48,7 +33,6 @@
   "totalAmount": "Jami summa",
   "placeOrder": "Buyurtma berish",
   "orderPlaced": "Buyurtma muvaffaqiyatli berildi!",
-  "orderError": "Buyurtma berishda xato",
   "som": "so'm",
   "kitchenScreen": "Oshxona ekrani",
   "newOrders": "Yangi buyurtmalar",
@@ -58,7 +42,6 @@
   "markReady": "Tayyor deb belgilash",
   "markServed": "Yetkazildi deb belgilash",
   "statusPending": "Kutilmoqda",
-  "statusCooking": "Tayyorlanmoqda",
   "statusReady": "Tayyor",
   "statusServed": "Yetkazildi",
   "table": "Stol",
@@ -67,12 +50,7 @@
   "customerMode": "Mijoz rejimi",
   "customerSubtitle": "Stoldan taom buyurtma bering",
   "adminPanel": "Admin Panel",
-  "adminSubtitle": "Kategoriya, menyu va buyurtmalarni boshqarish",
-  "kitchenDisplay": "Oshxona ekrani",
-  "kitchenSubtitle": "Yangi buyurtmalarni kuzatish va tayyorlash",
   "tableInfo": "Stol raqami",
-  "tableOccupiedBadge": "Bu stol band",
-  "orderTracking": "Buyurtma kuzatuvi",
   "all": "Barchasi",
   "error": "Xato: {msg}",
   "@error": {
@@ -93,66 +71,36 @@
   "requestBill": "Hisob so'rash",
   "billRequested": "Ofitsiant hisob uchun xabardor qilindi.",
   "statusPreparing": "Tayyorlanmoqda",
-  "statusDelivered": "Yetkazildi",
   "noOrdersInStage": "Bu bosqichda buyurtmalar yo'q.",
   "qrScanTitle": "QR Codeni Skanerlang",
   "qrScanManualTitle": "QR Kodni Kiritib Chiqing",
   "confirm": "Tasdiqlang",
   "goBack": "Orqaga qaytish",
-  "adminLogin": "Admin Kirish",
-  "adminSignup": "Admin Ro'yxatdan o'tish",
   "login": "Kirish",
   "register": "Ro'yxatdan o'tish",
-  "createAdminAccount": "Yangi admin akkaunt yaratish",
   "cancelOrder": "Sifarishni Bekor Qilish",
   "confirmCancelOrder": "Bu sifarishni bekor qilishni xohlaysizmi?",
-  "enterTableNumber": "Stol raqamini kiriting:",
-  "yes": "Ha, Bekor Qilish",
+  "yes": "Ha",
   "no": "Yo'q",
   "logout": "Chiqish",
   "logoutConfirm": "Sistemadan chiqmoqchisiz?",
-  "yesLogout": "Ha, Chiqish",
-  "ready2": "Tayyorlandi",
-  "goToKitchen": "Oshxonaga o'tish",
-  "manageQrCodes": "QR Kodlarni Boshqarish",
   "editMenu": "Menyunu Tahrirlash",
-  "webNoCameraTitle": "Veb-da kamera mavjud emas",
-  "enterQrManually": "Qr code-ni qo'lda kiritib chiqing:",
   "cameraNotAvailable": "Kamera bu platform-da mavjud emas",
   "enterQrManuallyShort": "QR code ma'lumotini qo'lda kiritib chiqing:",
   "adminPanelSubtitle": "Restoran boshqaruvi",
   "dashboard": "Boshqaruv paneli",
-  "dashboardSubtitle": "Bugungi statistika va real vaqt ma'lumotlari",
-  "todayRevenue": "Bugungi daromad",
-  "orderCount": "Buyurtmalar soni",
-  "averageOrder": "O'rtacha buyurtma",
-  "menuItemsCount": "Menyu mahsulotlari",
+  "dashboardSubtitle": "Oxirgi 7 kunlik buyurtmalar bo'yicha ko'rsatkichlar",
+  "todayRevenue": "Bugungi tushum (to'langan)",
+  "averageOrder": "O'rtacha to'langan buyurtma (bugun)",
   "categoriesLabel": "Kategoriyalar",
   "topOrdered": "Eng ko'p buyurtma qilingan",
-  "statusCompleted": "Tugallandi",
   "staffCalls": "Xodim chaqiruvlari",
-  "staffCallAtTable": "Stol {table} - xodim chaqirdi",
-  "@staffCallAtTable": {
-    "placeholders": {
-      "table": {
-        "type": "String"
-      }
-    }
-  },
   "markDone": "Tayyorlandi",
   "staffCallResolved": "Xodim chaqiruvi bajarildi",
   "noStaffCalls": "Hozircha chaqiruvlar yo'q",
   "staffRequested": "Xodim chaqirilmoqda",
   "searchOrdersHint": "Stol yoki buyurtma ID bo'yicha qidiring...",
   "noOrdersFound": "Buyurtmalar topilmadi",
-  "tableNumberLabel": "Stol #{table}",
-  "@tableNumberLabel": {
-    "placeholders": {
-      "table": {
-        "type": "String"
-      }
-    }
-  },
   "orderNumberLabel": "Buyurtma #{number}",
   "@orderNumberLabel": {
     "placeholders": {
@@ -161,9 +109,6 @@
       }
     }
   },
-  "kitchenView": "Oshxona ko'rinishi",
-  "qrGenerator": "QR kod generatori",
-  "menuManagement": "Menyu boshqaruvi",
   "confirmCancelTableOrder": "Stol #{table} buyurtmasini bekor qilmoqchimisiz?",
   "@confirmCancelTableOrder": {
     "placeholders": {
@@ -174,9 +119,6 @@
   },
   "sidebarKitchen": "Oshxona",
   "ingredients": "Masalliqlar",
-  "qrCodes": "QR kodlar",
-  "kitchenOrdersTitle": "Oshxona buyurtmalari",
-  "noOrdersAtMoment": "Hozircha buyurtmalar yo'q",
   "tableWithNumber": "Stol {table}",
   "@tableWithNumber": {
     "placeholders": {
@@ -185,30 +127,8 @@
       }
     }
   },
-  "generateTableQrCodes": "Stollar uchun QR kodlar yaratish",
-  "qrSelectHint": "QR kod yaratiladigan stollarni tanlang. Mijozlar stolida telefon orqali QR kodni skanerlashi mumkin.",
-  "selectedTablesCount": "Tanlangan stollar: {count}",
-  "@selectedTablesCount": {
-    "placeholders": {
-      "count": {
-        "type": "String"
-      }
-    }
-  },
-  "clearAll": "Hammasini tozalash",
-  "downloadQrCodes": "QR kodlarni yuklab olish",
-  "selectTables": "Stollarni tanlang",
-  "qrCodesReady": "QR kodlar tayyor",
-  "qrGeneratedMessage": "{count} ta stol uchun QR kodlar yaratildi.\\n\\nEndi siz:\\n- Chop etishingiz\\n- Ekranlarda ko'rsatishingiz\\n- Mijozlarga ulashishingiz mumkin",
-  "@qrGeneratedMessage": {
-    "placeholders": {
-      "count": {
-        "type": "String"
-      }
-    }
-  },
+  "qrSelectHint": "Mijozlar faqat shu yerda ro'yxatga olingan stollarda buyurtma bera oladi. QR kodni chop etib, stolga qo'ying.",
   "ok": "OK",
-  "ingredientsManagement": "Masalliqlar boshqaruvi",
   "newIngredient": "Yangi masalliq",
   "ingredientsSubtitle": "Taom tayyorlash uchun kerakli masalliqlar ro'yxati",
   "lowStockAlert": "Kam qolgan ({count} ta masalliq)",
@@ -220,7 +140,6 @@
     }
   },
   "lowStock": "Kam qolgan",
-  "updateAction": "Yangilash",
   "noIngredientsFound": "Masalliq topilmadi",
   "editAction": "Tahrirlash",
   "deleteAction": "O'chirish",
@@ -245,7 +164,6 @@
   "addAction": "Qo'shish",
   "saveAction": "Saqlash",
   "deleteIngredientConfirm": "Ushbu masalliqni o'chirib tashlamoqchimisiz?",
-  "yesDelete": "Ha, o'chirish",
   "unitPiece": "dona",
   "unitKg": "kg",
   "unitGram": "g",
@@ -257,14 +175,10 @@
   "menuItemAdded": "Menyu mahsuloti qo'shildi",
   "addNewMenuItem": "Yangi menyu mahsulotini qo'shish",
   "itemNameRequired": "Mahsulot nomi *",
-  "itemNameHint": "masalan, Tovuqli palov",
   "descriptionLabel": "Tavsif",
-  "itemDescriptionHint": "Mahsulot tavsifi...",
   "priceRequired": "Narxi *",
   "categoryRequired": "Kategoriya *",
-  "newLabel": "Yangi",
   "imageUrl": "Rasm URL manzili",
-  "addingInProgress": "Qo'shilmoqda...",
   "addMenuItem": "Menyu mahsulotini qo'shish",
   "menuItems": "Menyu mahsulotlari",
   "noMenuItemsYet": "Hozircha menyu mahsulotlari yo'q",
@@ -293,19 +207,7 @@
     }
   },
   "placeQrInFrame": "QR kodni ramka ichiga joylashtiring",
-  "orderItemsSummary": "{count} ta mahsulot • {total}",
-  "@orderItemsSummary": {
-    "placeholders": {
-      "count": {
-        "type": "String"
-      },
-      "total": {
-        "type": "String"
-      }
-    }
-  },
   "enterEmailPassword": "Email va parolni kiriting",
-  "authNoAdminRights": "Sizda admin huquqlari yo'q.",
   "authUserNotFound": "Bu email bilan foydalanuvchi topilmadi",
   "authWrongPassword": "Parol noto'g'ri",
   "authInvalidCredential": "Email yoki parol noto'g'ri",
@@ -316,9 +218,160 @@
   "authInvalidEmail": "Email noto'g'ri formatda",
   "passwordsMismatch": "Parollar mos kelmadi",
   "passwordTooShort": "Parol kamida 6 ta belgi bo'lishi kerak",
-  "signupSuccess": "Foydalanuvchi muvaffaqiyatli yaratildi. Endi tizimga kiring.",
   "emailLabel": "Email",
   "passwordLabel": "Parol",
   "confirmPasswordLabel": "Parolni tasdiqlang",
-  "passwordHint": "Kamida 6 ta belgidan iborat kuchli parol tanlang"
+  "passwordHint": "Kamida 6 ta belgidan iborat kuchli parol tanlang",
+  "statusPaid": "To'langan",
+  "statusCancelled": "Bekor qilingan",
+  "retry": "Qayta urinish",
+  "errOrderNotFound": "Bu buyurtma topilmadi.",
+  "errInvalidTransition": "Buyurtma holati allaqachon o'zgargan. Oxirgi holatni tekshiring.",
+  "errItemUnavailable": "\"{name}\" hozircha mavjud emas.",
+  "@errItemUnavailable": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "errInsufficientStock": "Omborda yetarli emas: {name}.",
+  "@errInsufficientStock": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "errBillNotReady": "Stolning barcha buyurtmalari berilgandan keyin hisobni yopish mumkin.",
+  "errNothingToPay": "Bu stolda ochiq buyurtma yo'q.",
+  "errTableExists": "Bu raqamli stol allaqachon mavjud.",
+  "errCategoryInUse": "Bu kategoriyada hali taomlar bor.",
+  "errPermissionDenied": "Bu amal uchun ruxsatingiz yo'q.",
+  "invalidNumber": "To'g'ri son kiriting",
+  "pageNotFound": "Sahifa topilmadi",
+  "accessDenied": "Bu sahifaga ruxsati bor xodim akkaunti bilan kiring.",
+  "staffLogin": "Xodimlar uchun kirish",
+  "staffLoginSubtitle": "Oshxona ekrani va admin panel",
+  "authNoStaffAccess": "Bu akkauntda hali xodim huquqi yo'q. Ruxsat so'rovi yuborildi; admindan tasdiqlashni so'rang.",
+  "requestStaffAccount": "Xodim akkauntini so'rash",
+  "staffRequestSent": "Akkaunt yaratildi. Kirish uchun admin tasdiqlashi kerak.",
+  "staffSignupHint": "Oshxona xodimi uchun akkaunt yarating. Admin so'rovni tasdiqlagach ruxsat beriladi.",
+  "tableNotFound": "{table}-stol ro'yxatda yo'q. Raqamni tekshiring yoki xodimga murojaat qiling.",
+  "@tableNotFound": {
+    "placeholders": {
+      "table": {
+        "type": "String"
+      }
+    }
+  },
+  "tableDisabled": "{table}-stolda hozircha buyurtma qabul qilinmaydi.",
+  "@tableDisabled": {
+    "placeholders": {
+      "table": {
+        "type": "String"
+      }
+    }
+  },
+  "billTotal": "Hisob jami",
+  "orderCancelled": "Buyurtma bekor qilindi",
+  "soldOut": "Tugagan",
+  "bills": "Hisoblar",
+  "noOpenBills": "Ochiq hisoblar yo'q",
+  "closeBill": "Hisobni yopish (to'landi)",
+  "confirmCloseBill": "{table}-stol hisobi ({total}) to'langan deb belgilansinmi?",
+  "@confirmCloseBill": {
+    "placeholders": {
+      "table": {
+        "type": "String"
+      },
+      "total": {
+        "type": "String"
+      }
+    }
+  },
+  "billClosed": "{table}-stol: hisob yopildi",
+  "@billClosed": {
+    "placeholders": {
+      "table": {
+        "type": "String"
+      }
+    }
+  },
+  "billRequestedByTable": "Hisob so'raldi",
+  "tablesAndQr": "Stollar va QR kodlar",
+  "addTable": "Stol qo'shish",
+  "tableAdded": "{table}-stol qo'shildi",
+  "@tableAdded": {
+    "placeholders": {
+      "table": {
+        "type": "String"
+      }
+    }
+  },
+  "printQrCodes": "QR kodlarni chop etish",
+  "noTablesYet": "Hali stollar yo'q. QR kod yaratish uchun stol qo'shing.",
+  "confirmDeleteTable": "{table}-stol o'chirilsinmi? Uning QR kodi ishlamay qoladi.",
+  "@confirmDeleteTable": {
+    "placeholders": {
+      "table": {
+        "type": "String"
+      }
+    }
+  },
+  "tableStatusDisabled": "O'chirilgan",
+  "tableStatusFree": "Bo'sh",
+  "staffSection": "Xodimlar",
+  "staffAdminHint": "Oshxona xodimlari kirish sahifasidan akkaunt yaratadi; buyurtmalar va omborga ruxsat berish uchun so'rovni shu yerda tasdiqlang.",
+  "staffRequestsTitle": "Ruxsat so'rovlari",
+  "noStaffRequests": "Kutilayotgan so'rovlar yo'q",
+  "approveAction": "Tasdiqlash",
+  "rejectAction": "Rad etish",
+  "staffApproved": "{email} ga oshxona ruxsati berildi",
+  "@staffApproved": {
+    "placeholders": {
+      "email": {
+        "type": "String"
+      }
+    }
+  },
+  "kitchenStaffTitle": "Oshxona xodimlari",
+  "noKitchenStaff": "Hali oshxona xodimlari yo'q",
+  "revokeAction": "Ruxsatni bekor qilish",
+  "confirmRevokeStaff": "{email} ning oshxona ruxsati bekor qilinsinmi?",
+  "@confirmRevokeStaff": {
+    "placeholders": {
+      "email": {
+        "type": "String"
+      }
+    }
+  },
+  "confirmDeleteCategory": "\"{name}\" kategoriyasi o'chirilsinmi?",
+  "@confirmDeleteCategory": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "createCategoryFirst": "Avval kategoriya yarating.",
+  "menuItemUpdated": "Taom yangilandi",
+  "recipeLinesCount": "Retsept: {count} ta masalliq",
+  "@recipeLinesCount": {
+    "placeholders": {
+      "count": {
+        "type": "String"
+      }
+    }
+  },
+  "availableOnMenu": "Menyuda ko'rsatiladi",
+  "recipeTitle": "Retsept (bir porsiya uchun)",
+  "recipeHint": "Oshxona buyurtmani qabul qilganda bu miqdorlar ombordan ayriladi.",
+  "addRecipeLine": "Masalliq qo'shish",
+  "weekRevenue": "Shu haftalik tushum",
+  "todayOrdersCount": "Bugungi buyurtmalar",
+  "weekOrdersCount": "Shu haftalik buyurtmalar",
+  "openOrdersCount": "Ochiq buyurtmalar",
+  "cancelledToday": "Bugun bekor qilingan",
+  "tableStatusOccupied": "Band"
 }

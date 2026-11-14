@@ -184,29 +184,11 @@ abstract class AppLocalizations {
   /// **'Table number must be a number'**
   String get tableInvalid;
 
-  /// No description provided for @tableOccupied.
-  ///
-  /// In en, this message translates to:
-  /// **'⚠️ Table Occupied'**
-  String get tableOccupied;
-
-  /// No description provided for @tableOccupiedMsg.
-  ///
-  /// In en, this message translates to:
-  /// **'This table is currently in use. Do you want to continue?'**
-  String get tableOccupiedMsg;
-
   /// No description provided for @cancel.
   ///
   /// In en, this message translates to:
   /// **'Cancel'**
   String get cancel;
-
-  /// No description provided for @continueAnyway.
-  ///
-  /// In en, this message translates to:
-  /// **'Continue'**
-  String get continueAnyway;
 
   /// No description provided for @goToMenu.
   ///
@@ -220,47 +202,17 @@ abstract class AppLocalizations {
   /// **'Checking...'**
   String get checking;
 
-  /// No description provided for @qrScanned.
-  ///
-  /// In en, this message translates to:
-  /// **'QR Scanned: Table {table}'**
-  String qrScanned(String table);
-
   /// No description provided for @invalidQr.
   ///
   /// In en, this message translates to:
   /// **'Invalid QR code. Please try again.'**
   String get invalidQr;
 
-  /// No description provided for @scanQrDialog.
-  ///
-  /// In en, this message translates to:
-  /// **'Scan Table QR'**
-  String get scanQrDialog;
-
-  /// No description provided for @scanQrDialogContent.
-  ///
-  /// In en, this message translates to:
-  /// **'We use camera to scan table QR code'**
-  String get scanQrDialogContent;
-
-  /// No description provided for @openCamera.
-  ///
-  /// In en, this message translates to:
-  /// **'Open Camera'**
-  String get openCamera;
-
   /// No description provided for @searchFood.
   ///
   /// In en, this message translates to:
   /// **'Search for food...'**
   String get searchFood;
-
-  /// No description provided for @addToCart.
-  ///
-  /// In en, this message translates to:
-  /// **'Add to Cart'**
-  String get addToCart;
 
   /// No description provided for @addedToCart.
   ///
@@ -303,12 +255,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Order placed successfully!'**
   String get orderPlaced;
-
-  /// No description provided for @orderError.
-  ///
-  /// In en, this message translates to:
-  /// **'Error placing order'**
-  String get orderError;
 
   /// No description provided for @som.
   ///
@@ -364,12 +310,6 @@ abstract class AppLocalizations {
   /// **'Pending'**
   String get statusPending;
 
-  /// No description provided for @statusCooking.
-  ///
-  /// In en, this message translates to:
-  /// **'Cooking'**
-  String get statusCooking;
-
   /// No description provided for @statusReady.
   ///
   /// In en, this message translates to:
@@ -418,41 +358,11 @@ abstract class AppLocalizations {
   /// **'Admin Panel'**
   String get adminPanel;
 
-  /// No description provided for @adminSubtitle.
-  ///
-  /// In en, this message translates to:
-  /// **'Manage categories, menu, and orders'**
-  String get adminSubtitle;
-
-  /// No description provided for @kitchenDisplay.
-  ///
-  /// In en, this message translates to:
-  /// **'Kitchen Display'**
-  String get kitchenDisplay;
-
-  /// No description provided for @kitchenSubtitle.
-  ///
-  /// In en, this message translates to:
-  /// **'Track and prepare incoming orders'**
-  String get kitchenSubtitle;
-
   /// No description provided for @tableInfo.
   ///
   /// In en, this message translates to:
   /// **'Table number'**
   String get tableInfo;
-
-  /// No description provided for @tableOccupiedBadge.
-  ///
-  /// In en, this message translates to:
-  /// **'This table is busy'**
-  String get tableOccupiedBadge;
-
-  /// No description provided for @orderTracking.
-  ///
-  /// In en, this message translates to:
-  /// **'Order Tracking'**
-  String get orderTracking;
 
   /// No description provided for @all.
   ///
@@ -532,12 +442,6 @@ abstract class AppLocalizations {
   /// **'Preparing'**
   String get statusPreparing;
 
-  /// No description provided for @statusDelivered.
-  ///
-  /// In en, this message translates to:
-  /// **'Delivered'**
-  String get statusDelivered;
-
   /// No description provided for @noOrdersInStage.
   ///
   /// In en, this message translates to:
@@ -568,18 +472,6 @@ abstract class AppLocalizations {
   /// **'Go Back'**
   String get goBack;
 
-  /// No description provided for @adminLogin.
-  ///
-  /// In en, this message translates to:
-  /// **'Admin Login'**
-  String get adminLogin;
-
-  /// No description provided for @adminSignup.
-  ///
-  /// In en, this message translates to:
-  /// **'Admin Registration'**
-  String get adminSignup;
-
   /// No description provided for @login.
   ///
   /// In en, this message translates to:
@@ -591,12 +483,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Register'**
   String get register;
-
-  /// No description provided for @createAdminAccount.
-  ///
-  /// In en, this message translates to:
-  /// **'Create new admin account'**
-  String get createAdminAccount;
 
   /// No description provided for @cancelOrder.
   ///
@@ -610,16 +496,10 @@ abstract class AppLocalizations {
   /// **'Are you sure you want to cancel this order?'**
   String get confirmCancelOrder;
 
-  /// No description provided for @enterTableNumber.
-  ///
-  /// In en, this message translates to:
-  /// **'Enter table number:'**
-  String get enterTableNumber;
-
   /// No description provided for @yes.
   ///
   /// In en, this message translates to:
-  /// **'Yes, Cancel'**
+  /// **'Yes'**
   String get yes;
 
   /// No description provided for @no.
@@ -640,47 +520,11 @@ abstract class AppLocalizations {
   /// **'Are you sure you want to logout?'**
   String get logoutConfirm;
 
-  /// No description provided for @yesLogout.
-  ///
-  /// In en, this message translates to:
-  /// **'Yes, Logout'**
-  String get yesLogout;
-
-  /// No description provided for @ready2.
-  ///
-  /// In en, this message translates to:
-  /// **'Ready'**
-  String get ready2;
-
-  /// No description provided for @goToKitchen.
-  ///
-  /// In en, this message translates to:
-  /// **'Go to Kitchen'**
-  String get goToKitchen;
-
-  /// No description provided for @manageQrCodes.
-  ///
-  /// In en, this message translates to:
-  /// **'Manage QR Codes'**
-  String get manageQrCodes;
-
   /// No description provided for @editMenu.
   ///
   /// In en, this message translates to:
   /// **'Edit Menu'**
   String get editMenu;
-
-  /// No description provided for @webNoCameraTitle.
-  ///
-  /// In en, this message translates to:
-  /// **'No Camera on Web'**
-  String get webNoCameraTitle;
-
-  /// No description provided for @enterQrManually.
-  ///
-  /// In en, this message translates to:
-  /// **'Enter QR code manually:'**
-  String get enterQrManually;
 
   /// No description provided for @cameraNotAvailable.
   ///
@@ -709,32 +553,20 @@ abstract class AppLocalizations {
   /// No description provided for @dashboardSubtitle.
   ///
   /// In en, this message translates to:
-  /// **'Today\'s statistics and real-time data'**
+  /// **'Figures from the orders of the last 7 days'**
   String get dashboardSubtitle;
 
   /// No description provided for @todayRevenue.
   ///
   /// In en, this message translates to:
-  /// **'Today\'s Revenue'**
+  /// **'Revenue today (paid)'**
   String get todayRevenue;
-
-  /// No description provided for @orderCount.
-  ///
-  /// In en, this message translates to:
-  /// **'Orders'**
-  String get orderCount;
 
   /// No description provided for @averageOrder.
   ///
   /// In en, this message translates to:
-  /// **'Average Order'**
+  /// **'Average paid order (today)'**
   String get averageOrder;
-
-  /// No description provided for @menuItemsCount.
-  ///
-  /// In en, this message translates to:
-  /// **'Menu Items'**
-  String get menuItemsCount;
 
   /// No description provided for @categoriesLabel.
   ///
@@ -748,23 +580,11 @@ abstract class AppLocalizations {
   /// **'Most Ordered'**
   String get topOrdered;
 
-  /// No description provided for @statusCompleted.
-  ///
-  /// In en, this message translates to:
-  /// **'Completed'**
-  String get statusCompleted;
-
   /// No description provided for @staffCalls.
   ///
   /// In en, this message translates to:
   /// **'Staff Calls'**
   String get staffCalls;
-
-  /// No description provided for @staffCallAtTable.
-  ///
-  /// In en, this message translates to:
-  /// **'Table {table} - staff requested'**
-  String staffCallAtTable(String table);
 
   /// No description provided for @markDone.
   ///
@@ -802,35 +622,11 @@ abstract class AppLocalizations {
   /// **'No orders found'**
   String get noOrdersFound;
 
-  /// No description provided for @tableNumberLabel.
-  ///
-  /// In en, this message translates to:
-  /// **'Table #{table}'**
-  String tableNumberLabel(String table);
-
   /// No description provided for @orderNumberLabel.
   ///
   /// In en, this message translates to:
   /// **'Order #{number}'**
   String orderNumberLabel(String number);
-
-  /// No description provided for @kitchenView.
-  ///
-  /// In en, this message translates to:
-  /// **'Kitchen View'**
-  String get kitchenView;
-
-  /// No description provided for @qrGenerator.
-  ///
-  /// In en, this message translates to:
-  /// **'QR Code Generator'**
-  String get qrGenerator;
-
-  /// No description provided for @menuManagement.
-  ///
-  /// In en, this message translates to:
-  /// **'Menu Management'**
-  String get menuManagement;
 
   /// No description provided for @confirmCancelTableOrder.
   ///
@@ -850,89 +646,23 @@ abstract class AppLocalizations {
   /// **'Ingredients'**
   String get ingredients;
 
-  /// No description provided for @qrCodes.
-  ///
-  /// In en, this message translates to:
-  /// **'QR Codes'**
-  String get qrCodes;
-
-  /// No description provided for @kitchenOrdersTitle.
-  ///
-  /// In en, this message translates to:
-  /// **'Kitchen Orders'**
-  String get kitchenOrdersTitle;
-
-  /// No description provided for @noOrdersAtMoment.
-  ///
-  /// In en, this message translates to:
-  /// **'No orders at the moment'**
-  String get noOrdersAtMoment;
-
   /// No description provided for @tableWithNumber.
   ///
   /// In en, this message translates to:
   /// **'Table {table}'**
   String tableWithNumber(String table);
 
-  /// No description provided for @generateTableQrCodes.
-  ///
-  /// In en, this message translates to:
-  /// **'Generate Table QR Codes'**
-  String get generateTableQrCodes;
-
   /// No description provided for @qrSelectHint.
   ///
   /// In en, this message translates to:
-  /// **'Select tables to generate QR codes for. Customers can scan these QR codes at their table with their phone.'**
+  /// **'Customers can only order at tables registered here. Print the QR code and place it on the table.'**
   String get qrSelectHint;
-
-  /// No description provided for @selectedTablesCount.
-  ///
-  /// In en, this message translates to:
-  /// **'Selected Tables: {count}'**
-  String selectedTablesCount(String count);
-
-  /// No description provided for @clearAll.
-  ///
-  /// In en, this message translates to:
-  /// **'Clear All'**
-  String get clearAll;
-
-  /// No description provided for @downloadQrCodes.
-  ///
-  /// In en, this message translates to:
-  /// **'Download QR Codes'**
-  String get downloadQrCodes;
-
-  /// No description provided for @selectTables.
-  ///
-  /// In en, this message translates to:
-  /// **'Select Tables'**
-  String get selectTables;
-
-  /// No description provided for @qrCodesReady.
-  ///
-  /// In en, this message translates to:
-  /// **'QR Codes Ready'**
-  String get qrCodesReady;
-
-  /// No description provided for @qrGeneratedMessage.
-  ///
-  /// In en, this message translates to:
-  /// **'Generated QR codes for {count} tables.\\n\\nYou can now:\\n- Print them\\n- Display on screens\\n- Share with customers'**
-  String qrGeneratedMessage(String count);
 
   /// No description provided for @ok.
   ///
   /// In en, this message translates to:
   /// **'OK'**
   String get ok;
-
-  /// No description provided for @ingredientsManagement.
-  ///
-  /// In en, this message translates to:
-  /// **'Ingredients Management'**
-  String get ingredientsManagement;
 
   /// No description provided for @newIngredient.
   ///
@@ -957,12 +687,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Low Stock'**
   String get lowStock;
-
-  /// No description provided for @updateAction.
-  ///
-  /// In en, this message translates to:
-  /// **'Update'**
-  String get updateAction;
 
   /// No description provided for @noIngredientsFound.
   ///
@@ -1066,12 +790,6 @@ abstract class AppLocalizations {
   /// **'Do you want to delete this ingredient?'**
   String get deleteIngredientConfirm;
 
-  /// No description provided for @yesDelete.
-  ///
-  /// In en, this message translates to:
-  /// **'Yes, Delete'**
-  String get yesDelete;
-
   /// No description provided for @unitPiece.
   ///
   /// In en, this message translates to:
@@ -1138,23 +856,11 @@ abstract class AppLocalizations {
   /// **'Item Name *'**
   String get itemNameRequired;
 
-  /// No description provided for @itemNameHint.
-  ///
-  /// In en, this message translates to:
-  /// **'e.g., Chicken Biryani'**
-  String get itemNameHint;
-
   /// No description provided for @descriptionLabel.
   ///
   /// In en, this message translates to:
   /// **'Description'**
   String get descriptionLabel;
-
-  /// No description provided for @itemDescriptionHint.
-  ///
-  /// In en, this message translates to:
-  /// **'Item description...'**
-  String get itemDescriptionHint;
 
   /// No description provided for @priceRequired.
   ///
@@ -1168,23 +874,11 @@ abstract class AppLocalizations {
   /// **'Category *'**
   String get categoryRequired;
 
-  /// No description provided for @newLabel.
-  ///
-  /// In en, this message translates to:
-  /// **'New'**
-  String get newLabel;
-
   /// No description provided for @imageUrl.
   ///
   /// In en, this message translates to:
   /// **'Image URL'**
   String get imageUrl;
-
-  /// No description provided for @addingInProgress.
-  ///
-  /// In en, this message translates to:
-  /// **'Adding...'**
-  String get addingInProgress;
 
   /// No description provided for @addMenuItem.
   ///
@@ -1270,23 +964,11 @@ abstract class AppLocalizations {
   /// **'Place the QR code inside the frame'**
   String get placeQrInFrame;
 
-  /// No description provided for @orderItemsSummary.
-  ///
-  /// In en, this message translates to:
-  /// **'{count} items • {total}'**
-  String orderItemsSummary(String count, String total);
-
   /// No description provided for @enterEmailPassword.
   ///
   /// In en, this message translates to:
   /// **'Please enter your email and password'**
   String get enterEmailPassword;
-
-  /// No description provided for @authNoAdminRights.
-  ///
-  /// In en, this message translates to:
-  /// **'You do not have admin rights.'**
-  String get authNoAdminRights;
 
   /// No description provided for @authUserNotFound.
   ///
@@ -1348,12 +1030,6 @@ abstract class AppLocalizations {
   /// **'Password must be at least 6 characters'**
   String get passwordTooShort;
 
-  /// No description provided for @signupSuccess.
-  ///
-  /// In en, this message translates to:
-  /// **'User created successfully. Please log in now.'**
-  String get signupSuccess;
-
   /// No description provided for @emailLabel.
   ///
   /// In en, this message translates to:
@@ -1377,6 +1053,396 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Choose a strong password of at least 6 characters'**
   String get passwordHint;
+
+  /// No description provided for @statusPaid.
+  ///
+  /// In en, this message translates to:
+  /// **'Paid'**
+  String get statusPaid;
+
+  /// No description provided for @statusCancelled.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancelled'**
+  String get statusCancelled;
+
+  /// No description provided for @retry.
+  ///
+  /// In en, this message translates to:
+  /// **'Retry'**
+  String get retry;
+
+  /// No description provided for @errOrderNotFound.
+  ///
+  /// In en, this message translates to:
+  /// **'This order no longer exists.'**
+  String get errOrderNotFound;
+
+  /// No description provided for @errInvalidTransition.
+  ///
+  /// In en, this message translates to:
+  /// **'The order status has already changed. Please check the latest status.'**
+  String get errInvalidTransition;
+
+  /// No description provided for @errItemUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'\"{name}\" is currently unavailable.'**
+  String errItemUnavailable(String name);
+
+  /// No description provided for @errInsufficientStock.
+  ///
+  /// In en, this message translates to:
+  /// **'Not enough stock: {name}.'**
+  String errInsufficientStock(String name);
+
+  /// No description provided for @errBillNotReady.
+  ///
+  /// In en, this message translates to:
+  /// **'The bill can be closed once every order of the table has been served.'**
+  String get errBillNotReady;
+
+  /// No description provided for @errNothingToPay.
+  ///
+  /// In en, this message translates to:
+  /// **'This table has no open orders.'**
+  String get errNothingToPay;
+
+  /// No description provided for @errTableExists.
+  ///
+  /// In en, this message translates to:
+  /// **'A table with this number already exists.'**
+  String get errTableExists;
+
+  /// No description provided for @errCategoryInUse.
+  ///
+  /// In en, this message translates to:
+  /// **'This category still contains menu items.'**
+  String get errCategoryInUse;
+
+  /// No description provided for @errPermissionDenied.
+  ///
+  /// In en, this message translates to:
+  /// **'You do not have permission for this action.'**
+  String get errPermissionDenied;
+
+  /// No description provided for @invalidNumber.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter a valid number'**
+  String get invalidNumber;
+
+  /// No description provided for @pageNotFound.
+  ///
+  /// In en, this message translates to:
+  /// **'Page not found'**
+  String get pageNotFound;
+
+  /// No description provided for @accessDenied.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign in with a staff account that has access to this screen.'**
+  String get accessDenied;
+
+  /// No description provided for @staffLogin.
+  ///
+  /// In en, this message translates to:
+  /// **'Staff sign-in'**
+  String get staffLogin;
+
+  /// No description provided for @staffLoginSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Kitchen display and admin panel'**
+  String get staffLoginSubtitle;
+
+  /// No description provided for @authNoStaffAccess.
+  ///
+  /// In en, this message translates to:
+  /// **'This account has no staff access yet. An access request was sent; ask an admin to approve it.'**
+  String get authNoStaffAccess;
+
+  /// No description provided for @requestStaffAccount.
+  ///
+  /// In en, this message translates to:
+  /// **'Request a staff account'**
+  String get requestStaffAccount;
+
+  /// No description provided for @staffRequestSent.
+  ///
+  /// In en, this message translates to:
+  /// **'Account created. An admin has to approve it before you can sign in.'**
+  String get staffRequestSent;
+
+  /// No description provided for @staffSignupHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Create an account for kitchen staff. It gets access after an admin approves the request.'**
+  String get staffSignupHint;
+
+  /// No description provided for @tableNotFound.
+  ///
+  /// In en, this message translates to:
+  /// **'Table {table} is not registered. Please check the number or ask the staff.'**
+  String tableNotFound(String table);
+
+  /// No description provided for @tableDisabled.
+  ///
+  /// In en, this message translates to:
+  /// **'Table {table} is currently not available for ordering.'**
+  String tableDisabled(String table);
+
+  /// No description provided for @billTotal.
+  ///
+  /// In en, this message translates to:
+  /// **'Bill total'**
+  String get billTotal;
+
+  /// No description provided for @orderCancelled.
+  ///
+  /// In en, this message translates to:
+  /// **'Order cancelled'**
+  String get orderCancelled;
+
+  /// No description provided for @soldOut.
+  ///
+  /// In en, this message translates to:
+  /// **'Sold out'**
+  String get soldOut;
+
+  /// No description provided for @bills.
+  ///
+  /// In en, this message translates to:
+  /// **'Bills'**
+  String get bills;
+
+  /// No description provided for @noOpenBills.
+  ///
+  /// In en, this message translates to:
+  /// **'No open bills'**
+  String get noOpenBills;
+
+  /// No description provided for @closeBill.
+  ///
+  /// In en, this message translates to:
+  /// **'Close bill (paid)'**
+  String get closeBill;
+
+  /// No description provided for @confirmCloseBill.
+  ///
+  /// In en, this message translates to:
+  /// **'Mark the bill of table {table} ({total}) as paid?'**
+  String confirmCloseBill(String table, String total);
+
+  /// No description provided for @billClosed.
+  ///
+  /// In en, this message translates to:
+  /// **'Table {table}: bill closed'**
+  String billClosed(String table);
+
+  /// No description provided for @billRequestedByTable.
+  ///
+  /// In en, this message translates to:
+  /// **'Bill requested'**
+  String get billRequestedByTable;
+
+  /// No description provided for @tablesAndQr.
+  ///
+  /// In en, this message translates to:
+  /// **'Tables & QR codes'**
+  String get tablesAndQr;
+
+  /// No description provided for @addTable.
+  ///
+  /// In en, this message translates to:
+  /// **'Add table'**
+  String get addTable;
+
+  /// No description provided for @tableAdded.
+  ///
+  /// In en, this message translates to:
+  /// **'Table {table} added'**
+  String tableAdded(String table);
+
+  /// No description provided for @printQrCodes.
+  ///
+  /// In en, this message translates to:
+  /// **'Print QR codes'**
+  String get printQrCodes;
+
+  /// No description provided for @noTablesYet.
+  ///
+  /// In en, this message translates to:
+  /// **'No tables yet. Add a table to generate its QR code.'**
+  String get noTablesYet;
+
+  /// No description provided for @confirmDeleteTable.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete table {table}? Its QR code will stop working.'**
+  String confirmDeleteTable(String table);
+
+  /// No description provided for @tableStatusDisabled.
+  ///
+  /// In en, this message translates to:
+  /// **'Disabled'**
+  String get tableStatusDisabled;
+
+  /// No description provided for @tableStatusFree.
+  ///
+  /// In en, this message translates to:
+  /// **'Free'**
+  String get tableStatusFree;
+
+  /// No description provided for @staffSection.
+  ///
+  /// In en, this message translates to:
+  /// **'Staff'**
+  String get staffSection;
+
+  /// No description provided for @staffAdminHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Kitchen staff create an account from the sign-in page; approve the request here to give it access to orders and stock.'**
+  String get staffAdminHint;
+
+  /// No description provided for @staffRequestsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Access requests'**
+  String get staffRequestsTitle;
+
+  /// No description provided for @noStaffRequests.
+  ///
+  /// In en, this message translates to:
+  /// **'No pending requests'**
+  String get noStaffRequests;
+
+  /// No description provided for @approveAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Approve'**
+  String get approveAction;
+
+  /// No description provided for @rejectAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Reject'**
+  String get rejectAction;
+
+  /// No description provided for @staffApproved.
+  ///
+  /// In en, this message translates to:
+  /// **'{email} now has kitchen access'**
+  String staffApproved(String email);
+
+  /// No description provided for @kitchenStaffTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Kitchen staff'**
+  String get kitchenStaffTitle;
+
+  /// No description provided for @noKitchenStaff.
+  ///
+  /// In en, this message translates to:
+  /// **'No kitchen staff yet'**
+  String get noKitchenStaff;
+
+  /// No description provided for @revokeAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Revoke access'**
+  String get revokeAction;
+
+  /// No description provided for @confirmRevokeStaff.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove kitchen access for {email}?'**
+  String confirmRevokeStaff(String email);
+
+  /// No description provided for @confirmDeleteCategory.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete the category \"{name}\"?'**
+  String confirmDeleteCategory(String name);
+
+  /// No description provided for @createCategoryFirst.
+  ///
+  /// In en, this message translates to:
+  /// **'Create a category first.'**
+  String get createCategoryFirst;
+
+  /// No description provided for @menuItemUpdated.
+  ///
+  /// In en, this message translates to:
+  /// **'Menu item updated'**
+  String get menuItemUpdated;
+
+  /// No description provided for @recipeLinesCount.
+  ///
+  /// In en, this message translates to:
+  /// **'Recipe: {count} ingredients'**
+  String recipeLinesCount(String count);
+
+  /// No description provided for @availableOnMenu.
+  ///
+  /// In en, this message translates to:
+  /// **'Shown on the menu'**
+  String get availableOnMenu;
+
+  /// No description provided for @recipeTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Recipe (per portion)'**
+  String get recipeTitle;
+
+  /// No description provided for @recipeHint.
+  ///
+  /// In en, this message translates to:
+  /// **'These quantities are taken from stock when the kitchen accepts an order.'**
+  String get recipeHint;
+
+  /// No description provided for @addRecipeLine.
+  ///
+  /// In en, this message translates to:
+  /// **'Add ingredient'**
+  String get addRecipeLine;
+
+  /// No description provided for @weekRevenue.
+  ///
+  /// In en, this message translates to:
+  /// **'Revenue this week'**
+  String get weekRevenue;
+
+  /// No description provided for @todayOrdersCount.
+  ///
+  /// In en, this message translates to:
+  /// **'Orders today'**
+  String get todayOrdersCount;
+
+  /// No description provided for @weekOrdersCount.
+  ///
+  /// In en, this message translates to:
+  /// **'Orders this week'**
+  String get weekOrdersCount;
+
+  /// No description provided for @openOrdersCount.
+  ///
+  /// In en, this message translates to:
+  /// **'Open orders'**
+  String get openOrdersCount;
+
+  /// No description provided for @cancelledToday.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancelled today'**
+  String get cancelledToday;
+
+  /// No description provided for @tableStatusOccupied.
+  ///
+  /// In en, this message translates to:
+  /// **'Occupied'**
+  String get tableStatusOccupied;
 }
 
 class _AppLocalizationsDelegate

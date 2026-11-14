@@ -1,161 +1,75 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../../core/widgets/app_scaffold.dart';
-import '../../../../l10n/app_localizations.dart';
-import '../../../../models/order_model.dart';
-import '../../../orders/application/order_providers.dart';
+import 'package:go_router/go_router.dart';
 
+import '../../../../core/ui/feedback.dart';
+import '../../../../core/widgets/language_menu_button.dart';
+import '../../../auth/application/auth_provider.dart';
+import '../../../calls/application/calls_provider.dart';
+import '../../../calls/presentation/staff_calls_view.dart';
+import '../../../tables/presentation/table_bills_view.dart';
+import '../widgets/kitchen_board.dart';
+
+/// Screen for kitchen/floor staff: the order queue, the open bills and the
+/// calls coming from tables.
 class KitchenOrdersPage extends ConsumerWidget {
   const KitchenOrdersPage({super.key});
 
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    // StreamProvider'dan ma'lumotlarni watch qilamiz
-    final ordersAsync = ref.watch(ordersStreamProvider);
-
-    final l = AppLocalizations.of(context)!;
-
-    return AppScaffold(
-      title: l.kitchenScreen,
-      child: ordersAsync.when(
-        data: (orders) {
-          final pending = orders.where((e) => e.status == 'pending').toList();
-          final cooking = orders.where((e) => e.status == 'cooking').toList();
-          final ready = orders.where((e) => e.status == 'ready').toList();
-
-          return ListView(
-            padding: const EdgeInsets.all(16),
-            children: [
-              _KitchenSection(
-                title: l.newOrders,
-                orders: pending,
-                nextStatus: 'cooking',
-                color: Colors.red,
-                buttonText: l.startCooking,
-              ),
-              const SizedBox(height: 24),
-              _KitchenSection(
-                title: l.cooking,
-                orders: cooking,
-                nextStatus: 'ready',
-                color: Colors.orange,
-                buttonText: l.markReady,
-              ),
-              const SizedBox(height: 24),
-              _KitchenSection(
-                title: l.ready,
-                orders: ready,
-                nextStatus: 'served',
-                color: Colors.green,
-                buttonText: l.markServed,
-              ),
-            ],
-          );
-        },
-        loading: () => const Center(child: CircularProgressIndicator()),
-        error: (err, stack) => Center(child: Text(AppLocalizations.of(context)!.error('$err'))),
-      ),
-    );
+  Future<void> _logout(BuildContext context, WidgetRef ref) async {
+    final l = context.l10n;
+    final confirmed =
+        await confirm(context, title: l.logout, message: l.logoutConfirm);
+    if (!confirmed || !context.mounted) return;
+    final done = await runAction(
+        context, () => ref.read(authRepositoryProvider).signOut());
+    if (done && context.mounted) context.go('/login');
   }
-}
-
-class _KitchenSection extends ConsumerWidget {
-  final String title;
-  final List<OrderModel> orders;
-  final String nextStatus;
-  final Color color;
-  final String buttonText;
-
-  const _KitchenSection({
-    required this.title,
-    required this.orders,
-    required this.nextStatus,
-    required this.color,
-    required this.buttonText,
-  });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          children: [
-            Container(width: 4, height: 24, color: color),
-            const SizedBox(width: 8),
-            Text(title,
-                style:
-                    const TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-            const SizedBox(width: 8),
-            Chip(
-              label: Text('${orders.length}',
-                  style: const TextStyle(color: Colors.white, fontSize: 12)),
-              backgroundColor: color,
-              visualDensity: VisualDensity.compact,
+    final l = context.l10n;
+    final pendingCalls = ref.watch(staffCallsProvider).valueOrNull?.length ?? 0;
+
+    return DefaultTabController(
+      length: 3,
+      child: Scaffold(
+        backgroundColor: Colors.grey[50],
+        appBar: AppBar(
+          title: Text(l.kitchenScreen),
+          actions: [
+            const LanguageMenuButton(),
+            IconButton(
+              icon: const Icon(Icons.logout),
+              tooltip: l.logout,
+              onPressed: () => _logout(context, ref),
             ),
           ],
-        ),
-        const SizedBox(height: 12),
-        if (orders.isEmpty)
-          Text(
-              AppLocalizations.of(context)?.noOrdersInStage ??
-                  'No orders in this stage.',
-              style: const TextStyle(color: Colors.grey, fontSize: 14)),
-        ...orders.map((order) => Card(
-              margin: const EdgeInsets.only(bottom: 12),
-              elevation: 2,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12)),
-              child: ExpansionTile(
-                leading: CircleAvatar(
-                  backgroundColor: color.withValues(alpha: 0.1),
-                  child: Text(order.tableName.replaceAll(RegExp(r'[^0-9]'), ''),
-                      style:
-                          TextStyle(color: color, fontWeight: FontWeight.bold)),
+          bottom: TabBar(
+            tabs: [
+              Tab(icon: const Icon(Icons.restaurant), text: l.orders),
+              Tab(icon: const Icon(Icons.receipt_long), text: l.bills),
+              Tab(
+                icon: Badge(
+                  isLabelVisible: pendingCalls > 0,
+                  label: Text('$pendingCalls'),
+                  child: const Icon(Icons.notifications_active),
                 ),
-                title: Text(AppLocalizations.of(context)!.orderNumberLabel(
-                    order.orderNumber.substring(order.orderNumber.length - 4))),
-                subtitle: Text(AppLocalizations.of(context)!.orderItemsSummary(
-                    '${order.items.length}',
-                    '${order.total.toStringAsFixed(0)} ${AppLocalizations.of(context)!.som}')),
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Column(
-                      children: [
-                        ...order.items.map((item) => Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 4),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text('${item.quantity}x ${item.name}',
-                                      style: const TextStyle(fontSize: 15)),
-                                  const Icon(Icons.check_circle_outline,
-                                      size: 18, color: Colors.grey),
-                                ],
-                              ),
-                            )),
-                        const Divider(height: 32),
-                        SizedBox(
-                          width: double.infinity,
-                          height: 48,
-                          child: FilledButton(
-                            style:
-                                FilledButton.styleFrom(backgroundColor: color),
-                            onPressed: () => ref
-                                .read(ordersActionProvider)
-                                .updateStatus(order.id, nextStatus),
-                            child: Text(buttonText),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
+                text: l.staffCalls,
               ),
-            )),
-      ],
+            ],
+          ),
+        ),
+        body: const TabBarView(
+          children: [
+            SingleChildScrollView(
+                padding: EdgeInsets.all(16), child: KitchenBoard()),
+            SingleChildScrollView(
+                padding: EdgeInsets.all(16), child: TableBillsView()),
+            SingleChildScrollView(
+                padding: EdgeInsets.all(16), child: StaffCallsView()),
+          ],
+        ),
+      ),
     );
   }
 }

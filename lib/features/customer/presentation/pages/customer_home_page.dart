@@ -3,21 +3,18 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../core/widgets/app_scaffold.dart';
-import '../../../../l10n/app_localizations.dart';
-import '../../../admin/data/admin_repository.dart';
+import '../../../../core/ui/feedback.dart';
+import '../../../auth/application/auth_provider.dart';
+import '../../../calls/data/calls_repository.dart';
 import '../../application/table_provider.dart';
-import '../../application/table_status_provider.dart';
 
 class CustomerHomePage extends ConsumerWidget {
   const CustomerHomePage({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final l = AppLocalizations.of(context)!;
-
-    final currentTableId = ref.watch(tableIdProvider);
-    final tableNumber = int.tryParse(currentTableId ?? '0') ?? 0;
-    final tableStatus = ref.watch(tableStatusProvider)(tableNumber);
+    final l = context.l10n;
+    final tableNumber = ref.watch(currentTableProvider);
 
     return AppScaffold(
       title: l.appTitle,
@@ -35,7 +32,7 @@ class CustomerHomePage extends ConsumerWidget {
             decoration: BoxDecoration(
               color: Colors.blue[50],
               borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: Colors.blue[200]!),
+              border: Border.all(color: Colors.blue.shade200),
             ),
             child: Row(
               children: [
@@ -51,38 +48,19 @@ class CustomerHomePage extends ConsumerWidget {
                             const TextStyle(fontSize: 12, color: Colors.grey),
                       ),
                       Text(
-                        currentTableId ?? '-',
+                        tableNumber?.toString() ?? '-',
                         style: const TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      if (tableStatus)
-                        Padding(
-                          padding: const EdgeInsets.only(top: 4),
-                          child: Row(
-                            children: [
-                              const Icon(Icons.info,
-                                  size: 12, color: Colors.orange),
-                              const SizedBox(width: 4),
-                              Text(
-                                l.tableOccupiedBadge,
-                                style: const TextStyle(
-                                  fontSize: 11,
-                                  color: Colors.orange,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
                     ],
                   ),
                 ),
                 ElevatedButton.icon(
                   onPressed: () {
-                    ref.read(tableIdProvider.notifier).state = null;
-                    context.go('/role-select');
+                    ref.read(currentTableProvider.notifier).state = null;
+                    context.go('/table-entry');
                   },
                   icon: const Icon(Icons.refresh, size: 18),
                   label: Text(l.reset),
@@ -99,7 +77,7 @@ class CustomerHomePage extends ConsumerWidget {
             padding: const EdgeInsets.all(24),
             decoration: BoxDecoration(
               gradient: LinearGradient(
-                colors: [Colors.blue[700]!, Colors.blue[500]!],
+                colors: [Colors.blue.shade700, Colors.blue.shade500],
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
               ),
@@ -147,44 +125,14 @@ class CustomerHomePage extends ConsumerWidget {
                 title: l.myOrders,
                 icon: Icons.receipt_long,
                 color: Colors.orange,
-                onTap: () => context.go('/customer/tracking'),
+                onTap: () => context.go('/customer/orders'),
               ),
               const SizedBox(width: 16),
               _HomeActionCard(
                 title: l.callStaff,
                 icon: Icons.notifications_active,
                 color: Colors.red,
-                onTap: () async {
-                  final tableId = ref.read(tableIdProvider);
-                  final tableNumber = int.tryParse(tableId ?? '0') ?? 0;
-                  if (tableNumber == 0) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text(l.tableRequired)),
-                    );
-                    return;
-                  }
-                  try {
-                    await ref
-                        .read(adminRepositoryProvider)
-                        .callStaff(tableNumber);
-                    if (context.mounted) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text(l.staffCalled),
-                          backgroundColor: Colors.green,
-                          duration: const Duration(seconds: 2),
-                        ),
-                      );
-                    }
-                  } catch (_) {
-                    if (context.mounted) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                            content: Text(l.error('Failed to call staff'))),
-                      );
-                    }
-                  }
-                },
+                onTap: () => _callStaff(context, ref),
               ),
             ],
           ),
@@ -192,6 +140,26 @@ class CustomerHomePage extends ConsumerWidget {
       ),
     );
   }
+}
+
+Future<void> _callStaff(BuildContext context, WidgetRef ref) async {
+  final l = context.l10n;
+  final tableNumber = ref.read(currentTableProvider);
+  if (tableNumber == null) {
+    showMessage(context, l.tableRequired, isError: true);
+    return;
+  }
+  await runAction(
+    context,
+    () async {
+      final uid =
+          await ref.read(authRepositoryProvider).ensureCustomerSession();
+      await ref
+          .read(callsRepositoryProvider)
+          .create(tableNumber: tableNumber, customerUid: uid);
+    },
+    successMessage: l.staffCalled,
+  );
 }
 
 class _HomeActionCard extends StatelessWidget {

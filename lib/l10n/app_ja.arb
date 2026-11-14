@@ -14,26 +14,11 @@
   "enterTableManually": "テーブル番号を入力",
   "tableRequired": "テーブル番号を入力してください",
   "tableInvalid": "テーブル番号は数字でなければなりません",
-  "tableOccupied": "⚠️ テーブル使用中",
-  "tableOccupiedMsg": "このテーブルは現在使用されています。続けますか？",
   "cancel": "キャンセル",
-  "continueAnyway": "続ける",
   "goToMenu": "メニューへ",
   "checking": "確認中...",
-  "qrScanned": "QRスキャン完了: テーブル {table}",
-  "@qrScanned": {
-    "placeholders": {
-      "table": {
-        "type": "String"
-      }
-    }
-  },
   "invalidQr": "無効なQRコードです。もう一度お試しください。",
-  "scanQrDialog": "テーブルQRをスキャン",
-  "scanQrDialogContent": "テーブルQRをスキャンするためカメラを使用します",
-  "openCamera": "カメラを開く",
   "searchFood": "料理を検索...",
-  "addToCart": "カートに追加",
   "addedToCart": "{item} をカートに追加しました！",
   "@addedToCart": {
     "placeholders": {
@@ -48,7 +33,6 @@
   "totalAmount": "合計金額",
   "placeOrder": "注文する",
   "orderPlaced": "注文が確定されました！",
-  "orderError": "注文エラー",
   "som": "スム",
   "kitchenScreen": "キッチン画面",
   "newOrders": "新しい注文",
@@ -58,7 +42,6 @@
   "markReady": "準備完了にする",
   "markServed": "提供済みにする",
   "statusPending": "保留中",
-  "statusCooking": "調理中",
   "statusReady": "準備完了",
   "statusServed": "提供済み",
   "table": "テーブル",
@@ -67,12 +50,7 @@
   "customerMode": "お客様モード",
   "customerSubtitle": "テーブルから料理を注文する",
   "adminPanel": "管理パネル",
-  "adminSubtitle": "カテゴリ、メニュー、注文の管理",
-  "kitchenDisplay": "キッチン画面",
-  "kitchenSubtitle": "注文の追跡と調理",
   "tableInfo": "テーブル番号",
-  "tableOccupiedBadge": "このテーブルは使用中です",
-  "orderTracking": "注文追跡",
   "all": "すべて",
   "error": "エラー: {msg}",
   "@error": {
@@ -93,66 +71,36 @@
   "requestBill": "お会計",
   "billRequested": "スタッフに伝票をお知らせしました。",
   "statusPreparing": "準備中",
-  "statusDelivered": "配達済み",
   "noOrdersInStage": "この段階の注文はありません。",
   "qrScanTitle": "QRコードをスキャン",
   "qrScanManualTitle": "QRコードを入力",
   "confirm": "確認",
   "goBack": "戻る",
-  "adminLogin": "管理者ログイン",
-  "adminSignup": "管理者登録",
   "login": "ログイン",
   "register": "登録",
-  "createAdminAccount": "新しい管理者アカウントを作成",
   "cancelOrder": "注文をキャンセル",
   "confirmCancelOrder": "この注文をキャンセルしますか？",
-  "enterTableNumber": "テーブル番号を入力:",
-  "yes": "はい、キャンセル",
+  "yes": "はい",
   "no": "いいえ",
   "logout": "ログアウト",
   "logoutConfirm": "ログアウトしますか？",
-  "yesLogout": "はい、ログアウト",
-  "ready2": "完成",
-  "goToKitchen": "キッチンへ",
-  "manageQrCodes": "QRコード管理",
   "editMenu": "メニュー編集",
-  "webNoCameraTitle": "ウェブではカメラは利用できません",
-  "enterQrManually": "QRコードを手動で入力してください:",
   "cameraNotAvailable": "このプラットフォームではカメラが利用できません",
   "enterQrManuallyShort": "QRコードのデータを手動で入力してください:",
   "adminPanelSubtitle": "レストラン管理",
   "dashboard": "ダッシュボード",
-  "dashboardSubtitle": "本日の統計とリアルタイムデータ",
-  "todayRevenue": "本日の売上",
-  "orderCount": "注文数",
-  "averageOrder": "平均注文額",
-  "menuItemsCount": "メニュー品目",
+  "dashboardSubtitle": "直近7日間の注文に基づく集計",
+  "todayRevenue": "本日の売上（支払い済み）",
+  "averageOrder": "平均会計額（本日）",
   "categoriesLabel": "カテゴリ",
   "topOrdered": "人気ランキング",
-  "statusCompleted": "完了",
   "staffCalls": "スタッフ呼び出し",
-  "staffCallAtTable": "テーブル{table} - スタッフ呼び出し",
-  "@staffCallAtTable": {
-    "placeholders": {
-      "table": {
-        "type": "String"
-      }
-    }
-  },
   "markDone": "対応済み",
   "staffCallResolved": "呼び出しに対応しました",
   "noStaffCalls": "呼び出しはありません",
   "staffRequested": "スタッフを呼んでいます",
   "searchOrdersHint": "テーブルまたは注文IDで検索...",
   "noOrdersFound": "注文が見つかりません",
-  "tableNumberLabel": "テーブル #{table}",
-  "@tableNumberLabel": {
-    "placeholders": {
-      "table": {
-        "type": "String"
-      }
-    }
-  },
   "orderNumberLabel": "注文 #{number}",
   "@orderNumberLabel": {
     "placeholders": {
@@ -161,9 +109,6 @@
       }
     }
   },
-  "kitchenView": "キッチンビュー",
-  "qrGenerator": "QRコード生成",
-  "menuManagement": "メニュー管理",
   "confirmCancelTableOrder": "テーブル #{table} の注文をキャンセルしますか？",
   "@confirmCancelTableOrder": {
     "placeholders": {
@@ -174,9 +119,6 @@
   },
   "sidebarKitchen": "キッチン",
   "ingredients": "食材",
-  "qrCodes": "QRコード",
-  "kitchenOrdersTitle": "キッチン注文",
-  "noOrdersAtMoment": "現在注文はありません",
   "tableWithNumber": "テーブル {table}",
   "@tableWithNumber": {
     "placeholders": {
@@ -185,30 +127,8 @@
       }
     }
   },
-  "generateTableQrCodes": "テーブルQRコードの作成",
-  "qrSelectHint": "QRコードを作成するテーブルを選択してください。お客様はテーブルでスマートフォンからQRコードを読み取れます。",
-  "selectedTablesCount": "選択したテーブル: {count}",
-  "@selectedTablesCount": {
-    "placeholders": {
-      "count": {
-        "type": "String"
-      }
-    }
-  },
-  "clearAll": "すべてクリア",
-  "downloadQrCodes": "QRコードをダウンロード",
-  "selectTables": "テーブルを選択",
-  "qrCodesReady": "QRコードの準備完了",
-  "qrGeneratedMessage": "{count}件のテーブルのQRコードを作成しました。\\n\\n次のことができます:\\n- 印刷する\\n- 画面に表示する\\n- お客様に共有する",
-  "@qrGeneratedMessage": {
-    "placeholders": {
-      "count": {
-        "type": "String"
-      }
-    }
-  },
+  "qrSelectHint": "お客様はここに登録されたテーブルでのみ注文できます。QRコードを印刷してテーブルに設置してください。",
   "ok": "OK",
-  "ingredientsManagement": "食材管理",
   "newIngredient": "食材を追加",
   "ingredientsSubtitle": "料理の調理に必要な食材の一覧",
   "lowStockAlert": "在庫不足（{count}件）",
@@ -220,7 +140,6 @@
     }
   },
   "lowStock": "在庫不足",
-  "updateAction": "更新",
   "noIngredientsFound": "食材が見つかりません",
   "editAction": "編集",
   "deleteAction": "削除",
@@ -245,7 +164,6 @@
   "addAction": "追加",
   "saveAction": "保存",
   "deleteIngredientConfirm": "この食材を削除しますか？",
-  "yesDelete": "はい、削除",
   "unitPiece": "個",
   "unitKg": "kg",
   "unitGram": "g",
@@ -257,14 +175,10 @@
   "menuItemAdded": "メニュー品目を追加しました",
   "addNewMenuItem": "メニュー品目の新規追加",
   "itemNameRequired": "品目名 *",
-  "itemNameHint": "例: チキンビリヤニ",
   "descriptionLabel": "説明",
-  "itemDescriptionHint": "品目の説明...",
   "priceRequired": "価格 *",
   "categoryRequired": "カテゴリ *",
-  "newLabel": "新規",
   "imageUrl": "画像URL",
-  "addingInProgress": "追加中...",
   "addMenuItem": "メニュー品目を追加",
   "menuItems": "メニュー品目",
   "noMenuItemsYet": "メニュー品目はまだありません",
@@ -293,19 +207,7 @@
     }
   },
   "placeQrInFrame": "QRコードを枠内に合わせてください",
-  "orderItemsSummary": "{count}品 • {total}",
-  "@orderItemsSummary": {
-    "placeholders": {
-      "count": {
-        "type": "String"
-      },
-      "total": {
-        "type": "String"
-      }
-    }
-  },
   "enterEmailPassword": "メールアドレスとパスワードを入力してください",
-  "authNoAdminRights": "管理者権限がありません。",
   "authUserNotFound": "このメールアドレスのユーザーが見つかりません",
   "authWrongPassword": "パスワードが正しくありません",
   "authInvalidCredential": "メールアドレスまたはパスワードが正しくありません",
@@ -316,9 +218,160 @@
   "authInvalidEmail": "メールアドレスの形式が正しくありません",
   "passwordsMismatch": "パスワードが一致しません",
   "passwordTooShort": "パスワードは6文字以上にしてください",
-  "signupSuccess": "ユーザーを作成しました。ログインしてください。",
   "emailLabel": "メールアドレス",
   "passwordLabel": "パスワード",
   "confirmPasswordLabel": "パスワード（確認）",
-  "passwordHint": "6文字以上の強力なパスワードを設定してください"
+  "passwordHint": "6文字以上の強力なパスワードを設定してください",
+  "statusPaid": "支払い済み",
+  "statusCancelled": "キャンセル済み",
+  "retry": "再試行",
+  "errOrderNotFound": "この注文は存在しません。",
+  "errInvalidTransition": "注文のステータスは既に変更されています。最新の状態をご確認ください。",
+  "errItemUnavailable": "「{name}」は現在ご注文いただけません。",
+  "@errItemUnavailable": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "errInsufficientStock": "在庫が不足しています: {name}",
+  "@errInsufficientStock": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "errBillNotReady": "テーブルのすべての注文が提供済みになると会計を締められます。",
+  "errNothingToPay": "このテーブルに未会計の注文はありません。",
+  "errTableExists": "この番号のテーブルは既に登録されています。",
+  "errCategoryInUse": "このカテゴリにはまだメニューが登録されています。",
+  "errPermissionDenied": "この操作を行う権限がありません。",
+  "invalidNumber": "正しい数値を入力してください",
+  "pageNotFound": "ページが見つかりません",
+  "accessDenied": "この画面にアクセスできるスタッフアカウントでログインしてください。",
+  "staffLogin": "スタッフログイン",
+  "staffLoginSubtitle": "キッチン画面と管理パネル",
+  "authNoStaffAccess": "このアカウントにはまだスタッフ権限がありません。アクセス申請を送信しました。管理者に承認を依頼してください。",
+  "requestStaffAccount": "スタッフアカウントを申請",
+  "staffRequestSent": "アカウントを作成しました。管理者の承認後にログインできます。",
+  "staffSignupHint": "キッチンスタッフ用のアカウントを作成します。管理者が申請を承認すると利用できます。",
+  "tableNotFound": "テーブル{table}は登録されていません。番号をご確認いただくか、スタッフにお尋ねください。",
+  "@tableNotFound": {
+    "placeholders": {
+      "table": {
+        "type": "String"
+      }
+    }
+  },
+  "tableDisabled": "テーブル{table}は現在ご注文を受け付けていません。",
+  "@tableDisabled": {
+    "placeholders": {
+      "table": {
+        "type": "String"
+      }
+    }
+  },
+  "billTotal": "お会計合計",
+  "orderCancelled": "注文をキャンセルしました",
+  "soldOut": "売り切れ",
+  "bills": "会計",
+  "noOpenBills": "未会計のテーブルはありません",
+  "closeBill": "会計を締める（支払い済み）",
+  "confirmCloseBill": "テーブル{table}の会計（{total}）を支払い済みにしますか？",
+  "@confirmCloseBill": {
+    "placeholders": {
+      "table": {
+        "type": "String"
+      },
+      "total": {
+        "type": "String"
+      }
+    }
+  },
+  "billClosed": "テーブル{table}: 会計を締めました",
+  "@billClosed": {
+    "placeholders": {
+      "table": {
+        "type": "String"
+      }
+    }
+  },
+  "billRequestedByTable": "お会計の依頼",
+  "tablesAndQr": "テーブルとQRコード",
+  "addTable": "テーブルを追加",
+  "tableAdded": "テーブル{table}を追加しました",
+  "@tableAdded": {
+    "placeholders": {
+      "table": {
+        "type": "String"
+      }
+    }
+  },
+  "printQrCodes": "QRコードを印刷",
+  "noTablesYet": "テーブルがまだありません。テーブルを追加するとQRコードが生成されます。",
+  "confirmDeleteTable": "テーブル{table}を削除しますか？QRコードは使用できなくなります。",
+  "@confirmDeleteTable": {
+    "placeholders": {
+      "table": {
+        "type": "String"
+      }
+    }
+  },
+  "tableStatusDisabled": "無効",
+  "tableStatusFree": "空席",
+  "staffSection": "スタッフ",
+  "staffAdminHint": "キッチンスタッフはログイン画面からアカウントを作成します。ここで申請を承認すると、注文と在庫にアクセスできるようになります。",
+  "staffRequestsTitle": "アクセス申請",
+  "noStaffRequests": "保留中の申請はありません",
+  "approveAction": "承認",
+  "rejectAction": "却下",
+  "staffApproved": "{email} にキッチン権限を付与しました",
+  "@staffApproved": {
+    "placeholders": {
+      "email": {
+        "type": "String"
+      }
+    }
+  },
+  "kitchenStaffTitle": "キッチンスタッフ",
+  "noKitchenStaff": "キッチンスタッフはまだいません",
+  "revokeAction": "権限を取り消す",
+  "confirmRevokeStaff": "{email} のキッチン権限を取り消しますか？",
+  "@confirmRevokeStaff": {
+    "placeholders": {
+      "email": {
+        "type": "String"
+      }
+    }
+  },
+  "confirmDeleteCategory": "カテゴリ「{name}」を削除しますか？",
+  "@confirmDeleteCategory": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "createCategoryFirst": "先にカテゴリを作成してください。",
+  "menuItemUpdated": "メニューを更新しました",
+  "recipeLinesCount": "レシピ: 食材{count}件",
+  "@recipeLinesCount": {
+    "placeholders": {
+      "count": {
+        "type": "String"
+      }
+    }
+  },
+  "availableOnMenu": "メニューに表示",
+  "recipeTitle": "レシピ（1人前）",
+  "recipeHint": "キッチンが注文を受け付けると、この数量が在庫から差し引かれます。",
+  "addRecipeLine": "食材を追加",
+  "weekRevenue": "今週の売上",
+  "todayOrdersCount": "本日の注文数",
+  "weekOrdersCount": "今週の注文数",
+  "openOrdersCount": "未会計の注文",
+  "cancelledToday": "本日のキャンセル",
+  "tableStatusOccupied": "使用中"
 }

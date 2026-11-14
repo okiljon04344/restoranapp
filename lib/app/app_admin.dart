@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
 
 import '../core/theme/app_theme.dart';
+import '../l10n/app_localizations.dart';
+import 'locale_provider_hive.dart';
 import 'router_admin.dart';
 
 class AdminApp extends ConsumerWidget {
@@ -10,22 +11,20 @@ class AdminApp extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    // Loads the saved language from Hive and applies it to the notifier.
+    ref.watch(localeInitializerProvider);
     final router = ref.watch(adminRouterProvider);
+    final locale = ref.watch(localeNotifierProvider);
 
     return MaterialApp.router(
-      title: 'Restaurant Admin Panel',
+      onGenerateTitle: (context) =>
+          AppLocalizations.of(context)?.adminPanel ?? '',
       debugShowCheckedModeBanner: false,
       theme: AppTheme.light,
       routerConfig: router,
-      locale: const Locale('en'),
-      localizationsDelegates: const [
-        GlobalMaterialLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate,
-        GlobalCupertinoLocalizations.delegate,
-      ],
-      supportedLocales: const [
-        Locale('en'),
-      ],
+      locale: locale,
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      supportedLocales: AppLocalizations.supportedLocales,
     );
   }
 }

@@ -67,6 +67,6 @@
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
 	<key>NSCameraUsageDescription</key>
-	<string>Stol QR코드-ni scan qilish uchun kamera talab qilinadi</string>
+	<string>The camera is used to scan the QR code on your table.</string>
 </dict>
 </plist>

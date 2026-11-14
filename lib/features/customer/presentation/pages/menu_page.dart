@@ -3,8 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../../../l10n/app_localizations.dart';
+import '../../../../core/ui/feedback.dart';
+import '../../../../core/widgets/async_view.dart';
 import '../../../../models/menu_item_model.dart';
+import '../../../../models/order_item_model.dart';
 import '../../../orders/application/order_providers.dart';
 
 class MenuPage extends ConsumerStatefulWidget {
@@ -44,7 +46,7 @@ class _MenuPageState extends ConsumerState<MenuPage>
 
   @override
   Widget build(BuildContext context) {
-    final l = AppLocalizations.of(context)!;
+    final l = context.l10n;
     final categoriesAsync = ref.watch(categoriesProvider);
     final itemsAsync = ref.watch(menuItemsProvider);
     final cartItems = ref.watch(cartProvider);
@@ -209,8 +211,8 @@ class _MenuPageState extends ConsumerState<MenuPage>
                       childCount: filtered.length,
                     ),
                     gridDelegate:
-                        const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2,
+                        const SliverGridDelegateWithMaxCrossAxisExtent(
+                      maxCrossAxisExtent: 240,
                       mainAxisSpacing: 12,
                       crossAxisSpacing: 12,
                       childAspectRatio: 0.72,
@@ -240,9 +242,10 @@ class _MenuPageState extends ConsumerState<MenuPage>
               child: Center(child: CircularProgressIndicator()),
             ),
             error: (e, _) => SliverFillRemaining(
-              child: Center(
-                  child:
-                      Text(AppLocalizations.of(context)!.error(e.toString()))),
+              child: ErrorNotice(
+                error: e,
+                onRetry: () => ref.invalidate(menuItemsProvider),
+              ),
             ),
           ),
         ],
@@ -254,7 +257,7 @@ class _MenuPageState extends ConsumerState<MenuPage>
           backgroundColor: theme.colorScheme.primary,
           icon: const Icon(Icons.shopping_cart_rounded, color: Colors.white),
           label: Text(
-            '${cartItems.length}  ${AppLocalizations.of(context)!.cart}',
+            '${cartItems.fold<int>(0, (sum, e) => sum + e.quantity)}  ${context.l10n.cart}',
             style: const TextStyle(
                 color: Colors.white, fontWeight: FontWeight.bold),
           ),
@@ -264,10 +267,15 @@ class _MenuPageState extends ConsumerState<MenuPage>
   }
 
   void _addToCart(MenuItemModel item) {
+    if (!item.canOrder) {
+      showMessage(context, context.l10n.errItemUnavailable(item.name),
+          isError: true);
+      return;
+    }
     ref.read(cartProvider.notifier).addItem(item);
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text(AppLocalizations.of(context)!.addedToCart(item.name)),
+        content: Text(context.l10n.addedToCart(item.name)),
         duration: const Duration(seconds: 1),
         behavior: SnackBarBehavior.floating,
         margin: const EdgeInsets.fromLTRB(16, 0, 16, 90),
@@ -302,7 +310,7 @@ class _CategoryChip extends StatelessWidget {
         decoration: BoxDecoration(
           color: isSelected ? color : Colors.white,
           borderRadius: BorderRadius.circular(24),
-          border: Border.all(color: isSelected ? color : Colors.grey[300]!),
+          border: Border.all(color: isSelected ? color : Colors.grey.shade300),
           boxShadow: isSelected
               ? [
                   BoxShadow(
@@ -336,7 +344,7 @@ class _CategoryChip extends StatelessWidget {
 
 class _GridMenuCard extends StatelessWidget {
   final MenuItemModel item;
-  final List cartItems;
+  final List<OrderItemModel> cartItems;
   final VoidCallback onAdd;
 
   const _GridMenuCard(
@@ -344,12 +352,12 @@ class _GridMenuCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final l = AppLocalizations.of(context)!;
+    final l = context.l10n;
     final inCart = cartItems.any((c) => c.menuItemId == item.id);
     final color = Theme.of(context).colorScheme.primary;
 
     return Material(
-      color: Colors.white,
+      color: item.canOrder ? Colors.white : Colors.grey.shade200,
       borderRadius: BorderRadius.circular(20),
       elevation: 2,
       shadowColor: Colors.black.withValues(alpha: 0.08),
@@ -374,9 +382,9 @@ class _GridMenuCard extends StatelessWidget {
                             child: const Center(
                                 child:
                                     CircularProgressIndicator(strokeWidth: 2))),
-                        errorWidget: (_, __, ___) => _Placeholder(),
+                        errorWidget: (_, __, ___) => const _Placeholder(),
                       )
-                    : _Placeholder(),
+                    : const _Placeholder(),
               ),
             ),
             Expanded(
@@ -399,7 +407,7 @@ class _GridMenuCard extends StatelessWidget {
                       children: [
                         Expanded(
                           child: Text(
-                            '${item.price.toStringAsFixed(0)} ${l.som}',
+                            item.canOrder ? formatMoney(l, item.price) : l.soldOut,
                             style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 color: color,
@@ -407,7 +415,7 @@ class _GridMenuCard extends StatelessWidget {
                             overflow: TextOverflow.ellipsis,
                           ),
                         ),
-                        _AddButton(inCart: inCart, onTap: onAdd),
+                        if (item.canOrder) _AddButton(inCart: inCart, onTap: onAdd),
                       ],
                     ),
                   ],
@@ -423,7 +431,7 @@ class _GridMenuCard extends StatelessWidget {
 
 class _ListMenuCard extends StatelessWidget {
   final MenuItemModel item;
-  final List cartItems;
+  final List<OrderItemModel> cartItems;
   final VoidCallback onAdd;
 
   const _ListMenuCard(
@@ -431,12 +439,12 @@ class _ListMenuCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final l = AppLocalizations.of(context)!;
+    final l = context.l10n;
     final inCart = cartItems.any((c) => c.menuItemId == item.id);
     final color = Theme.of(context).colorScheme.primary;
 
     return Material(
-      color: Colors.white,
+      color: item.canOrder ? Colors.white : Colors.grey.shade200,
       borderRadius: BorderRadius.circular(20),
       elevation: 2,
       shadowColor: Colors.black.withValues(alpha: 0.08),
@@ -462,9 +470,9 @@ class _ListMenuCard extends StatelessWidget {
                               child: const Center(
                                   child: CircularProgressIndicator(
                                       strokeWidth: 2))),
-                          errorWidget: (_, __, ___) => _Placeholder(),
+                          errorWidget: (_, __, ___) => const _Placeholder(),
                         )
-                      : _Placeholder(),
+                      : const _Placeholder(),
                 ),
               ),
               Expanded(
@@ -491,13 +499,13 @@ class _ListMenuCard extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                            '${item.price.toStringAsFixed(0)} ${l.som}',
+                            item.canOrder ? formatMoney(l, item.price) : l.soldOut,
                             style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 fontSize: 16,
                                 color: color),
                           ),
-                          _AddButton(inCart: inCart, onTap: onAdd),
+                          if (item.canOrder) _AddButton(inCart: inCart, onTap: onAdd),
                         ],
                       ),
                     ],
@@ -513,6 +521,8 @@ class _ListMenuCard extends StatelessWidget {
 }
 
 class _Placeholder extends StatelessWidget {
+  const _Placeholder();
+
   @override
   Widget build(BuildContext context) {
     return Container(

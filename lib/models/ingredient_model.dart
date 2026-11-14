@@ -1,44 +1,35 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+import '../core/cafe_refs.dart';
 
 class Ingredient {
   final String id;
   final String name;
-  final String unit; // kg, l, dona, etc.
+
+  /// Stored unit code (`dona`, `kg`, `g`, `l`, `ml`, `box`, `pack`).
+  final String unit;
   final double quantity;
   final double minimumQuantity;
-  final bool isOutOfStock;
-  final DateTime lastUpdated;
+  final DateTime? lastUpdated;
 
-  Ingredient({
+  const Ingredient({
     required this.id,
     required this.name,
     required this.unit,
     required this.quantity,
     required this.minimumQuantity,
-    required this.isOutOfStock,
-    required this.lastUpdated,
+    this.lastUpdated,
   });
+
+  /// At or below the alert threshold configured by the admin.
+  bool get isLow => quantity <= minimumQuantity;
 
   factory Ingredient.fromFirestore(Map<String, dynamic> data, String id) {
     return Ingredient(
       id: id,
-      name: data['name'] ?? '',
-      unit: data['unit'] ?? 'dona',
-      quantity: (data['quantity'] ?? 0).toDouble(),
-      minimumQuantity: (data['minimumQuantity'] ?? 0).toDouble(),
-      isOutOfStock: data['isOutOfStock'] ?? false,
-      lastUpdated: data['lastUpdated'] != null
-          ? (data['lastUpdated'] as Timestamp).toDate()
-          : DateTime.now(),
+      name: readString(data['name']),
+      unit: readString(data['unit'], 'dona'),
+      quantity: readDouble(data['quantity']),
+      minimumQuantity: readDouble(data['minimumQuantity']),
+      lastUpdated: readDate(data['lastUpdated']),
     );
   }
-
-  Map<String, dynamic> toFirestore() => {
-        'name': name,
-        'unit': unit,
-        'quantity': quantity,
-        'minimumQuantity': minimumQuantity,
-        'isOutOfStock': isOutOfStock,
-        'lastUpdated': Timestamp.now(),
-      };
 }

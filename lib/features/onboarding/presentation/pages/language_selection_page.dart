@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../app/locale_provider_hive.dart';
-import '../../../../l10n/app_localizations.dart';
+import '../../../../core/ui/feedback.dart';
 
 class LanguageSelectionPage extends ConsumerStatefulWidget {
   const LanguageSelectionPage({super.key});
@@ -30,12 +30,13 @@ class _LanguageSelectionPageState extends ConsumerState<LanguageSelectionPage> {
   }
 
   Future<void> _confirm() async {
-    if (_selectedCode == null || _isLoading) return;
+    final code = _selectedCode;
+    if (code == null || _isLoading) return;
 
     setState(() => _isLoading = true);
 
     try {
-      final locale = Locale(_selectedCode!);
+      final locale = Locale(code);
       await ref.read(localeNotifierProvider.notifier).setLocale(locale);
 
       if (!mounted) return;
@@ -109,8 +110,7 @@ class _LanguageSelectionPageState extends ConsumerState<LanguageSelectionPage> {
 
                         // ── Title ─────────────────────────────────────────
                         Text(
-                          AppLocalizations.of(context)?.welcomeTitle ??
-                              'Xush kelibsiz!',
+                          context.l10n.welcomeTitle,
                           textAlign: TextAlign.center,
                           style: Theme.of(context).textTheme.headlineMedium?.copyWith(
                                 fontWeight: FontWeight.w800,
@@ -120,8 +120,7 @@ class _LanguageSelectionPageState extends ConsumerState<LanguageSelectionPage> {
                         ),
                         const SizedBox(height: 6),
                         Text(
-                          AppLocalizations.of(context)?.chooseLanguage ??
-                              'Davom etish uchun tilni tanlang',
+                          context.l10n.chooseLanguage,
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             fontSize: 15,
@@ -175,8 +174,7 @@ class _LanguageSelectionPageState extends ConsumerState<LanguageSelectionPage> {
                                     color: Colors.white,
                                   ),
                                 )
-                              : Text(AppLocalizations.of(context)?.continueBtn ??
-                                  'Davom etish →'),
+                              : Text(context.l10n.continueBtn),
                         ),
 
                         const SizedBox(height: 12),

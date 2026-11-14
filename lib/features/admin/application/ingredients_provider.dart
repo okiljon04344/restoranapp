@@ -8,7 +8,3 @@ export '../../../models/ingredient_model.dart';
 final ingredientsProvider = StreamProvider<List<Ingredient>>((ref) {
   return ref.watch(ingredientsRepositoryProvider).watchAll();
 });
-
-final outOfStockIngredientsProvider = StreamProvider<List<Ingredient>>((ref) {
-  return ref.watch(ingredientsRepositoryProvider).watchLowStock();
-});

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import '../../../../l10n/app_localizations.dart';
+import '../../../../core/ui/feedback.dart';
 
 class RoleSelectPage extends StatelessWidget {
   const RoleSelectPage({super.key});
@@ -26,7 +26,7 @@ class RoleSelectPage extends StatelessWidget {
             children: [
               const Spacer(),
               Builder(builder: (context) {
-                final l = AppLocalizations.of(context)!;
+                final l = context.l10n;
                 return Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -45,21 +45,14 @@ class RoleSelectPage extends StatelessWidget {
                       title: l.customerMode,
                       subtitle: l.customerSubtitle,
                       icon: Icons.restaurant,
-                      onTap: () => context.go('/customer'),
+                      onTap: () => context.go('/table-entry'),
                     ),
                     const SizedBox(height: 16),
                     _RoleButton(
-                      title: l.adminPanel,
-                      subtitle: l.adminSubtitle,
+                      title: l.staffLogin,
+                      subtitle: l.staffLoginSubtitle,
                       icon: Icons.admin_panel_settings,
-                      onTap: () => context.push('/login/admin'),
-                    ),
-                    const SizedBox(height: 16),
-                    _RoleButton(
-                      title: l.kitchenDisplay,
-                      subtitle: l.kitchenSubtitle,
-                      icon: Icons.kitchen,
-                      onTap: () => context.push('/login/kitchen'),
+                      onTap: () => context.push('/login'),
                     ),
                   ],
                 );
